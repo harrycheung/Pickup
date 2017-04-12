@@ -26,5 +26,8 @@ export default StyleSheet.create({
   loginButtonText: {
     fontSize: 18,
     color: colors.buttonText,
+  },
+  disabled: {
+    opacity: 0.3,
   }
 });

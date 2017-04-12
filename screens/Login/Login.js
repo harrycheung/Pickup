@@ -4,9 +4,15 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import styles from './styles';
 import { colors } from '../../config/styles';
+import { navigateTo } from '../../helpers';
 import LinedTextInput from '../../components/LinedTextInput';
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { disabled: true, phoneNumber: '' };
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -18,28 +24,32 @@ class Login extends React.Component {
           clearButtonMode='while-editing'
           borderBottomColor={colors.darkGrey}
           keyboardType='phone-pad'
+          onChangeText={(text) => this._changeText(text)}
         />
         <TouchableOpacity
-          onPress={this._login}
-          style={styles.loginButton}
+          onPress={() => navigateTo(this.props.navigation, 'LoginRequest', { phoneNumber: this.state.phoneNumber })}
+          style={{alignSelf: 'stretch'}}
+          disabled={this.state.disabled}
         >
-          <Text style={styles.loginButtonText}>Get login link</Text>
+          <View style={[styles.loginButton, this.state.disabled ? styles.disabled : {}]}>
+            <Text style={styles.loginButtonText}>Get login link</Text>
+          </View>
         </TouchableOpacity>
       </View>
     );
   }
 
-  _navigateTo(routeName, params) {
-    const actionToDispatch = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName })],
-    })
-    this.props.navigation.dispatch(actionToDispatch, params);
-  }
-
-  _login() {
-    this._navigateTo('Main', { loginKey: 'harry' });
+  _changeText = (text) => {
+    if (text.length == 10) {
+      this.setState({disabled: false, phoneNumber: text});
+    } else {
+      this.setState({disabled: true});
+    }
   }
 }
+
+// Login.propTypes = {
+//   login: React.PropTypes.func.isRequired,
+// }
 
 export default Login;

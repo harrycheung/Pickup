@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import { DrawerNavigator, StackNavigator } from 'react-navigation';
+import { DrawerNavigator, StackNavigator, addNavigationHelpers } from 'react-navigation';
+// import { Provider, connect } from 'react-redux';
+// import { createStore, combineReducers } from 'redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import CustomStackNavigator from './components/CustomStackNavigator';
 import AddStudentScreen from './screens/AddStudent';
 import HomeScreen from './screens/Home';
 import HistoryScreen from './screens/History';
 import LaunchScreen from './screens/Launch';
 import LoginScreen from './screens/Login';
+import LoginRequestScreen from './screens/LoginRequest';
 
 const StackScreen = (Screen) => {
   return StackNavigator({
@@ -42,6 +44,7 @@ const MainNavigator = DrawerNavigator({
 const App = StackNavigator({
   Launch: { screen: LaunchScreen },
   Login: { screen: LoginScreen },
+  LoginRequest: { screen: LoginRequestScreen },
   Main: { screen: MainNavigator },
 }, {
   headerMode: 'screen',
@@ -49,6 +52,39 @@ const App = StackNavigator({
     header: { visible: false }
   }
 });
+
+// const appReducer = combineReducers({
+//   nav: (state, action) => (
+//     AppNavigator.router.getStateForAction(action, state)
+//   ),
+// });
+//
+// @connect(state => ({
+//   nav: state.nav,
+// }))
+//
+// class AppWithNavigationState extends React.Component {
+//   render() {
+//     return (
+//       <AppNavigator navigation={addNavigationHelpers({
+//         dispatch: this.props.dispatch,
+//         state: this.props.nav,
+//       })} />
+//     );
+//   }
+// }
+//
+// const store = createStore(appReducer);
+//
+// class App extends React.Component {
+//   render() {
+//     return (
+//       <Provider store={store}>
+//         <AppWithNavigationState />
+//       </Provider>
+//     );
+//   }
+// }
 
 var styles = StyleSheet.create({
   menuButton: {
