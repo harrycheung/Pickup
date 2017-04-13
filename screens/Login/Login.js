@@ -1,10 +1,13 @@
 
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux';
 
 import styles from './styles';
 import { colors } from '../../config/styles';
-import { navigateTo } from '../../helpers';
+import { actions as AuthActions } from '../../actions/auth';
+import { actions as NavigationActions } from '../../actions/navigation';
 import LinedTextInput from '../../components/LinedTextInput';
 
 class Login extends React.Component {
@@ -27,7 +30,7 @@ class Login extends React.Component {
           onChangeText={(text) => this._changeText(text)}
         />
         <TouchableOpacity
-          onPress={() => navigateTo(this.props.navigation, 'LoginRequest', { phoneNumber: this.state.phoneNumber })}
+          onPress={this._login}
           style={{alignSelf: 'stretch'}}
           disabled={this.state.disabled}
         >
@@ -46,10 +49,21 @@ class Login extends React.Component {
       this.setState({disabled: true});
     }
   }
+
+  _login = () => {
+    this.props.login(this.state.phoneNumber);
+    this.props.loginRequest(this.state.phoneNumber);
+  }
 }
 
-// Login.propTypes = {
-//   login: React.PropTypes.func.isRequired,
-// }
+Login.propTypes = {
+  login: React.PropTypes.func.isRequired,
+  loginRequest: React.PropTypes.func.isRequired,
+}
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  ...bindActionCreators(AuthActions, dispatch),
+  ...bindActionCreators(NavigationActions, dispatch),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
