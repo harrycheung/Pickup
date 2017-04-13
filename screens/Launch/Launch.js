@@ -1,30 +1,25 @@
 
 import React from 'react';
 import { AsyncStorage, View } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux';
 
 import constants from '../../config/constants';
+import { actions as AuthActions } from '../../actions/auth';
+import { actions as NavigationActions } from '../../actions/navigation';
 
 class Launch extends React.Component {
   async componentDidMount() {
     try {
       const value = await AsyncStorage.getItem(constants.LoginKey);
       if (value !== null) {
-        this._navigateTo('Main', { loginKey: value });
+        this.props.resetNavigation('Main');
       } else {
-        this._navigateTo('Login');
+        this.props.resetNavigation('Login');
       }
     } catch (error) {
-      this._navigateTo('Login');
+      this.props.resetNavigation('Login');
     }
-  }
-
-  _navigateTo(routeName, params) {
-    const actionToDispatch = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName })],
-    })
-    this.props.navigation.dispatch(actionToDispatch, params);
   }
 
   render() {
@@ -34,4 +29,13 @@ class Launch extends React.Component {
   }
 }
 
-export default Launch;
+Launch.propTypes = {
+  resetNavigation: React.PropTypes.func.isRequired,
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  ...bindActionCreators(AuthActions, dispatch),
+  ...bindActionCreators(NavigationActions, dispatch),
+});
+
+export default connect(null, mapDispatchToProps)(Launch);
