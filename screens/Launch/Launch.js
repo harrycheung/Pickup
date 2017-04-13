@@ -10,16 +10,16 @@ import { actions as NavigationActions } from '../../actions/navigation';
 
 class Launch extends React.Component {
   async componentDidMount() {
-    try {
-      const value = await AsyncStorage.getItem(constants.LoginKey);
-      if (value !== null) {
-        this.props.resetNavigation('Main');
-      } else {
-        this.props.resetNavigation('Login');
-      }
-    } catch (error) {
-      this.props.resetNavigation('Login');
-    }
+    // try {
+    //   const value = await AsyncStorage.getItem(constants.LoginKey);
+    //   if (value !== null) {
+    //     this.props.resetNavigation('Main');
+    //   } else {
+    //     this.props.resetNavigation('Login');
+    //   }
+    // } catch (error) {
+    //   this.props.resetNavigation('Login');
+    // }
   }
 
   render() {

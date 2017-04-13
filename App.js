@@ -3,7 +3,8 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import { DrawerNavigator, StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga'
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import AddStudentScreen from './screens/AddStudent';
@@ -14,6 +15,7 @@ import LoginScreen from './screens/Login';
 import LoginRequestScreen from './screens/LoginRequest';
 
 import authReducer from './reducers/auth';
+import rootSaga from './sagas';
 
 const StackScreen = (Screen) => {
   return StackNavigator({
@@ -77,7 +79,9 @@ class AppWithNavigationState extends React.Component {
   }
 }
 
-const store = createStore(appReducer);
+const sagaMiddleware = createSagaMiddleware()
+const store = createStore(appReducer, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(rootSaga);
 
 class App extends React.Component {
   render() {
