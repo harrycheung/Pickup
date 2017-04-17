@@ -61,7 +61,7 @@ const appReducer = combineReducers({
   nav: (state, action) => (
     AppNavigator.router.getStateForAction(action, state)
   ),
-  authReducer,
+  auth: authReducer,
 });
 
 @connect(state => ({

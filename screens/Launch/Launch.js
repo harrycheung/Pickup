@@ -9,7 +9,8 @@ import { actions as AuthActions } from '../../actions/auth';
 import { actions as NavigationActions } from '../../actions/navigation';
 
 class Launch extends React.Component {
-  async componentDidMount() {
+  componentDidMount() {
+    this.props.loadAuth();
     // try {
     //   const value = await AsyncStorage.getItem(constants.LoginKey);
     //   if (value !== null) {
