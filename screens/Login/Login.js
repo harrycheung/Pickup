@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import PropTypes from 'prop-types';
+import { Text, View } from 'react-native';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 
@@ -56,8 +57,8 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  login: React.PropTypes.func.isRequired,
-  loginRequest: React.PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+  loginRequest: PropTypes.func.isRequired,
 }
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
@@ -38,7 +39,7 @@ class LoginRequest extends React.Component {
 }
 
 LoginRequest.propTypes = {
-  isRequesting: React.PropTypes.bool.isRequired,
+  isRequesting: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => ({

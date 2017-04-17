@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { AsyncStorage, View } from 'react-native';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
@@ -31,7 +32,7 @@ class Launch extends React.Component {
 }
 
 Launch.propTypes = {
-  resetNavigation: React.PropTypes.func.isRequired,
+  resetNavigation: PropTypes.func.isRequired,
 }
 
 const mapDispatchToProps = (dispatch) => ({

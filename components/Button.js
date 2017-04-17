@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 class Button extends React.Component {
@@ -23,8 +24,8 @@ class Button extends React.Component {
 }
 
 Button.propTypes = {
-  onPress: React.PropTypes.func,
-  disabled: React.PropTypes.bool,
+  onPress: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 export default Button;
