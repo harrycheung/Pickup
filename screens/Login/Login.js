@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 import { colors } from '../../config/styles';
+import Button from '../../components/Button';
 import { actions as AuthActions } from '../../actions/auth';
 import { actions as NavigationActions } from '../../actions/navigation';
 import LinedTextInput from '../../components/LinedTextInput';
@@ -29,15 +30,13 @@ class Login extends React.Component {
           keyboardType='phone-pad'
           onChangeText={(text) => this._changeText(text)}
         />
-        <TouchableOpacity
+        <Button
           onPress={this._login}
-          style={{alignSelf: 'stretch'}}
+          style={styles.loginButton}
           disabled={this.state.disabled}
         >
-          <View style={[styles.loginButton, this.state.disabled ? styles.disabled : {}]}>
-            <Text style={styles.loginButtonText}>Get login link</Text>
-          </View>
-        </TouchableOpacity>
+          <Text style={styles.loginButtonText}>Get login link</Text>
+        </Button>
       </View>
     );
   }

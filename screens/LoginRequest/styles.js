@@ -21,9 +21,6 @@ export default StyleSheet.create({
   resendButton: {
     height: 44,
     marginTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'stretch',
     backgroundColor: colors.buttonBackground,
   },
   resendButtonText: {

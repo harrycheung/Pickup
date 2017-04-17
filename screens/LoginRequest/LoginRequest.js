@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 
 import styles from './styles';
+import Button from '../../components/Button';
 import { actions as AuthActions } from '../../actions/auth';
 import { actions as NavigationActions } from '../../actions/navigation';
 
@@ -23,15 +24,13 @@ class LoginRequest extends React.Component {
             size='large'
           />
         </View>
-        <TouchableOpacity
-          style={{alignSelf: 'stretch'}}
-          onPress={() => {}}
+        <Button
+          style={styles.resendButton}
           disabled={this.props.isRequesting}
+          onPress={() => {}}
         >
-          <View style={[styles.resendButton, this.props.isRequesting ? styles.disabled : {}]}>
-            <Text style={styles.resendButtonText}>Re-send login link</Text>
-          </View>
-        </TouchableOpacity>
+          <Text style={styles.resendButtonText}>Re-send login link</Text>
+        </Button>
         <View style={{flex: 1}} />
       </View>
     );
