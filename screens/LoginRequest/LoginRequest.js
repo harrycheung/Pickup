@@ -11,10 +11,6 @@ import { actions as AuthActions } from '../../actions/auth';
 import { actions as NavigationActions } from '../../actions/navigation';
 
 class LoginRequest extends React.Component {
-  componentDidMount() {
-    console.log(this.props.navigation.state.params.phoneNumber);
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -28,7 +24,7 @@ class LoginRequest extends React.Component {
         <Button
           style={styles.resendButton}
           disabled={this.props.isRequesting}
-          onPress={() => {}}
+          onPress={() => { this.props.resetNavigation('Main') }}
         >
           <Text style={styles.resendButtonText}>Re-send login link</Text>
         </Button>
@@ -40,6 +36,7 @@ class LoginRequest extends React.Component {
 
 LoginRequest.propTypes = {
   isRequesting: PropTypes.bool.isRequired,
+  resetNavigation: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({

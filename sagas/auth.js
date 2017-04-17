@@ -39,7 +39,13 @@ export function* requestLogin() {
 }
 
 export function* authenticate() {
-
+  while(true) {
+    try {
+      yield take(types.AUTHENTICATE);
+    } catch (error) {
+      
+    }
+  }
 }
 
 export function* logout() {

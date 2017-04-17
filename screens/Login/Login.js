@@ -51,14 +51,14 @@ class Login extends React.Component {
   }
 
   _login = () => {
-    this.props.login(this.state.phoneNumber);
     this.props.loginRequest(this.state.phoneNumber);
+    this.props.navigate('LoginRequest');
   }
 }
 
 Login.propTypes = {
-  login: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
 }
 
 const mapDispatchToProps = (dispatch) => ({
