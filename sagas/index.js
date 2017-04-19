@@ -1,8 +1,11 @@
 
-import { loadAuth, requestLogin } from './auth';
+import { loadAuth, requestLogin, watchLogin } from './auth';
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
-  yield loadAuth();
-  yield requestLogin();
+  yield [
+    loadAuth(),
+    requestLogin(),
+    watchLogin()
+  ];
 }

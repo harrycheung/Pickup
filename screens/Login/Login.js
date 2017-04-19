@@ -51,13 +51,13 @@ class Login extends React.Component {
   }
 
   _login = () => {
-    this.props.loginRequest(this.state.phoneNumber);
+    this.props.requestLogin(this.state.phoneNumber);
     this.props.navigate('LoginRequest');
   }
 }
 
 Login.propTypes = {
-  loginRequest: PropTypes.func.isRequired,
+  requestLogin: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
 }
 

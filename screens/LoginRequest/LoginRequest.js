@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import Button from '../../components/Button';
 import { actions as AuthActions } from '../../actions/auth';
-import { actions as NavigationActions } from '../../actions/navigation';
 
 class LoginRequest extends React.Component {
   render() {
@@ -24,7 +23,7 @@ class LoginRequest extends React.Component {
         <Button
           style={styles.resendButton}
           disabled={this.props.isRequesting}
-          onPress={() => { this.props.resetNavigation('Main') }}
+          onPress={() => { this.props.login('harryToken') }}
         >
           <Text style={styles.resendButtonText}>Re-send login link</Text>
         </Button>
@@ -36,7 +35,7 @@ class LoginRequest extends React.Component {
 
 LoginRequest.propTypes = {
   isRequesting: PropTypes.bool.isRequired,
-  resetNavigation: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -45,7 +44,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ...bindActionCreators(AuthActions, dispatch),
-  ...bindActionCreators(NavigationActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginRequest);

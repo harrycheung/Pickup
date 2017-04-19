@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { AppState, AsyncStorage, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import { DrawerNavigator, StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -15,6 +15,7 @@ import LoginScreen from './screens/Login';
 import LoginRequestScreen from './screens/LoginRequest';
 
 import authReducer from './reducers/auth';
+import dataReducer from './reducers/data';
 import rootSaga from './sagas';
 
 const StackScreen = (Screen) => {
@@ -37,7 +38,7 @@ const StackScreen = (Screen) => {
   });
 };
 
-const MainNavigator = DrawerNavigator({
+const HomeNavigator = DrawerNavigator({
   Home: { screen: StackScreen(HomeScreen) },
   History: { screen: StackScreen(HistoryScreen) },
   AddStudent: { screen: StackScreen(AddStudentScreen) },
@@ -49,7 +50,7 @@ const AppNavigator = StackNavigator({
   Launch: { screen: LaunchScreen },
   Login: { screen: LoginScreen },
   LoginRequest: { screen: LoginRequestScreen },
-  Main: { screen: MainNavigator },
+  Home: { screen: HomeNavigator },
 }, {
   headerMode: 'screen',
   navigationOptions: {
@@ -62,6 +63,7 @@ const appReducer = combineReducers({
     AppNavigator.router.getStateForAction(action, state)
   ),
   auth: authReducer,
+  data: dataReducer,
 });
 
 @connect(state => ({
@@ -84,12 +86,54 @@ const store = createStore(appReducer, applyMiddleware(sagaMiddleware));
 sagaMiddleware.run(rootSaga);
 
 class App extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      isStoreLoading: false,
+      store: store,
+    }
+  }
+
+  componentWillMount() {
+    var self = this;
+    AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+    this.setState({isStoreLoading: true});
+    AsyncStorage.getItem('reduxStore')
+    .then((value) => {
+      if(value && value.length){
+        let initialStore = JSON.parse(value)
+        self.setState({store: createStore(reducers, initialStore, middleware)});
+      }else{
+        self.setState({store: store});
+      }
+      self.setState({isStoreLoading: false});
+    })
+    .catch((error) => {
+      self.setState({store: store});
+      self.setState({isStoreLoading: false});
+    })
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange.bind(this));
+  }
+
+  _handleAppStateChange(nextAppState) {
+    let storingValue = JSON.stringify(this.state.store.getState())
+    AsyncStorage.setItem('reduxStore', storingValue);
+  }
+
   render() {
-    return (
-      <Provider store={store}>
-        <AppWithNavigationState />
-      </Provider>
-    );
+    if (this.state.isStoreLoading) {
+      return <Text>Loading...</Text>;
+    } else {
+      return (
+        <Provider store={this.state.store}>
+          <AppWithNavigationState />
+        </Provider>
+      );
+    }
   }
 }
 

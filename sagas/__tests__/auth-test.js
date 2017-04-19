@@ -14,5 +14,11 @@ it('loadAuth succeeds', () => {
 it('requestLogin succeeds', () => {
   const saga = auth.requestLogin();
 
-  expect(saga.next().value).toEqual(take(types.LOGIN_REQUEST));  
+  expect(saga.next().value).toEqual(take(types.REQUEST_LOGIN));
+});
+
+it('login succeeds', () => {
+  const saga = auth.login('token');
+
+  expect(saga.next().value).toEqual(take(types.LOGIN));
 });

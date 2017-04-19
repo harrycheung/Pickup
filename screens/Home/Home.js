@@ -1,9 +1,11 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View, Text, Button, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux';
 
 import styles from './styles';
-import images from '../../config/images';
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -13,21 +15,19 @@ class Home extends React.Component {
     },
   };
   render() {
+    const students = this.props.students.map((student) => {
+      return (
+        <View key={student.key} style={styles.student}>
+          <Image style={styles.studentImage} source={require('../../images/max.png')} />
+          <Text style={styles.studentName}>{student.name}</Text>
+        </View>
+      );
+    });
+
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.students}>
-          <View style={styles.student}>
-            <Image style={styles.studentImage} source={require('../../images/max.png')} />
-            <Text style={styles.studentName}>Max</Text>
-          </View>
-          <View style={styles.student}>
-            <Image style={styles.studentImage} source={require('../../images/josh.png')} />
-            <Text style={styles.studentName}>Josh</Text>
-          </View>
-          <View style={styles.student}>
-            <Image style={styles.studentImage} source={require('../../images/sam.png')} />
-            <Text style={styles.studentName}>Sam</Text>
-          </View>
+          {students}
         </ScrollView>
         <TouchableOpacity style={styles.pickupButton} >
           <Text style={styles.pickupButtonText}>Pickup</Text>
@@ -37,4 +37,15 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+Home.propTypes = {
+  students: PropTypes.array.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  students: state.data.students,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

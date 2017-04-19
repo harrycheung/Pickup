@@ -10,14 +10,17 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.LOGIN_REQUEST:
+    case types.REQUEST_LOGIN:
       return {...state, phoneNumber: action.phoneNumber, isRequesting: true, error: null};
 
-    case types.LOGIN_REQUEST_SUCCEEDED:
-      return {...state, isRequesting: false, user: action.user}
+    case types.REQUEST_LOGIN_SUCCEEDED:
+      return {...state, isRequesting: false};
 
-    case types.LOGIN_REQUEST_FAILED:
+    case types.REQUEST_LOGIN_FAILED:
       return {...state, isRequesting: false, error: 'Login request failed'};
+
+    case types.LOGIN_SUCCEEDED:
+      return {...state, user: action.user};
 
     case types.LOGOUT:
       return {...state, user: null};
