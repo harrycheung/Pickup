@@ -10,6 +10,9 @@ export default (state = initialState, action) => {
     case types.LOAD_STUDENTS:
       return {...state, students: action.students};
 
+    case types.ADD_STUDENT_SUCCEEDED:
+      return {...state, students: state.students.concat([action.student])}
+
     default:
       return state;
   }

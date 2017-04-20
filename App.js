@@ -18,6 +18,15 @@ import authReducer from './reducers/auth';
 import dataReducer from './reducers/data';
 import rootSaga from './sagas';
 
+function wrap(WrappedComponent) {
+  const EnhancedComponent = class extends React.Component {
+    render() {
+      return <WrappedComponent />
+    }
+  }
+  return EnhancedComponent;
+}
+
 const StackScreen = (Screen) => {
   return StackNavigator({
     root: {
@@ -38,7 +47,7 @@ const StackScreen = (Screen) => {
   });
 };
 
-const HomeNavigator = DrawerNavigator({
+const MainNavigator = DrawerNavigator({
   Home: { screen: StackScreen(HomeScreen) },
   History: { screen: StackScreen(HistoryScreen) },
   AddStudent: { screen: StackScreen(AddStudentScreen) },
@@ -50,7 +59,7 @@ const AppNavigator = StackNavigator({
   Launch: { screen: LaunchScreen },
   Login: { screen: LoginScreen },
   LoginRequest: { screen: LoginRequestScreen },
-  Home: { screen: HomeNavigator },
+  Main: { screen: MainNavigator },
 }, {
   headerMode: 'screen',
   navigationOptions: {
@@ -101,10 +110,10 @@ class App extends React.Component {
     this.setState({isStoreLoading: true});
     AsyncStorage.getItem('reduxStore')
     .then((value) => {
-      if(value && value.length){
+      if (value && value.length) {
         let initialStore = JSON.parse(value)
         self.setState({store: createStore(reducers, initialStore, middleware)});
-      }else{
+      } else {
         self.setState({store: store});
       }
       self.setState({isStoreLoading: false});

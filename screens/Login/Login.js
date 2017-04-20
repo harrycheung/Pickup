@@ -15,7 +15,11 @@ import LinedTextInput from '../../components/LinedTextInput';
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {disabled: true, phoneNumber: ''};
+    
+    this.state = {
+      disabled: true,
+      phoneNumber: '',
+    };
   }
 
   render() {

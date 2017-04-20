@@ -19,7 +19,7 @@ class Home extends React.Component {
       return (
         <View key={student.key} style={styles.student}>
           <Image style={styles.studentImage} source={require('../../images/max.png')} />
-          <Text style={styles.studentName}>{student.name}</Text>
+          <Text style={styles.studentName}>{student.firstName} {student.lastInitial}</Text>
         </View>
       );
     });

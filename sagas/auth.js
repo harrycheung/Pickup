@@ -1,5 +1,5 @@
 
-import { delay } from 'redux-saga'
+import { delay } from 'redux-saga'; // TODO: remove
 import { call, put, select, take, takeLatest } from 'redux-saga/effects';
 
 import { FBFunctions, LoginKey } from '../config/constants';
@@ -17,7 +17,7 @@ export function* loadAuth() {
   try {
     const state = yield select();
     if (state.auth.user != null) {
-      yield put(navActions.resetNavigation('Home'));
+      yield put(navActions.resetNavigation('Main'));
     } else {
       yield put(navActions.resetNavigation('Login'));
     }
@@ -49,12 +49,12 @@ export function* login(action) {
       const user = { name: 'Harry' };
       yield put(authActions.loginSucceeded(user));
       const students = [
-        {key: 'a', name: 'Max C', image: {url: '../../images/max.png'}, grade: 'L1'},
-        {key: 'b', name: 'Josh B', image: {url: '../../images/max.png'}, grade: 'L1'},
-        {key: 'c', name: 'Sam P', image: {url: '../../images/max.png'}, grade: 'L1'}
+        {key: 'a', firstName: 'Max', lastInitial: 'C', image: {url: '../../images/max.png'}, grade: 'L1'},
+        {key: 'b', firstName: 'Josh', lastInitial: 'B', image: {url: '../../images/max.png'}, grade: 'L1'},
+        {key: 'c', firstName: 'Sam', lastInitial: 'P', image: {url: '../../images/max.png'}, grade: 'L1'}
       ];
       yield put(dataActions.loadStudents(students));
-      yield put(navActions.resetNavigation('Home'));
+      yield put(navActions.resetNavigation('Main'));
     // }
   } catch (error) {
     console.log('login failed', error);
