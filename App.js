@@ -18,15 +18,6 @@ import authReducer from './reducers/auth';
 import dataReducer from './reducers/data';
 import rootSaga from './sagas';
 
-function wrap(WrappedComponent) {
-  const EnhancedComponent = class extends React.Component {
-    render() {
-      return <WrappedComponent />
-    }
-  }
-  return EnhancedComponent;
-}
-
 const StackScreen = (Screen) => {
   return StackNavigator({
     root: {
@@ -90,8 +81,23 @@ class AppWithNavigationState extends React.Component {
   }
 }
 
+const logger = ({ getState }) => {
+  return (next) => (action) => {
+    console.log('will dispatch', action);
+
+    // Call the next dispatch method in the middleware chain.
+    let returnValue = next(action);
+
+    console.log('state after dispatch', getState());
+
+    // This will likely be the action itself, unless
+    // a middleware further in chain changed it.
+    return returnValue;
+  }
+}
+
 const sagaMiddleware = createSagaMiddleware()
-const store = createStore(appReducer, applyMiddleware(sagaMiddleware));
+const store = createStore(appReducer, applyMiddleware(sagaMiddleware, logger));
 sagaMiddleware.run(rootSaga);
 
 class App extends React.Component {
