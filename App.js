@@ -13,15 +13,16 @@ import HistoryScreen from './screens/History';
 import LaunchScreen from './screens/Launch';
 import LoginScreen from './screens/Login';
 import LoginRequestScreen from './screens/LoginRequest';
+import AwaitingPickupScreen from './screens/AwaitingPickup';
 
 import authReducer from './reducers/auth';
 import dataReducer from './reducers/data';
 import rootSaga from './sagas';
 
-const StackScreen = (Screen) => {
+const StackScreen = (rootScreen, otherScreens) => {
   return StackNavigator({
     root: {
-      screen: Screen,
+      screen: rootScreen,
       navigationOptions: {
         header: (navigation) => ({
           left: (
@@ -34,27 +35,28 @@ const StackScreen = (Screen) => {
           ),
         }),
       },
-    }
+    },
+    ...otherScreens
   });
 };
 
 const MainNavigator = DrawerNavigator({
-  Home: { screen: StackScreen(HomeScreen) },
-  History: { screen: StackScreen(HistoryScreen) },
-  AddStudent: { screen: StackScreen(AddStudentScreen) },
+  Home: {screen: StackScreen(HomeScreen, {AwaitingPickup: {screen: AwaitingPickupScreen}})},
+  History: {screen: StackScreen(HistoryScreen)},
+  AddStudent: {screen: StackScreen(AddStudentScreen)},
 }, {
   drawerWidth: 200,
 });
 
 const AppNavigator = StackNavigator({
-  Launch: { screen: LaunchScreen },
-  Login: { screen: LoginScreen },
-  LoginRequest: { screen: LoginRequestScreen },
-  Main: { screen: MainNavigator },
+  Launch: {screen: LaunchScreen},
+  Login: {screen: LoginScreen},
+  LoginRequest: {screen: LoginRequestScreen},
+  Main: {screen: MainNavigator},
 }, {
   headerMode: 'screen',
   navigationOptions: {
-    header: { visible: false }
+    header: {visible: false}
   }
 });
 

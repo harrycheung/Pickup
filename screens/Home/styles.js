@@ -30,6 +30,10 @@ export default StyleSheet.create({
     height: 100,
     borderRadius: 50,
   },
+  selected: {
+    borderWidth: 2,
+    borderColor: colors.buttonBackground,
+  },
   pickupButton: {
     height: 44,
     justifyContent: 'center',

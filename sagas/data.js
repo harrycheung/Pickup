@@ -29,3 +29,15 @@ export function* addStudent(action) {
 export function* watchAddStudent() {
   yield takeEvery(types.ADD_STUDENT, addStudent);
 }
+
+export function* pickup(action) {
+  try {
+    yield put(navActions.navigate('AwaitingPickup'));
+  } catch (error) {
+    console.log('pickup failed', error);
+  }
+}
+
+export function* watchPickup(action) {
+  yield takeEvery(types.PICKUP, pickup);
+}
