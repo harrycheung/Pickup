@@ -126,7 +126,7 @@ class AddStudent extends React.Component {
   }
 }
 
-AddStudent.PropTypes = {
+AddStudent.propTypes = {
   addStudent: PropTypes.func.isRequired,
 };
 

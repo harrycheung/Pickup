@@ -18,7 +18,7 @@ class RelationshipPicker extends React.Component {
   }
 }
 
-RelationshipPicker.PropTypes = {
+RelationshipPicker.propTypes = {
   values: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   style: PropTypes.object,

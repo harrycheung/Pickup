@@ -1,18 +1,33 @@
 
 import React from 'react';
-import { DrawerNavigator, StackNavigator } from 'react-navigation';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { DrawerNavigator, StackNavigator, DrawerView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import HomeScreen from './Home';
 import EscortScreen from './Escort';
-import EscortLevelScreen from './EscortLevel';
+
+const DrawerComponent = (props) => (
+  <View style={{flex: 1}}>
+    <DrawerView.Items {...props} />
+    <View style={{flex: 1, justifyContent: 'flex-end'}}>
+      <TouchableOpacity
+        onPress={() => { props.navigation.navigate('Main'); }}
+      >
+        <Text>Switch to Parent</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+);
 
 export default DrawerNavigator({
-  Escort: {screen: StackNavigator({
+  Home: {screen: StackNavigator({
+    Home: {screen: HomeScreen},
     Escort: {screen: EscortScreen},
-    EscortLevel: {screen: EscortLevelScreen},
   }, {
-    initialRouteName: 'Escort',
+    initialRouteName: 'Home',
   })},
 }, {
   drawerWidth: 200,
+  contentComponent: DrawerComponent,
 });
