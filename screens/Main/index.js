@@ -41,7 +41,7 @@ var styles = StyleSheet.create({
   },
 });
 
-const Main = DrawerNavigator({
+export default DrawerNavigator({
   Home: {screen: StackScreen(HomeScreen, {AwaitingPickup: {screen: AwaitingPickupScreen}})},
   History: {screen: StackScreen(HistoryScreen)},
   AddStudent: {screen: StackScreen(AddStudentScreen)},
@@ -49,5 +49,3 @@ const Main = DrawerNavigator({
 }, {
   drawerWidth: 200,
 });
-
-export default Main;
