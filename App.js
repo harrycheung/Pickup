@@ -14,6 +14,8 @@ import LaunchScreen from './screens/Launch';
 import LoginScreen from './screens/Login';
 import LoginRequestScreen from './screens/LoginRequest';
 import AwaitingPickupScreen from './screens/AwaitingPickup';
+import EscortScreen from './screens/Escort';
+import EscortLevelScreen from './screens/EscortLevel';
 
 import authReducer from './reducers/auth';
 import dataReducer from './reducers/data';
@@ -44,15 +46,16 @@ const MainNavigator = DrawerNavigator({
   Home: {screen: StackScreen(HomeScreen, {AwaitingPickup: {screen: AwaitingPickupScreen}})},
   History: {screen: StackScreen(HistoryScreen)},
   AddStudent: {screen: StackScreen(AddStudentScreen)},
+  Escort: {screen: StackScreen(EscortScreen, {EscortLevel: {screen: EscortLevelScreen}})},
 }, {
   drawerWidth: 200,
 });
 
 const AppNavigator = StackNavigator({
+  Main: {screen: MainNavigator},
   Launch: {screen: LaunchScreen},
   Login: {screen: LoginScreen},
   LoginRequest: {screen: LoginRequestScreen},
-  Main: {screen: MainNavigator},
 }, {
   headerMode: 'screen',
   navigationOptions: {

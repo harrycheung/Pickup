@@ -8,7 +8,7 @@ export const actions = {
       actions: [NavigationActions.navigate({routeName})],
     });
   },
-  navigate: (routeName) => {
-    return NavigationActions.navigate({routeName});
+  navigate: (routeName, params) => {
+    return NavigationActions.navigate({routeName, params});
   }
 }
