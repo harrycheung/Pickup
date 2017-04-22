@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
+import drawerHeader from '../../../helpers/DrawerHeader';
 import Button from '../../../components/Button';
 import { actions as dataActions } from '../../../actions/data';
 
@@ -15,6 +17,7 @@ class Home extends React.Component {
     drawer: {
       label: 'Home',
     },
+    header: drawerHeader,
   };
 
   constructor(props) {

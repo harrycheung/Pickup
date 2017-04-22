@@ -1,32 +1,15 @@
 
 import React from 'react';
-import { AppState, AsyncStorage, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import { StackNavigator, addNavigationHelpers } from 'react-navigation';
+import { AppState, AsyncStorage, Text } from 'react-native';
+import { addNavigationHelpers } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import createSagaMiddleware from 'redux-saga'
-import Icon from 'react-native-vector-icons/Ionicons';
+import createSagaMiddleware from 'redux-saga';
 
-import LaunchScreen from './screens/Launch';
-import LoginScreen from './screens/Login';
-import LoginRequestScreen from './screens/LoginRequest';
-import MainScreen from './screens/Main';
-
+import AppNavigator from './screens';
 import authReducer from './reducers/auth';
 import dataReducer from './reducers/data';
 import rootSaga from './sagas';
-
-const AppNavigator = StackNavigator({
-  Main: {screen: MainScreen},
-  Launch: {screen: LaunchScreen},
-  Login: {screen: LoginScreen},
-  LoginRequest: {screen: LoginRequestScreen},
-}, {
-  headerMode: 'screen',
-  navigationOptions: {
-    header: {visible: false}
-  }
-});
 
 const appReducer = combineReducers({
   nav: (state, action) => (

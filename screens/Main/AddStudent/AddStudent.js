@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 import { colors } from '../../../config/styles';
+import drawerHeader from '../../../helpers/DrawerHeader';
 import LinedTextInput from '../../../components/LinedTextInput';
 import RelationshipPicker from '../../../components/RelationshipPicker';
 import Button from '../../../components/Button';
@@ -24,6 +25,7 @@ class AddStudent extends React.Component {
     drawer: {
       label: 'Add Student',
     },
+    header: drawerHeader,
   };
 
   constructor(props) {

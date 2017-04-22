@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import styles from './styles';
+import drawerHeader from '../../../helpers/DrawerHeader';
 import Button from '../../../components/Button';
 import { actions as navActions } from '../../../actions/navigation';
 
@@ -14,6 +15,7 @@ class Escort extends React.Component {
     drawer: {
       label: 'Escort',
     },
+    header: drawerHeader,
   };
 
   constructor(props) {
