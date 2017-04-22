@@ -13,6 +13,7 @@ class History extends React.Component {
   render() {
     return (
       <View>
+        <Text>History</Text>
       </View>
     );
   }

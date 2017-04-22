@@ -6,8 +6,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import styles from './styles';
-import Button from '../../components/Button';
-import { actions as dataActions } from '../../actions/data';
+import Button from '../../../components/Button';
+import { actions as dataActions } from '../../../actions/data';
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -35,7 +35,7 @@ class Home extends React.Component {
           style={styles.student}
           onPress={this._selectStudent.bind(this, student.key)}
         >
-          <Image style={style} source={require('../../images/max.png')} />
+          <Image style={style} source={require('../../../images/max.png')} />
           <Text style={styles.studentName}>
             {student.firstName} {student.lastInitial}
           </Text>

@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 
-import Button from '../../components/Button';
+import Button from '../../../components/Button';
 
 class EscortLevel extends React.Component {
   static navigationOptions = {

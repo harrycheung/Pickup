@@ -1,58 +1,23 @@
 
 import React from 'react';
 import { AppState, AsyncStorage, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import { DrawerNavigator, StackNavigator, addNavigationHelpers } from 'react-navigation';
+import { StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga'
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import AddStudentScreen from './screens/AddStudent';
-import HomeScreen from './screens/Home';
-import HistoryScreen from './screens/History';
 import LaunchScreen from './screens/Launch';
 import LoginScreen from './screens/Login';
 import LoginRequestScreen from './screens/LoginRequest';
-import AwaitingPickupScreen from './screens/AwaitingPickup';
-import EscortScreen from './screens/Escort';
-import EscortLevelScreen from './screens/EscortLevel';
+import MainScreen from './screens/Main';
 
 import authReducer from './reducers/auth';
 import dataReducer from './reducers/data';
 import rootSaga from './sagas';
 
-const StackScreen = (rootScreen, otherScreens) => {
-  return StackNavigator({
-    root: {
-      screen: rootScreen,
-      navigationOptions: {
-        header: (navigation) => ({
-          left: (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('DrawerOpen')}
-              style={styles.menuButton}
-            >
-              <Icon name='md-menu' size={30} color='#000000' />
-            </TouchableOpacity>
-          ),
-        }),
-      },
-    },
-    ...otherScreens
-  });
-};
-
-const MainNavigator = DrawerNavigator({
-  Home: {screen: StackScreen(HomeScreen, {AwaitingPickup: {screen: AwaitingPickupScreen}})},
-  History: {screen: StackScreen(HistoryScreen)},
-  AddStudent: {screen: StackScreen(AddStudentScreen)},
-  Escort: {screen: StackScreen(EscortScreen, {EscortLevel: {screen: EscortLevelScreen}})},
-}, {
-  drawerWidth: 200,
-});
-
 const AppNavigator = StackNavigator({
-  Main: {screen: MainNavigator},
+  Main: {screen: MainScreen},
   Launch: {screen: LaunchScreen},
   Login: {screen: LoginScreen},
   LoginRequest: {screen: LoginRequestScreen},
@@ -88,11 +53,9 @@ class AppWithNavigationState extends React.Component {
 
 const logger = ({ getState }) => {
   return (next) => (action) => {
-    console.log('will dispatch', action);
-
     // Call the next dispatch method in the middleware chain.
+    console.log('will dispatch', action);
     let returnValue = next(action);
-
     console.log('state after dispatch', getState());
 
     // This will likely be the action itself, unless
@@ -156,14 +119,5 @@ class App extends React.Component {
     }
   }
 }
-
-var styles = StyleSheet.create({
-  menuButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 5,
-    marginLeft: 15,
-  },
-});
 
 export default App;

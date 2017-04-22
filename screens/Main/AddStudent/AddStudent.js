@@ -12,11 +12,11 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 
 import styles from './styles';
-import { colors } from '../../config/styles';
-import LinedTextInput from '../../components/LinedTextInput';
-import RelationshipPicker from '../../components/RelationshipPicker';
-import Button from '../../components/Button';
-import { actions as DataActions } from '../../actions/data';
+import { colors } from '../../../config/styles';
+import LinedTextInput from '../../../components/LinedTextInput';
+import RelationshipPicker from '../../../components/RelationshipPicker';
+import Button from '../../../components/Button';
+import { actions as DataActions } from '../../../actions/data';
 
 class AddStudent extends React.Component {
   static navigationOptions = {
@@ -52,7 +52,7 @@ class AddStudent extends React.Component {
         </TouchableOpacity>
       );
     } else {
-      image = <Image style={styles.studentImage} source={require('../../images/josh.png')} />;
+      image = <Image style={styles.studentImage} source={require('../../../images/josh.png')} />;
     }
 
     return (
