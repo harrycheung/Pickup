@@ -1,15 +1,34 @@
 
 import { delay } from 'redux-saga'; // TODO: remove
 import { call, put, select, take, takeLatest } from 'redux-saga/effects';
+import CryptoJS from 'crypto-js';
 
-import { FBFunctions, LoginKey } from '../config/constants';
+import constants from '../config/constants';
 import { types } from '../actions/auth';
 import { actions as navActions } from '../actions/navigation';
 import { actions as authActions } from '../actions/auth';
 import { actions as dataActions } from '../actions/data';
 
 const requestLoginAsync = (phoneNumber) => {
-  return fetch('https://' + FBFunctions + '/requestLogin?phoneNumber=' + phoneNumber);
+  const body = JSON.stringify({phoneNumber});
+  const hmac = CryptoJS.HmacSHA1(body, 'secret1').toString(CryptoJS.enc.Hex);
+
+  return fetch('https://' + constants.FBFunctions + '/requestLogin', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'x-signature': hmac,
+    },
+    body: JSON.stringify({phoneNumber}),
+  })
+  .then((response) => {
+    if (response.status == 200) {
+      return response.json();
+    } else {
+      throw response;
+    }
+  });
 };
 
 export function* loadAuth() {
@@ -31,10 +50,9 @@ export function* requestLogin() {
   while (true) {
     try {
       yield take(types.REQUEST_LOGIN);
-      const state = yield select();
-      // const response = yield call(requestLoginAsync, state.auth.phoneNumber);
-      yield delay(500);
-      yield put(authActions.requestLoginSucceeded());
+      const { auth } = yield select();
+      const response = yield call(requestLoginAsync, auth.phoneNumber);
+      yield put(authActions.requestLoginSucceeded(response));
     } catch (error) {
       console.log('requestLogin failed', error);
       yield put(authActions.requestLoginFailed());

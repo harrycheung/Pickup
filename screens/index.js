@@ -19,5 +19,5 @@ export default StackNavigator({
   navigationOptions: {
     header: {visible: false}
   },
-  initialRouteName: 'Main',
+  initialRouteName: 'Launch',
 });
