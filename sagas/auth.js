@@ -11,7 +11,7 @@ import { actions as dataActions } from '../actions/data';
 
 const requestLoginAsync = (phoneNumber) => {
   const body = JSON.stringify({phoneNumber});
-  const hmac = CryptoJS.HmacSHA1(body, 'secret1').toString(CryptoJS.enc.Hex);
+  const hmac = CryptoJS.HmacSHA1(body, 'secret').toString(CryptoJS.enc.Hex);
 
   return fetch('https://' + constants.FBFunctions + '/requestLogin', {
     method: 'POST',
