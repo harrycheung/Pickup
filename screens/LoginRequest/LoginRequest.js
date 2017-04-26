@@ -28,17 +28,6 @@ class LoginRequest extends React.Component {
           <Text style={styles.resendButtonText}>Re-send login link</Text>
         </Button>
         <View style={{flex: 1}} />
-        <Button
-          style={{
-            position: 'absolute',
-            right: 0, bottom: 0,
-            height: 44, width: 150,
-            backgroundColor: '#880000',
-          }}
-          onPress={() => { this.props.login('harryToken') }}
-        >
-          <Text>Login</Text>
-        </Button>
       </View>
     );
   }

@@ -2,34 +2,13 @@
 import { delay } from 'redux-saga'; // TODO: remove
 import { call, put, select, take, takeLatest } from 'redux-saga/effects';
 import CryptoJS from 'crypto-js';
+import firebase from 'firebase';
 
-import constants from '../config/constants';
+import * as c from '../config/constants';
 import { types } from '../actions/auth';
 import { actions as navActions } from '../actions/navigation';
 import { actions as authActions } from '../actions/auth';
 import { actions as dataActions } from '../actions/data';
-
-const requestLoginAsync = (phoneNumber) => {
-  const body = JSON.stringify({phoneNumber});
-  const hmac = CryptoJS.HmacSHA1(body, 'secret').toString(CryptoJS.enc.Hex);
-
-  return fetch('https://' + constants.FBFunctions + '/requestLogin', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'x-signature': hmac,
-    },
-    body: JSON.stringify({phoneNumber}),
-  })
-  .then((response) => {
-    if (response.status == 200) {
-      return response.json();
-    } else {
-      throw response;
-    }
-  });
-};
 
 export function* loadAuth() {
   yield take(types.LOAD_AUTH);
@@ -46,13 +25,38 @@ export function* loadAuth() {
   }
 }
 
+const requestLoginAsync = (phoneNumber) => {
+  const body = JSON.stringify({phoneNumber});
+  const hmac = CryptoJS.HmacSHA1(body, 'secret').toString(CryptoJS.enc.Hex);
+
+  return fetch('https://' + c.FirebaseFunctions + '/requestLogin', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'x-signature': hmac,
+    },
+    body: JSON.stringify({phoneNumber}),
+  })
+  .then((response) => {
+    if (response.status == 200) {
+      return response.text();
+    } else {
+      throw response;
+    }
+  });
+};
+
 export function* requestLogin() {
   while (true) {
     try {
       yield take(types.REQUEST_LOGIN);
       const { auth } = yield select();
       const response = yield call(requestLoginAsync, auth.phoneNumber);
-      yield put(authActions.requestLoginSucceeded(response));
+      // console.log('response', response);
+      yield put(authActions.requestLoginSucceeded());
+      // TODO: remove this call
+      yield call(login, {token: response});
     } catch (error) {
       console.log('requestLogin failed', error);
       yield put(authActions.requestLoginFailed());
@@ -60,20 +64,31 @@ export function* requestLogin() {
   }
 }
 
+firebase.initializeApp(c.FirebaseConfig);
+
+const loginAsync = (token) => {
+  return firebase.auth().signInWithCustomToken(token);
+};
+
+const fetchStudents = (uid) => {
+  return firebase.database().ref('/users/' + uid + '/students').once('value')
+    .then((snapshot) => {
+      if (snapshot.val() == null) {
+        return [];
+      } else {
+        return snapshot.val();
+      }
+    });
+}
+
 export function* login(action) {
   try {
-    // const response = yield call(loginAsync, action.token);
-    // if (response.status == 200) {
-      const user = { name: 'Harry' };
-      yield put(authActions.loginSucceeded(user));
-      const students = [
-        {key: 'a', firstName: 'Max', lastInitial: 'C', image: {url: '../../images/max.png'}, grade: 'L1'},
-        {key: 'b', firstName: 'Josh', lastInitial: 'B', image: {url: '../../images/max.png'}, grade: 'L1'},
-        {key: 'c', firstName: 'Sam', lastInitial: 'P', image: {url: '../../images/max.png'}, grade: 'L1'}
-      ];
-      yield put(dataActions.loadStudents(students));
-      yield put(navActions.resetNavigation('Main'));
-    // }
+    const user = yield call(loginAsync, action.token);
+    yield put(authActions.loginSucceeded(user));
+    const students = yield call(fetchStudents, user.uid);
+    console.log('students', students);
+    yield put(dataActions.loadStudents(students));
+    yield put(navActions.resetNavigation('Main'));
   } catch (error) {
     console.log('login failed', error);
     // Do nothing?
@@ -82,4 +97,20 @@ export function* login(action) {
 
 export function* watchLogin() {
   yield takeLatest(types.LOGIN, login);
+}
+
+const logoutAsync = () => {
+  return firebase.auth().signOut();
+};
+
+export function* logout() {
+  try {
+    yield call(logoutAsync);
+  } catch (error) {
+    console.log('logout failed', error);
+  }
+}
+
+export function* watchLogout() {
+  yield takeLatest(types.LOGOUT, logout);
 }
