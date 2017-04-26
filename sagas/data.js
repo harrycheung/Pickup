@@ -1,25 +1,31 @@
 
 import { delay } from 'redux-saga'; // TODO: remove
-import { put, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import firebase from 'firebase';
 
-import { FBFunctions } from '../config/constants';
 import { types } from '../actions/data';
 import { actions as dataActions } from '../actions/data';
 import { actions as navActions } from '../actions/navigation';
 
-const addStudentAsync = (firstName, lastInitial, relationship) => {
-  return fetch('https://' + FBFunctions + '/addStudent');
+const addStudentAsync = (uid, firstName, lastInitial, relationship) => {
+  return firebase.database().ref('/students')
+    .push({firstName, lastInitial, relationship})
+    .then((studentRef) => {
+      var newStudent = {};
+      newStudent[studentRef.key] = true;
+      return firebase.database().ref('/users/' + uid + '/students')
+        .update(newStudent)
+        .then(() => (studentRef.key));
+    });
 };
 
 export function* addStudent(action) {
   try {
     const { firstName, lastInitial, relationship } = action;
-    // const response = yield call(addStudentAsync, firstName, lastInitial, relationship);
-    // if (response.status == 200) {
-      const student = {key: firstName + lastInitial, firstName, lastInitial, relationship};
-      yield put(dataActions.addStudentSucceeded(student));
-      yield put(navActions.navigate('Home'));
-    // }
+    const state = yield select();
+    const studentKey = yield call(addStudentAsync, state.auth.user.uid, firstName, lastInitial, relationship);
+    yield put(dataActions.addStudentSucceeded({key: studentKey, firstName, lastInitial, relationship}));
+    yield put(navActions.navigate('Home'));
   } catch (error) {
     console.log('addStudent failed', error);
     // Do nothing?

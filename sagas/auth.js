@@ -73,11 +73,15 @@ const loginAsync = (token) => {
 const fetchStudents = (uid) => {
   return firebase.database().ref('/users/' + uid + '/students').once('value')
     .then((snapshot) => {
-      if (snapshot.val() == null) {
-        return [];
-      } else {
-        return snapshot.val();
-      }
+      const students = Object.keys(snapshot.val() == null ? {} : snapshot.val());
+      return Promise.all(
+        students.map((id) => {
+          return firebase.database().ref('/students/' + id).once('value')
+            .then((snapshot) => {
+              return Object.assign({}, snapshot.val(), {key:id});
+            });
+        })
+      );
     });
 }
 
@@ -86,7 +90,6 @@ export function* login(action) {
     const user = yield call(loginAsync, action.token);
     yield put(authActions.loginSucceeded(user));
     const students = yield call(fetchStudents, user.uid);
-    console.log('students', students);
     yield put(dataActions.loadStudents(students));
     yield put(navActions.resetNavigation('Main'));
   } catch (error) {

@@ -11,7 +11,7 @@ export default StyleSheet.create({
   students: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     flexWrap: 'wrap',
     paddingHorizontal: 15,
   },

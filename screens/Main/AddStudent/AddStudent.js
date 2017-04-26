@@ -1,7 +1,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, Text, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Exponent, {
   Constants,
@@ -80,7 +80,7 @@ class AddStudent extends React.Component {
           />
           <Text style={[styles.relationshipLabel, styles.margin]}>Relationship to Student</Text>
           <RelationshipPicker
-            style={styles.relationshipPicker}
+            style={StyleSheet.flatten(styles.relationshipPicker)}
             values={['Parent', 'Family', 'Nanny']}
             onChange={(value) => this._validate({relationship: value})}
           />
