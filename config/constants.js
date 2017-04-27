@@ -9,3 +9,5 @@ export const FirebaseConfig = {
   storageBucket: "synapse-7afed.appspot.com",
   messagingSenderId: "856653381451"
 };
+export const Levels = ['L1', 'L2', 'L3'];
+export const Relationships = ['Parent', 'Family', 'Nanny'];

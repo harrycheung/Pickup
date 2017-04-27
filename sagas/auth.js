@@ -70,15 +70,20 @@ const loginAsync = (token) => {
   return firebase.auth().signInWithCustomToken(token);
 };
 
+// TODO: move this to data saga
 const fetchStudents = (uid) => {
   return firebase.database().ref('/users/' + uid + '/students').once('value')
     .then((snapshot) => {
-      const students = Object.keys(snapshot.val() == null ? {} : snapshot.val());
+      const students = snapshot.val() == null ? {} : snapshot.val();
+      const studentKeys = Object.keys(students);
       return Promise.all(
-        students.map((id) => {
+        studentKeys.map((id) => {
           return firebase.database().ref('/students/' + id).once('value')
             .then((snapshot) => {
-              return Object.assign({}, snapshot.val(), {key:id});
+              return Object.assign({}, snapshot.val(), {
+                key: id,
+                relationship: students[id],
+              });
             });
         })
       );

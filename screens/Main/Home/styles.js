@@ -31,7 +31,7 @@ export default StyleSheet.create({
     borderRadius: 50,
   },
   selected: {
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: colors.buttonBackground,
   },
   pickupButton: {

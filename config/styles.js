@@ -9,5 +9,7 @@ export const colors = {
   inputBackground: '#FFFFFF',
   inputDivider: '#E4E2E5',
 
-  darkGrey: '#8e8e93'
+  darkGrey: '#8e8e93',
+  lightGrey: '#ceced2',
+  black: '#000000',
 };

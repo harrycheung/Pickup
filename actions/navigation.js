@@ -10,5 +10,8 @@ export const actions = {
   },
   navigate: (routeName, params) => {
     return NavigationActions.navigate({routeName, params});
-  }
+  },
+  back: (key) => {
+    return NavigationActions.back(key);
+  },
 }

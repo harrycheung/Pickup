@@ -23,33 +23,33 @@ class Home extends React.Component {
     super(props);
 
     this.state = {
-      levels: ['L1', 'L2', 'L3', 'L4'],
+      grades: ['L1', 'L2', 'L3', 'L4'],
     };
   }
 
   render() {
-    const { levels } = this.state;
-    const levelButtons = levels.map((level) => {
+    const { grades } = this.state;
+    const gradeButtons = grades.map((grade) => {
       return (
         <Button
-          key={level}
-          style={styles.levelButton}
-          onPress={this._selectLevel.bind(this, level)}
+          key={grade}
+          style={styles.gradeButton}
+          onPress={this._selectLevel.bind(this, grade)}
         >
-          <Text style={styles.levelButtonText}>{level}</Text>
+          <Text style={styles.gradeButtonText}>{grade}</Text>
         </Button>
       );
     });
 
     return (
       <View style={styles.container}>
-        {levelButtons}
+        {gradeButtons}
       </View>
     );
   }
 
-  _selectLevel(level) {
-    this.props.navigate('Escort', {level});
+  _selectLevel(grade) {
+    this.props.navigate('Escort', {grade});
   }
 }
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-class RelationshipPicker extends React.Component {
+class Picker extends React.Component {
   render() {
     return (
       <Text>Android Text</Text>
@@ -10,4 +10,4 @@ class RelationshipPicker extends React.Component {
   }
 }
 
-export default RelationshipPicker;
+export default Picker;

@@ -1,18 +1,19 @@
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../config/styles';
+import { colors } from '../../../../config/styles';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
   },
-  gradeButton: {
+  deleteButton: {
     height: 44,
-    marginTop: 15,
-    marginHorizontal: 15,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: colors.buttonBackground,
   },
-  gradeButtonText: {
+  deleteButtonText: {
     fontSize: 18,
     color: colors.buttonText,
   }

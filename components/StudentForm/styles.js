@@ -1,6 +1,6 @@
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../config/styles';
+import { colors } from '../../config/styles';
 
 export default StyleSheet.create({
   container: {
@@ -28,21 +28,21 @@ export default StyleSheet.create({
     height: 44,
     paddingHorizontal: 5,
   },
-  relationshipLabel: {
+  pickerLabel: {
     alignSelf: 'flex-start',
   },
-  relationshipPicker: {
+  picker: {
     alignSelf: 'stretch',
     marginTop: 5,
   },
-  addButton: {
+  submitButton: {
     height: 44,
     alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.buttonBackground,
   },
-  addButtonText: {
+  submitButtonText: {
     fontSize: 18,
     color: colors.buttonText,
   }

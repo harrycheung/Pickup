@@ -7,7 +7,7 @@ import Button from '../../../components/Button';
 
 class Escort extends React.Component {
   static navigationOptions = {
-    title: ({ state }) => (state.params.level),
+    title: ({ state }) => (state.params.grade),
     headerBackTitle: 'Back',
   };
 
@@ -19,7 +19,7 @@ class Escort extends React.Component {
 }
 
 Escort.propTypes = {
-  level: PropTypes.string.isRequired,
+  grade: PropTypes.string.isRequired,
 };
 
 export default Escort;
