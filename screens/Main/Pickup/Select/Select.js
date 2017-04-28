@@ -69,9 +69,9 @@ class Select extends React.Component {
 
   _selectStudent(key) {
     if (this.state.studentKeys.includes(key)) {
-      this.setState({students: this.state.studentKeys.filter((studentKey) => (studentKey != key))});
+      this.setState({studentKeys: this.state.studentKeys.filter((studentKey) => (studentKey != key))});
     } else {
-      this.setState({students: this.state.studentKeys.concat([key])});
+      this.setState({studentKeys: this.state.studentKeys.concat([key])});
     }
   }
 
