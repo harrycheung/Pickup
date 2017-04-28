@@ -49,11 +49,8 @@ const requestLoginAsync = (phoneNumber) => {
 
 export function* requestLogin() {
   try {
-    console.log('1');
     const { auth } = yield select();
-    console.log('auth', auth);
     const response = yield call(requestLoginAsync, auth.phoneNumber);
-    console.log('response', response);
     yield put(authActions.requestLoginSucceeded());
     // TODO: remove this call
     yield call(login, {token: response});
