@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, View, TouchableOpacity } from 'react-native';
@@ -11,6 +13,10 @@ import Button from '../../../components/Button';
 import { actions as navActions } from '../../../actions/navigation';
 
 class Home extends React.Component {
+  state: {
+    grades: string[],
+  };
+
   static navigationOptions = {
     title: 'Escort',
     drawer: {

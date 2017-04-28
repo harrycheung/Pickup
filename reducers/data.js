@@ -1,11 +1,13 @@
 
+// @flow
+
 import { types } from '../actions/data';
 
 const initialState = {
   students: [],
 };
 
-export default (state = initialState, action) => {
+export default (state: Object = initialState, action: Object) => {
   switch (action.type) {
     case types.LOAD_STUDENTS:
       return {...state, students: action.students};

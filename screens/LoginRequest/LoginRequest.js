@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ActivityIndicator, Text, View } from 'react-native';

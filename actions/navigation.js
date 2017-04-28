@@ -1,17 +1,19 @@
 
+// @flow
+
 import { NavigationActions } from 'react-navigation';
 
 export const actions = {
-  resetNavigation: (routeName) => {
+  resetNavigation: (routeName: string) => {
     return NavigationActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({routeName})],
     });
   },
-  navigate: (routeName, params) => {
+  navigate: (routeName: string, params: Object) => {
     return NavigationActions.navigate({routeName, params});
   },
-  back: (key) => {
+  back: (key: string) => {
     return NavigationActions.back(key);
   },
 }

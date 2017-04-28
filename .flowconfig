@@ -2,6 +2,9 @@
 ; We fork some components by platform
 .*/*[.]android.js
 
+; Ignore jest tests
+.*/react-navigation/.*/__tests__/.*
+
 ; Ignore "BUCK" generated dirs
 <PROJECT_ROOT>/\.buckd/
 

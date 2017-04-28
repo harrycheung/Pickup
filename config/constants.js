@@ -1,4 +1,6 @@
 
+// @flow
+
 export const LoginKey = 'LOGIN_TOKEN';
 export const FirebaseFunctions = 'us-central1-synapse-7afed.cloudfunctions.net';
 export const FirebaseConfig = {

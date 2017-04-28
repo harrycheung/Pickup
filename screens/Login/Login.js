@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, View } from 'react-native';
@@ -13,9 +15,14 @@ import { actions as NavigationActions } from '../../actions/navigation';
 import LinedTextInput from '../../components/LinedTextInput';
 
 class Login extends React.Component {
+  state: {
+    disabled: boolean,
+    phoneNumber: string,
+  };
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
       disabled: true,
       phoneNumber: '',

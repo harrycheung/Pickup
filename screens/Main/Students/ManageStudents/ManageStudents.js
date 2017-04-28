@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, ListView, Text, TouchableOpacity, View } from 'react-native';
@@ -13,6 +15,10 @@ import drawerHeader from '../../../../helpers/DrawerHeader';
 import { actions as navActions } from '../../../../actions/navigation';
 
 class ManageStudents extends React.Component {
+  state: {
+    dataSource: ListView.DataSource,
+  };
+
   static navigationOptions = {
     title: 'Manage Students',
     drawer: {

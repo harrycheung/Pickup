@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { DrawerNavigator, StackNavigator, DrawerView } from 'react-navigation';

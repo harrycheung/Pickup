@@ -1,11 +1,12 @@
 
+// @flow
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AsyncStorage, View } from 'react-native';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 
-import constants from '../../config/constants';
 import { actions as AuthActions } from '../../actions/auth';
 
 class Launch extends React.Component {

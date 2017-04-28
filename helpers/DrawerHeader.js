@@ -1,9 +1,12 @@
 
+// @flow
+
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default (navigation) => ({
+export default (navigation: NavigationActions) => ({
   left: (
     <TouchableOpacity
       onPress={() => navigation.navigate('DrawerOpen')}

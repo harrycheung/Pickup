@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import { AppState, AsyncStorage, Text } from 'react-native';
 import { addNavigationHelpers } from 'react-navigation';
@@ -11,7 +13,7 @@ import authReducer from './reducers/auth';
 import dataReducer from './reducers/data';
 import rootSaga from './sagas';
 
-const appReducer = combineReducers({
+const reducers = combineReducers({
   nav: (state, action) => (
     AppNavigator.router.getStateForAction(action, state)
   ),
@@ -47,12 +49,18 @@ const logger = ({ getState }) => {
   }
 }
 
-const sagaMiddleware = createSagaMiddleware()
-const store = createStore(appReducer, applyMiddleware(sagaMiddleware, logger));
+const sagaMiddleware = createSagaMiddleware();
+const middleware = applyMiddleware(sagaMiddleware, logger);
+const store = createStore(reducers, middleware);
 sagaMiddleware.run(rootSaga);
 
 class App extends React.Component {
-  constructor(props){
+  state: {
+    isStoreLoading: boolean,
+    store: Object,
+  }
+
+  constructor(props: Object){
     super(props);
 
     this.state = {

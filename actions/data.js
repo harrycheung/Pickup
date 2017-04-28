@@ -1,4 +1,6 @@
 
+// @flow
+
 export const types = {
   LOAD_STUDENTS: 'Data/LOAD_STUDENTS',
   ADD_STUDENT: 'Data/ADD_STUDENT',
@@ -11,28 +13,28 @@ export const types = {
 };
 
 export const actions = {
-  loadStudents: (students) => ({
+  loadStudents: (students: Object[]) => ({
     type: types.LOAD_STUDENTS, students
   }),
-  addStudent: (firstName, lastInitial, grade, relationship) => ({
+  addStudent: (firstName: string , lastInitial: string, grade: string, relationship: string) => ({
     type: types.ADD_STUDENT, firstName, lastInitial, grade, relationship
   }),
-  addStudentSucceeded: (student) => ({
+  addStudentSucceeded: (student: Object) => ({
     type: types.ADD_STUDENT_SUCCEEDED, student
   }),
-  editStudent: (student) => ({
+  editStudent: (student: Object) => ({
     type: types.EDIT_STUDENT, student
   }),
-  editStudentSucceeded: (student) => ({
+  editStudentSucceeded: (student: Object) => ({
     type: types.EDIT_STUDENT_SUCCEEDED, student
   }),
-  deleteStudent: (studentKey) => ({
+  deleteStudent: (studentKey: string) => ({
     type: types.DELETE_STUDENT, studentKey
   }),
-  deleteStudentSucceeded: (studentKey) => ({
+  deleteStudentSucceeded: (studentKey: string) => ({
     type: types.DELETE_STUDENT_SUCCEEDED, studentKey
   }),
-  pickup: (students) => ({
+  pickup: (students: Object[]) => ({
     type: types.PICKUP, students
   }),
 }

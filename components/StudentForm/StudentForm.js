@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -21,8 +23,23 @@ import Button from '../Button';
 import { actions as DataActions } from '../../actions/data';
 
 class StudentForm extends React.Component {
+  state: {
+    disabled: boolean,
+    firstName: string,
+    lastInitial: string,
+    grade: string,
+    relationship: string,
+  };
+  static defaultProps: {
+    firstName: string,
+    lastInitial: string,
+    grade: string,
+    relationship: string,
+    submitButtonText: string,
+    onSubmit: (firstName: string, lastInitial: string, grade: string, relationship: string) => void,
+  };
 
-  constructor(props) {
+  constructor(props: Object) {
     super(props);
 
     this.state = {
@@ -36,6 +53,10 @@ class StudentForm extends React.Component {
 
   componentDidMount() {
     this._validate({});
+  }
+
+  shouldComponentUpdate(nextProps: Object, nextState: Object) {
+    return this.state.disabled != nextState.disabled;
   }
 
   render() {
@@ -104,10 +125,6 @@ class StudentForm extends React.Component {
         </Button>
       </View>
     );
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.disabled != nextState.disabled;
   }
 
   async _takePhoto() {

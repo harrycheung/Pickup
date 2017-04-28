@@ -1,4 +1,6 @@
 
+// @flow
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -12,6 +14,10 @@ import Button from '../../../components/Button';
 import { actions as dataActions } from '../../../actions/data';
 
 class Home extends React.Component {
+  state: {
+    students: string[],
+  }
+
   static navigationOptions = {
     title: 'Synapse Pickup',
     drawer: {

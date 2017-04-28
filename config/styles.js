@@ -1,4 +1,6 @@
 
+// @flow
+
 export const colors = {
   background: '#f2f2f2',
   errorText: '#FA3256',
