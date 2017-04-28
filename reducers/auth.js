@@ -3,11 +3,16 @@
 
 import { types } from '../actions/auth';
 
-const initialState = {
+const initialState: {
+  user: any,
+  phoneNumber: string,
+  isRequesting: boolean,
+  error: string,
+} = {
   user: null,
-  phoneNumber: null,
+  phoneNumber: '',
   isRequesting: false,
-  error: null,
+  error: '',
 };
 
 export default (state: Object = initialState, action: Object) => {

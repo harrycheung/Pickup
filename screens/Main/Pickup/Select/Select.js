@@ -9,19 +9,19 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
-import drawerHeader from '../../../helpers/DrawerHeader';
-import Button from '../../../components/Button';
-import { actions as dataActions } from '../../../actions/data';
+import drawerHeader from '../../../../helpers/DrawerHeader';
+import Button from '../../../../components/Button';
+import { actions as dataActions } from '../../../../actions/data';
 
-class Home extends React.Component {
+class Select extends React.Component {
   state: {
-    students: string[],
+    studentKeys: string[],
   }
 
   static navigationOptions = {
     title: 'Synapse Pickup',
     drawer: {
-      label: 'Home',
+      label: 'Synapse Pickup',
     },
     header: drawerHeader,
   };
@@ -30,13 +30,13 @@ class Home extends React.Component {
     super(props);
 
     this.state = {
-      students: [],
+      studentKeys: [],
     };
   }
 
   render() {
-    const students = this.props.students.map((student) => {
-      const selected = this.state.students.includes(student.key);
+    const studentViews = this.props.students.map((student) => {
+      const selected = this.state.studentKeys.includes(student.key);
       const style = [styles.studentImage, selected ? styles.selected : {}];
       return (
         <TouchableOpacity
@@ -44,7 +44,7 @@ class Home extends React.Component {
           style={styles.student}
           onPress={this._selectStudent.bind(this, student.key)}
         >
-          <Image style={style} source={require('../../../images/max.png')} />
+          <Image style={style} source={require('../../../../images/max.png')} />
           <Text style={styles.studentName}>
             {student.firstName} {student.lastInitial}
           </Text>
@@ -55,11 +55,11 @@ class Home extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.students}>
-          {students}
+          {studentViews}
         </ScrollView>
         <Button
           style={styles.pickupButton}
-          disabled={this.state.students.length < 1}
+          disabled={this.state.studentKeys.length < 1}
           onPress={this._pickup.bind(this)}>
           <Text style={styles.pickupButtonText}>Pickup</Text>
         </Button>
@@ -68,19 +68,19 @@ class Home extends React.Component {
   }
 
   _selectStudent(key) {
-    if (this.state.students.includes(key)) {
-      this.setState({students: this.state.students.filter((studentKey) => (studentKey != key))});
+    if (this.state.studentKeys.includes(key)) {
+      this.setState({students: this.state.studentKeys.filter((studentKey) => (studentKey != key))});
     } else {
-      this.setState({students: this.state.students.concat([key])});
+      this.setState({students: this.state.studentKeys.concat([key])});
     }
   }
 
   _pickup() {
-    this.props.pickup(this.state.students);
+    this.props.pickup(this.state.studentKeys);
   }
 }
 
-Home.propTypes = {
+Select.propTypes = {
   students: PropTypes.array.isRequired,
   pickup: PropTypes.func.isRequired,
 }
@@ -93,4 +93,4 @@ const mapDispatchToProps = (dispatch) => ({
   ...bindActionCreators(dataActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Select);

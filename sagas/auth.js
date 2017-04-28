@@ -48,20 +48,23 @@ const requestLoginAsync = (phoneNumber) => {
 };
 
 export function* requestLogin() {
-  while (true) {
-    try {
-      yield take(types.REQUEST_LOGIN);
-      const { auth } = yield select();
-      const response = yield call(requestLoginAsync, auth.phoneNumber);
-      // console.log('response', response);
-      yield put(authActions.requestLoginSucceeded());
-      // TODO: remove this call
-      yield call(login, {token: response});
-    } catch (error) {
-      console.log('requestLogin failed', error);
-      yield put(authActions.requestLoginFailed());
-    }
+  try {
+    console.log('1');
+    const { auth } = yield select();
+    console.log('auth', auth);
+    const response = yield call(requestLoginAsync, auth.phoneNumber);
+    console.log('response', response);
+    yield put(authActions.requestLoginSucceeded());
+    // TODO: remove this call
+    yield call(login, {token: response});
+  } catch (error) {
+    console.log('requestLogin failed', error);
+    yield put(authActions.requestLoginFailed());
   }
+}
+
+export function* watchRequestLogin() {
+  yield takeLatest(types.REQUEST_LOGIN, requestLogin);
 }
 
 firebase.initializeApp(c.FirebaseConfig);

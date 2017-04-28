@@ -6,9 +6,8 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { DrawerNavigator, StackNavigator, DrawerView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import AwaitingPickupScreen from './AwaitingPickup';
 import HistoryScreen from './History';
-import HomeScreen from './Home';
+import PickupScreen from './Pickup';
 import StudentsScreen from './Students';
 
 const DrawerComponent = (props) => (
@@ -25,12 +24,7 @@ const DrawerComponent = (props) => (
 );
 
 export default DrawerNavigator({
-  Home: {screen: StackNavigator({
-    Home: {screen: HomeScreen},
-    AwaitingPickup: {screen: AwaitingPickupScreen},
-  }, {
-    initialRouteName: 'Home',
-  })},
+  Pickup: {screen: PickupScreen},
   History: {screen: StackNavigator({History: {screen: HistoryScreen}})},
   Students: {screen: StudentsScreen},
 }, {

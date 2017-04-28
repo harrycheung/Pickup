@@ -1,9 +1,10 @@
 
 import {
   loadAuth,
-  requestLogin,
+  watchRequestLogin,
   watchLogin
 } from './auth';
+
 import {
   watchAddStudent,
   watchEditStudent,
@@ -15,7 +16,7 @@ import {
 export default function* rootSaga() {
   yield [
     loadAuth(),
-    requestLogin(),
+    watchRequestLogin(),
     watchLogin(),
     watchAddStudent(),
     watchEditStudent(),
