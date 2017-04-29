@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { DrawerNavigator, StackNavigator, DrawerView } from 'react-navigation';
+import { DrawerNavigator, DrawerItems } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import PickupScreen from './Pickup';
@@ -13,7 +13,7 @@ import LogoutScreen from './Logout';
 
 const DrawerComponent = (props) => (
   <View style={{flex: 1}}>
-    <DrawerView.Items {...props} />
+    <DrawerItems {...props} />
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       <TouchableOpacity
         onPress={() => { props.navigation.navigate('Admin'); }}
@@ -26,7 +26,7 @@ const DrawerComponent = (props) => (
 
 export default DrawerNavigator({
   Pickup: {screen: PickupScreen},
-  History: {screen: StackNavigator({History: {screen: HistoryScreen}})},
+  History: {screen: HistoryScreen},
   Students: {screen: StudentsScreen},
   Logout: {screen: LogoutScreen},
 }, {

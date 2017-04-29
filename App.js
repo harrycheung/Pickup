@@ -3,38 +3,13 @@
 
 import React from 'react';
 import { AppState, AsyncStorage, Text } from 'react-native';
-import { addNavigationHelpers } from 'react-navigation';
-import { Provider, connect } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import AppNavigator from './screens';
-import AuthReducer from './reducers/Auth';
-import DataReducer from './reducers/Data';
+import AppReducers from './reducers';
+import AppWithNavigationState from './screens';
 import rootSaga from './sagas';
-
-const reducers = combineReducers({
-  nav: (state, action) => (
-    AppNavigator.router.getStateForAction(action, state)
-  ),
-  auth: AuthReducer,
-  data: DataReducer,
-});
-
-@connect(state => ({
-  nav: state.nav,
-}))
-
-class AppWithNavigationState extends React.Component {
-  render() {
-    return (
-      <AppNavigator navigation={addNavigationHelpers({
-        dispatch: this.props.dispatch,
-        state: this.props.nav,
-      })} />
-    );
-  }
-}
 
 const logger = ({ getState }) => {
   return (next) => (action) => {
@@ -51,10 +26,10 @@ const logger = ({ getState }) => {
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = applyMiddleware(sagaMiddleware, logger);
-const store = createStore(reducers, middleware);
+const store = createStore(AppReducers, middleware);
 sagaMiddleware.run(rootSaga);
 
-class App extends React.Component {
+class Root extends React.Component {
   state: {
     isStoreLoading: boolean,
     store: Object,
@@ -64,7 +39,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      isStoreLoading: false,
+      isStoreLoading: true,
       store: store,
     }
   }
@@ -72,17 +47,15 @@ class App extends React.Component {
   componentWillMount() {
     var self = this;
     AppState.addEventListener('change', this._handleAppStateChange.bind(this));
-    this.setState({isStoreLoading: true});
     AsyncStorage.getItem('reduxStore')
     .then((value) => {
       if (value && value.length) {
         let initialStore = JSON.parse(value)
-        // self.setState({store: createStore(reducers, initialStore, middleware)});
-        self.setState({store: store});
+        // self.setState({store: createStore(AppReducers, initialStore, middleware)});
+        self.setState({store: store, isStoreLoading: false});
       } else {
-        self.setState({store: store});
+        self.setState({isStoreLoading: false});
       }
-      self.setState({isStoreLoading: false});
     })
     .catch((error) => {
       self.setState({store: store});
@@ -95,7 +68,7 @@ class App extends React.Component {
   }
 
   _handleAppStateChange(nextAppState) {
-    let storingValue = JSON.stringify(this.state.store.getState())
+    let storingValue = JSON.stringify(this.state.store.getState());
     AsyncStorage.setItem('reduxStore', storingValue);
   }
 
@@ -112,4 +85,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Root;

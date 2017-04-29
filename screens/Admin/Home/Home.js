@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import styles from './styles';
-import drawerHeader from '../../../helpers/DrawerHeader';
+import drawerHeader from '../../../components/DrawerHeader';
 import Button from '../../../components/Button';
 import { Actions as NavActions } from '../../../actions/Navigation';
 

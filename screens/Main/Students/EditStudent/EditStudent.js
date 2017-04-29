@@ -15,26 +15,24 @@ import Button from '../../../../components/Button';
 import { Actions as DataActions } from '../../../../actions/Data';
 
 class EditStudent extends React.Component {
-  static navigationOptions = {
-    title: 'Edit',
-    header: (navigation) => {
-      const { student, deleteStudent } = navigation.state.params;
-      return {
-        right: (
-          <TouchableOpacity
-            onPress={() => deleteStudent(student.key)}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 5,
-              marginHorizontal: 15,
-            }}
-          >
-            <Icon name='md-trash' size={30} color={colors.black} />
-          </TouchableOpacity>
-        )
-      };
-    },
+  static navigationOptions = ({ navigation, screenProps }) => {
+    const { student, deleteStudent } = navigation.state.params;
+    return {
+      title: 'Edit',
+      headerRight: (
+        <TouchableOpacity
+          onPress={() => deleteStudent(student.key)}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 5,
+            marginHorizontal: 15,
+          }}
+        >
+          <Icon name='md-trash' size={30} color={colors.black} />
+        </TouchableOpacity>
+      ),
+    };
   };
 
   componentDidMount() {

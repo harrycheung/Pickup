@@ -10,8 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
 import { colors } from '../../../../config/styles';
-import { merge } from '../../../../helpers';
-import drawerHeader from '../../../../helpers/DrawerHeader';
+import drawerHeader from '../../../../components/DrawerHeader';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class ManageStudents extends React.Component {
@@ -19,29 +18,27 @@ class ManageStudents extends React.Component {
     dataSource: ListView.DataSource,
   };
 
-  static navigationOptions = {
-    title: 'Manage Students',
-    drawer: {
-      label: 'Manage Students',
-    },
-    header: (navigation) => (
-      merge(drawerHeader(navigation), {
-        right: (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('AddStudent')}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 5,
-              marginHorizontal: 15,
-            }}
-          >
-            <Icon name='md-add' size={30} color={colors.black} />
-          </TouchableOpacity>
-        )
-      })
-    )
-  };
+  static navigationOptions = ({ navigation, screenProps }) => (
+    drawerHeader(navigation, screenProps, {
+      title: 'Manage Students',
+      drawer: {
+        label: 'Manage Students',
+      },
+      headerRight: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('AddStudent')}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 5,
+            marginHorizontal: 15,
+          }}
+        >
+          <Icon name='md-add' size={30} color={colors.black} />
+        </TouchableOpacity>
+      )
+    })
+  );
 
   constructor(props) {
     super(props);

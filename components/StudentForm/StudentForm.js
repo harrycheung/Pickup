@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import * as c from '../../config/constants';
 import styles from './styles';
 import { colors } from '../../config/styles';
-import drawerHeader from '../../helpers/DrawerHeader';
+import drawerHeader from '../../components/DrawerHeader';
 import LinedTextInput from '../LinedTextInput';
 import Picker from '../Picker';
 import Button from '../Button';

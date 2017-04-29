@@ -118,9 +118,7 @@ export function* logout() {
   try {
     yield call(logoutAsync);
     yield put(AuthActions.logoutSucceeded());
-    // TODO: fix thuis
-
-    yield put(NavActions.navigate('Login'));
+    yield put(NavActions.resetNavigation('Login'));
   } catch (error) {
     console.log('logout failed', error);
     yield put(AuthActions.logoutFailed());

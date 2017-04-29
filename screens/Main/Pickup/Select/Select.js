@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
-import drawerHeader from '../../../../helpers/DrawerHeader';
+import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
 import { Actions as DataActions } from '../../../../actions/Data';
 
@@ -18,13 +18,14 @@ class Select extends React.Component {
     studentKeys: string[],
   }
 
-  static navigationOptions = {
-    title: 'Synapse Pickup',
-    drawer: {
-      label: 'Synapse Pickup',
-    },
-    header: drawerHeader,
-  };
+  static navigationOptions = ({ navigation, screenProps }) => (
+    drawerHeader(navigation, screenProps, {
+      title: 'Synapse Pickup',
+      drawer: {
+        label: 'Synapse Pickup',
+      },
+    })
+  );
 
   constructor(props) {
     super(props);

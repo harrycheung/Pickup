@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { DrawerNavigator, StackNavigator, DrawerView } from 'react-navigation';
+import { DrawerNavigator, StackNavigator, DrawerItems } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import HomeScreen from './Home';
@@ -11,7 +11,7 @@ import EscortScreen from './Escort';
 
 const DrawerComponent = (props) => (
   <View style={{flex: 1}}>
-    <DrawerView.Items {...props} />
+    <DrawerItems {...props} />
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       <TouchableOpacity
         onPress={() => { props.navigation.navigate('Main'); }}

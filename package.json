@@ -4,9 +4,9 @@
   "private": true,
   "devDependencies": {
     "flow-bin": "^0.38.0",
-    "jest-expo": "^0.3.0",
-    "react-native-scripts": "0.0.26",
-    "react-test-renderer": "~15.4.1"
+    "jest-expo": "^0.4.0",
+    "react-native-scripts": "0.0.29",
+    "react-test-renderer": "16.0.0-alpha.6"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
@@ -22,14 +22,14 @@
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "expo": "^15.1.3",
-    "firebase": "^3.8.0",
-    "react": "~15.4.0",
-    "react-native": "0.42.3",
+    "expo": "^16.0.0",
+    "firebase": "^3.9.0",
+    "react": "16.0.0-alpha.6",
+    "react-native": "^0.43.4",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-vector-icons": "^4.0.1",
-    "react-navigation": "^1.0.0-beta.7",
+    "react-navigation": "^1.0.0-beta.9",
     "react-redux": "^5.0.4",
-    "redux-saga": "^0.14.6"
+    "redux-saga": "^0.14.8"
   }
 }

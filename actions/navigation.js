@@ -8,6 +8,7 @@ export const Actions = {
     return NavigationActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({routeName})],
+      key: null,
     });
   },
   navigate: (routeName: string, params: Object) => {
