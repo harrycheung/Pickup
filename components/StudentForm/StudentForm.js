@@ -20,7 +20,6 @@ import drawerHeader from '../../helpers/DrawerHeader';
 import LinedTextInput from '../LinedTextInput';
 import Picker from '../Picker';
 import Button from '../Button';
-import { actions as DataActions } from '../../actions/data';
 
 class StudentForm extends React.Component {
   state: {

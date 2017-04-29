@@ -1,12 +1,12 @@
 
 // @flow
 
-import * as AuthActions from './auth';
-import * as NavigationActions from './navigation';
-import * as DataActions from './data';
+import * as AuthActions from './Auth';
+import * as NavActions from './Navigation';
+import * as DataActions from './Data';
 
 export {
   AuthActions,
-  NavigationActions,
+  NavActions,
   DataActions
 };

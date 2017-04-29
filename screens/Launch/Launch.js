@@ -7,7 +7,7 @@ import { AsyncStorage, View } from 'react-native';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 
-import { actions as AuthActions } from '../../actions/auth';
+import { Actions as AuthActions } from '../../actions/Auth';
 
 class Launch extends React.Component {
   componentDidMount() {

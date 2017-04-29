@@ -1,12 +1,12 @@
 
 // @flow
 
-export const types = {
+export const Types = {
   PICKUP_REQUEST: 'Pickup/PICKUP_REQUEST',
 };
 
-export const actions = {
+export const Actions = {
   pickupRequest: (students: Object[]) => ({
-    type: types.PICKUP_REQUEST, students
+    type: Types.PICKUP_REQUEST, students
   }),
 }

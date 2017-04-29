@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import drawerHeader from '../../../../helpers/DrawerHeader';
 import Button from '../../../../components/Button';
-import { actions as dataActions } from '../../../../actions/data';
+import { Actions as DataActions } from '../../../../actions/Data';
 
 class Select extends React.Component {
   state: {
@@ -90,7 +90,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(dataActions, dispatch),
+  ...bindActionCreators(DataActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Select);

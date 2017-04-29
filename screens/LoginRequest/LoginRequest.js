@@ -9,10 +9,11 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 import Button from '../../components/Button';
-import { actions as AuthActions } from '../../actions/auth';
+import { Actions as AuthActions } from '../../actions/Auth';
 
 class LoginRequest extends React.Component {
   render() {
+    const { params } = this.props.navigation.state;
     return (
       <View style={styles.container}>
         <View style={styles.activityContainer}>
@@ -25,7 +26,7 @@ class LoginRequest extends React.Component {
         <Button
           style={styles.resendButton}
           disabled={this.props.isRequesting}
-          onPress={() => { this.props.requestLogin(this.props.phoneNumber) }}
+          onPress={() => { this.props.requestLogin(params.phoneNumber) }}
         >
           <Text style={styles.resendButtonText}>Re-send login link</Text>
         </Button>
@@ -36,7 +37,6 @@ class LoginRequest extends React.Component {
 }
 
 LoginRequest.propTypes = {
-  phoneNumber: PropTypes.string.isRequired,
   isRequesting: PropTypes.bool.isRequired,
   requestLogin: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,

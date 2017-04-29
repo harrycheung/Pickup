@@ -2,15 +2,16 @@
 import {
   loadAuth,
   watchRequestLogin,
-  watchLogin
-} from './auth';
+  watchLogin,
+  watchLogout
+} from './Auth';
 
 import {
   watchAddStudent,
   watchEditStudent,
   watchDeleteStudent,
   watchPickup
-} from './data';
+} from './Data';
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
@@ -18,6 +19,7 @@ export default function* rootSaga() {
     loadAuth(),
     watchRequestLogin(),
     watchLogin(),
+    watchLogout(),
     watchAddStudent(),
     watchEditStudent(),
     watchDeleteStudent(),

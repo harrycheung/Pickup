@@ -12,7 +12,7 @@ import styles from './styles';
 import { colors } from '../../../../config/styles';
 import StudentForm from '../../../../components/StudentForm';
 import Button from '../../../../components/Button';
-import { actions as DataActions } from '../../../../actions/data';
+import { Actions as DataActions } from '../../../../actions/Data';
 
 class EditStudent extends React.Component {
   static navigationOptions = {

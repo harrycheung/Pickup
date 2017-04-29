@@ -9,16 +9,16 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import AppNavigator from './screens';
-import authReducer from './reducers/auth';
-import dataReducer from './reducers/data';
+import AuthReducer from './reducers/Auth';
+import DataReducer from './reducers/Data';
 import rootSaga from './sagas';
 
 const reducers = combineReducers({
   nav: (state, action) => (
     AppNavigator.router.getStateForAction(action, state)
   ),
-  auth: authReducer,
-  data: dataReducer,
+  auth: AuthReducer,
+  data: DataReducer,
 });
 
 @connect(state => ({
@@ -77,7 +77,8 @@ class App extends React.Component {
     .then((value) => {
       if (value && value.length) {
         let initialStore = JSON.parse(value)
-        self.setState({store: createStore(reducers, initialStore, middleware)});
+        // self.setState({store: createStore(reducers, initialStore, middleware)});
+        self.setState({store: store});
       } else {
         self.setState({store: store});
       }

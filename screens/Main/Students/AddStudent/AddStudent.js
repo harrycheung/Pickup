@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 import StudentForm from '../../../../components/StudentForm';
-import { actions as DataActions } from '../../../../actions/data';
+import { Actions as DataActions } from '../../../../actions/Data';
 
 class AddStudent extends React.Component {
   static navigationOptions = {

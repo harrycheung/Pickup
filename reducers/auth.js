@@ -1,36 +1,37 @@
 
 // @flow
 
-import { types } from '../actions/auth';
+import { Types } from '../actions/Auth';
 
-const initialState: {
-  user: any,
-  phoneNumber: string,
-  isRequesting: boolean,
-  error: string,
-} = {
+const initialState = {
   user: null,
-  phoneNumber: '',
   isRequesting: false,
-  error: '',
 };
 
 export default (state: Object = initialState, action: Object) => {
   switch (action.type) {
-    case types.REQUEST_LOGIN:
-      return {...state, phoneNumber: action.phoneNumber, isRequesting: true, error: null};
+    case Types.REQUEST_LOGIN:
+      return {...state, isRequesting: true};
 
-    case types.REQUEST_LOGIN_SUCCEEDED:
+    case Types.REQUEST_LOGIN_SUCCEEDED:
       return {...state, isRequesting: false};
 
-    case types.REQUEST_LOGIN_FAILED:
-      return {...state, isRequesting: false, error: 'Login request failed'};
+    case Types.REQUEST_LOGIN_FAILED:
+      return {...state, isRequesting: false};
 
-    case types.LOGIN_SUCCEEDED:
+    case Types.LOGIN:
+    case Types.LOGOUT:
+      return {...state, isRequesting: true};
+
+    case Types.LOGIN_SUCCEEDED:
       return {...state, user: action.user};
 
-    case types.LOGOUT:
-      return {...state, user: null};
+    case Types.LOGIN_FAILED:
+    case Types.LOGOUT_FAILED:
+      return {...state, isRequesting: false};
+
+    case Types.LOGOUT_SUCCEEDED:
+      return {...state, isRequesting: false, user: null};
 
     default:
       return state;

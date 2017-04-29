@@ -6,9 +6,10 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { DrawerNavigator, StackNavigator, DrawerView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import HistoryScreen from './History';
 import PickupScreen from './Pickup';
+import HistoryScreen from './History';
 import StudentsScreen from './Students';
+import LogoutScreen from './Logout';
 
 const DrawerComponent = (props) => (
   <View style={{flex: 1}}>
@@ -27,7 +28,9 @@ export default DrawerNavigator({
   Pickup: {screen: PickupScreen},
   History: {screen: StackNavigator({History: {screen: HistoryScreen}})},
   Students: {screen: StudentsScreen},
+  Logout: {screen: LogoutScreen},
 }, {
   drawerWidth: 200,
+  order: ['Pickup', 'Students', 'History', 'Logout'],
   contentComponent: DrawerComponent,
 });

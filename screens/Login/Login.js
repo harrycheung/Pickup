@@ -10,8 +10,8 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import { colors } from '../../config/styles';
 import Button from '../../components/Button';
-import { actions as AuthActions } from '../../actions/auth';
-import { actions as NavigationActions } from '../../actions/navigation';
+import { Actions as AuthActions } from '../../actions/Auth';
+import { Actions as NavActions } from '../../actions/Navigation';
 import LinedTextInput from '../../components/LinedTextInput';
 
 class Login extends React.Component {
@@ -63,7 +63,6 @@ class Login extends React.Component {
 
   _login = () => {
     this.props.requestLogin(this.state.phoneNumber);
-    this.props.navigate('LoginRequest');
   }
 }
 
@@ -74,7 +73,7 @@ Login.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   ...bindActionCreators(AuthActions, dispatch),
-  ...bindActionCreators(NavigationActions, dispatch),
+  ...bindActionCreators(NavActions, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

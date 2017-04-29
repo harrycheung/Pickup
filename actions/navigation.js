@@ -3,7 +3,7 @@
 
 import { NavigationActions } from 'react-navigation';
 
-export const actions = {
+export const Actions = {
   resetNavigation: (routeName: string) => {
     return NavigationActions.reset({
       index: 0,

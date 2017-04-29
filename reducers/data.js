@@ -1,7 +1,8 @@
 
 // @flow
 
-import { types } from '../actions/data';
+import { Types } from '../actions/Data';
+import { Types as AuthTypes } from '../actions/Auth';
 
 const initialState = {
   students: [],
@@ -9,13 +10,13 @@ const initialState = {
 
 export default (state: Object = initialState, action: Object) => {
   switch (action.type) {
-    case types.LOAD_STUDENTS:
+    case Types.LOAD_STUDENTS:
       return {...state, students: action.students};
 
-    case types.ADD_STUDENT_SUCCEEDED:
+    case Types.ADD_STUDENT_SUCCEEDED:
       return {...state, students: state.students.concat([action.student])}
 
-    case types.EDIT_STUDENT_SUCCEEDED:
+    case Types.EDIT_STUDENT_SUCCEEDED:
       return {...state,
         students: state.students.map((student) => {
           if (student.key == action.student.key) {
@@ -26,12 +27,15 @@ export default (state: Object = initialState, action: Object) => {
         }),
       };
 
-    case types.DELETE_STUDENT_SUCCEEDED:
+    case Types.DELETE_STUDENT_SUCCEEDED:
       return {...state,
         students: state.students.filter((student) => {
           return student.key != action.studentKey;
         }),
       };
+
+    case AuthTypes.LOGOUT:
+      return {...state, students: []};
 
     default:
       return state;

@@ -12,7 +12,7 @@ import styles from './styles';
 import { colors } from '../../../../config/styles';
 import { merge } from '../../../../helpers';
 import drawerHeader from '../../../../helpers/DrawerHeader';
-import { actions as navActions } from '../../../../actions/navigation';
+import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class ManageStudents extends React.Component {
   state: {
@@ -105,7 +105,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(navActions, dispatch),
+  ...bindActionCreators(NavActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageStudents);

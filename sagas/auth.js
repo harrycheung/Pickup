@@ -1,27 +1,29 @@
 
+// @flow
+
 import { delay } from 'redux-saga'; // TODO: remove
 import { call, put, select, take, takeLatest } from 'redux-saga/effects';
 import CryptoJS from 'crypto-js';
 import firebase from 'firebase';
 
 import * as c from '../config/constants';
-import { types } from '../actions/auth';
-import { actions as navActions } from '../actions/navigation';
-import { actions as authActions } from '../actions/auth';
-import { actions as dataActions } from '../actions/data';
+import { Types } from '../actions/Auth';
+import { Actions as AuthActions } from '../actions/Auth';
+import { Actions as DataActions } from '../actions/Data';
+import { Actions as NavActions } from '../actions/Navigation';
 
 export function* loadAuth() {
-  yield take(types.LOAD_AUTH);
+  yield take(Types.LOAD_AUTH);
   try {
     const state = yield select();
     if (state.auth.user != null) {
-      yield put(navActions.resetNavigation('Main'));
+      yield put(NavActions.resetNavigation('Main'));
     } else {
-      yield put(navActions.resetNavigation('Login'));
+      yield put(NavActions.resetNavigation('Login'));
     }
   } catch (error) {
     console.log('loadAuth failed');
-    yield put(navActions.resetNavigation('Login'));
+    yield put(NavActions.resetNavigation('Login'));
   }
 }
 
@@ -47,21 +49,22 @@ const requestLoginAsync = (phoneNumber) => {
   });
 };
 
-export function* requestLogin() {
+export function* requestLogin(action) {
   try {
-    const { auth } = yield select();
-    const response = yield call(requestLoginAsync, auth.phoneNumber);
-    yield put(authActions.requestLoginSucceeded());
+    const { phoneNumber } = action;
+    yield put(NavActions.navigate('LoginRequest', {phoneNumber}));
+    const response = yield call(requestLoginAsync, phoneNumber);
+    yield put(AuthActions.requestLoginSucceeded());
     // TODO: remove this call
     yield call(login, {token: response});
   } catch (error) {
     console.log('requestLogin failed', error);
-    yield put(authActions.requestLoginFailed());
+    yield put(AuthActions.requestLoginFailed());
   }
 }
 
 export function* watchRequestLogin() {
-  yield takeLatest(types.REQUEST_LOGIN, requestLogin);
+  yield takeLatest(Types.REQUEST_LOGIN, requestLogin);
 }
 
 firebase.initializeApp(c.FirebaseConfig);
@@ -93,18 +96,18 @@ const fetchStudents = (uid) => {
 export function* login(action) {
   try {
     const user = yield call(loginAsync, action.token);
-    yield put(authActions.loginSucceeded(user));
+    yield put(AuthActions.loginSucceeded(user));
     const students = yield call(fetchStudents, user.uid);
-    yield put(dataActions.loadStudents(students));
-    yield put(navActions.resetNavigation('Main'));
+    yield put(DataActions.loadStudents(students));
+    yield put(NavActions.resetNavigation('Main'));
   } catch (error) {
     console.log('login failed', error);
-    // Do nothing?
+    yield put(AuthActions.loginFailed());
   }
 }
 
 export function* watchLogin() {
-  yield takeLatest(types.LOGIN, login);
+  yield takeLatest(Types.LOGIN, login);
 }
 
 const logoutAsync = () => {
@@ -114,11 +117,16 @@ const logoutAsync = () => {
 export function* logout() {
   try {
     yield call(logoutAsync);
+    yield put(AuthActions.logoutSucceeded());
+    // TODO: fix thuis
+
+    yield put(NavActions.navigate('Login'));
   } catch (error) {
     console.log('logout failed', error);
+    yield put(AuthActions.logoutFailed());
   }
 }
 
 export function* watchLogout() {
-  yield takeLatest(types.LOGOUT, logout);
+  yield takeLatest(Types.LOGOUT, logout);
 }
