@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, View } from 'react-native';
+import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -11,11 +12,11 @@ import drawerHeader from '../../../components/DrawerHeader';
 import { Actions as AuthActions } from '../../../actions/Auth';
 
 class Logout extends React.Component {
+
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
-      drawer: {
-        label: 'Logout',
-      },
+      title: 'Logout',
+      drawerLabel: 'Logout',
     })
   );
 
@@ -40,4 +41,8 @@ const mapDispatchToProps = (dispatch) => ({
   ...bindActionCreators(AuthActions, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(Logout);
+export default StackNavigator({
+  Logout: {
+    screen: connect(null, mapDispatchToProps)(Logout),
+  },
+});

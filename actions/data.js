@@ -9,7 +9,6 @@ export const Types = {
   EDIT_STUDENT_SUCCEEDED: 'Data/EDIT_STUDENT_SUCCEEDED',
   DELETE_STUDENT: 'Data/DELETE_STUDENT',
   DELETE_STUDENT_SUCCEEDED: 'Data/DELETE_STUDENT_SUCCEEDED',
-  PICKUP: 'Data/PICKUP',
 };
 
 export const Actions = {
@@ -33,8 +32,5 @@ export const Actions = {
   }),
   deleteStudentSucceeded: (studentKey: string) => ({
     type: Types.DELETE_STUDENT_SUCCEEDED, studentKey
-  }),
-  pickup: (students: Object[]) => ({
-    type: Types.PICKUP, students
-  }),
+  })
 }

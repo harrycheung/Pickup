@@ -11,9 +11,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
-import { Actions as DataActions } from '../../../../actions/Data';
+import { Actions } from '../../../../actions/Pickup';
 
-class Select extends React.Component {
+class PickupSelect extends React.Component {
   state: {
     studentKeys: string[],
   }
@@ -21,9 +21,8 @@ class Select extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Synapse Pickup',
-      drawer: {
-        label: 'Synapse Pickup',
-      },
+      headerBackTitle: 'Cancel',
+      drawerLabel: 'Synapse Pickup',
     })
   );
 
@@ -81,7 +80,7 @@ class Select extends React.Component {
   }
 }
 
-Select.propTypes = {
+PickupSelect.propTypes = {
   students: PropTypes.array.isRequired,
   pickup: PropTypes.func.isRequired,
 }
@@ -91,7 +90,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(DataActions, dispatch),
+  ...bindActionCreators(Actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Select);
+export default connect(mapStateToProps, mapDispatchToProps)(PickupSelect);

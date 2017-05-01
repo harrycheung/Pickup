@@ -2,18 +2,17 @@
 // @flow
 
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import { connect } from 'react-redux';
 
 import drawerHeader from '../../../components/DrawerHeader';
-//import styles from './styles';
 
 class History extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Pickup History',
-      drawer: {
-        label: 'History',
-      },
+      drawerLabel: 'History',
     })
   );
 
@@ -26,4 +25,8 @@ class History extends React.Component {
   }
 }
 
-export default History;
+export default StackNavigator({
+  Logout: {
+    screen: History,
+  },
+});

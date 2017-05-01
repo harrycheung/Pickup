@@ -21,9 +21,7 @@ class ManageStudents extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Manage Students',
-      drawer: {
-        label: 'Manage Students',
-      },
+      drawerLabel: 'Manage Students',
       headerRight: (
         <TouchableOpacity
           onPress={() => navigation.navigate('AddStudent')}

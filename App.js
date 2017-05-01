@@ -51,8 +51,11 @@ class Root extends React.Component {
     .then((value) => {
       if (value && value.length) {
         let initialStore = JSON.parse(value)
-        // self.setState({store: createStore(AppReducers, initialStore, middleware)});
-        self.setState({store: store, isStoreLoading: false});
+        self.setState({
+          store: createStore(AppReducers, initialStore, middleware),
+          isStoreLoading: false,
+        });
+        // self.setState({store: store, isStoreLoading: false});
       } else {
         self.setState({isStoreLoading: false});
       }

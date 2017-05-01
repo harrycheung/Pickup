@@ -9,9 +9,12 @@ import {
 import {
   watchAddStudent,
   watchEditStudent,
-  watchDeleteStudent,
-  watchPickup
+  watchDeleteStudent
 } from './Data';
+
+import {
+  watchPickup
+} from './Pickup';
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
@@ -23,6 +26,6 @@ export default function* rootSaga() {
     watchAddStudent(),
     watchEditStudent(),
     watchDeleteStudent(),
-    watchPickup(),
+    watchPickup()
   ];
 }

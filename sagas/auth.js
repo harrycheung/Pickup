@@ -126,5 +126,6 @@ export function* logout() {
 }
 
 export function* watchLogout() {
+  console.log('watchlogout');
   yield takeLatest(Types.LOGOUT, logout);
 }
