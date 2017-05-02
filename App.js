@@ -50,10 +50,13 @@ class Root extends React.Component {
     AsyncStorage.getItem('reduxStore')
     .then((value) => {
       if (value && value.length) {
-        let initialStore = JSON.parse(value)
+        let previousStore = JSON.parse(value)
         self.setState({
-          store: createStore(AppReducers, initialStore, middleware),
+          store: createStore(AppReducers, previousStore, middleware),
           isStoreLoading: false,
+        }, () => {
+          // Rerun saga on previous store          
+          sagaMiddleware.run(rootSaga);
         });
         // self.setState({store: store, isStoreLoading: false});
       } else {
