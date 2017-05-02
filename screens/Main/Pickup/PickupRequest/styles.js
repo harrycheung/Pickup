@@ -39,7 +39,6 @@ export default StyleSheet.create({
   message: {
     padding: 10,
     borderRadius: 10,
-    flexDirection: 'column',
     maxWidth: '80%',
   },
   messageText: {
@@ -58,5 +57,8 @@ export default StyleSheet.create({
   withSender: {
     flexDirection: 'row',
     backgroundColor: colors.darkGrey,
+  },
+  request: {
+    flexDirection: 'column',
   }
 });

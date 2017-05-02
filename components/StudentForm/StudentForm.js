@@ -60,7 +60,7 @@ class StudentForm extends React.Component {
 
   render() {
     let image = null;
-    if (this.state.image == null) {
+    if (this.state.image === null) {
       image = (
         <TouchableOpacity
           style={styles.studentImage}
@@ -141,12 +141,12 @@ class StudentForm extends React.Component {
       const disabled = (
         state.firstName.length < 1 ||
         state.lastInitial.length < 1 ||
-        state.relationship == null ||
-        state.grade == null || (
-          state.firstName == props.firstName &&
-          state.lastInitial == props.lastInitial &&
-          state.grade == props.grade &&
-          state.relationship == props.relationship
+        state.relationship === null ||
+        state.grade === null || (
+          state.firstName === props.firstName &&
+          state.lastInitial === props.lastInitial &&
+          state.grade === props.grade &&
+          state.relationship === props.relationship
         )
       );
       if (this.state.disabled != disabled) {

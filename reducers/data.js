@@ -19,7 +19,7 @@ export default (state: Object = initialState, action: Object) => {
     case Types.EDIT_STUDENT_SUCCEEDED:
       return {...state,
         students: state.students.map((student) => {
-          if (student.key == action.student.key) {
+          if (student.key === action.student.key) {
             return action.student;
           } else {
             return student;

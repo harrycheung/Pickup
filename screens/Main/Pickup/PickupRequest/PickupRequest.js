@@ -24,6 +24,7 @@ class PickupRequest extends React.Component {
 
     const messages = [{
       type: 'request',
+      sender: '1111111111',
     }, {
       type: 'message',
       sender: '1111111112',
@@ -32,6 +33,16 @@ class PickupRequest extends React.Component {
       type: 'message',
       sender: '1111111111',
       message: 'Yes, he is',
+    }, {
+      type: 'message',
+      sender: '11111111112',
+      message: 'OK',
+    }, {
+      type: 'escort',
+      sender: '11111111113',
+    }, {
+      type: 'release',
+      sender: '11111111113',
     }];
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
@@ -58,81 +69,101 @@ class PickupRequest extends React.Component {
     );
   }
 
-  _renderRow(message, sectionID, rowID) {
+  _renderRow(messageData, sectionID, rowID) {
     const rowKey = `${sectionID}-${rowID}`;
+    let containerStyle = [styles.messageContainer];
+    let messageStyle = [styles.message];
+    let sender = null;
+    let message = <Text>Unknown message</Text>
 
-    switch (message.type) {
-      case 'request': {
-        return (
-          <View key={rowKey} style={[styles.messageContainer, styles.right]}>
-            <View style={[styles.message, styles.withoutSender]}>
-              <Text style={styles.messageText}>
-                Requesting pickup at the front gate for
-              </Text>
-              <View style={styles.student}>
-                <Image
-                  style={styles.studentImage}
-                  source={require('../../../../images/max.png')}
-                />
-                <Text style={styles.studentName}>
-                  Max Cheung
-                </Text>
-              </View>
-              <View style={styles.student}>
-                <Image
-                  style={styles.studentImage}
-                  source={require('../../../../images/max.png')}
-                />
-                <Text style={styles.studentName}>
-                  Max2 Cheung
-                </Text>
-              </View>
-              <View style={styles.student}>
-                <Image
-                  style={styles.studentImage}
-                  source={require('../../../../images/max.png')}
-                />
-                <Text style={styles.studentName}>
-                  Max2 Cheung
-                </Text>
-              </View>
-            </View>
-          </View>
-        );
-      }
-
-      case 'message': {
-        let containerStyle = [styles.messageContainer];
-        let messageStyle = [styles.message];
-        let senderJSX = null;
-        if (message.sender === this.props.uid) {
-          containerStyle.push(styles.right);
-          messageStyle.push(styles.withoutSender);
-        } else {
-          containerStyle.push(styles.left);
-          messageStyle.push(styles.withSender);
-          senderJSX = (
-            <Image
-              style={styles.senderImage}
-              source={require('../../../../images/max.png')}
-            />
-          );
-        }
-        return (
-          <View key={rowKey} style={containerStyle}>
-            {senderJSX}
-            <View style={messageStyle}>
-              <Text style={styles.messageText}>
-                {message.message}
-              </Text>
-            </View>
-          </View>
-        );
-      }
-
-      default:
-        return <View><Text>Unknown message</Text></View>
+    if (messageData.sender === this.props.uid) {
+      containerStyle.push(styles.right);
+      messageStyle.push(styles.withoutSender);
+    } else {
+      containerStyle.push(styles.left);
+      messageStyle.push(styles.withSender);
+      sender = messageData.sender;
     }
+
+    switch (messageData.type) {
+      case 'request':
+        message = (
+          <View style={styles.request}>
+            <Text style={styles.messageText}>
+              Requesting pickup at the front gate for
+            </Text>
+            <View style={styles.student}>
+              <Image
+                style={styles.studentImage}
+                source={require('../../../../images/max.png')}
+              />
+              <Text style={styles.studentName}>
+                Max Cheung
+              </Text>
+            </View>
+            <View style={styles.student}>
+              <Image
+                style={styles.studentImage}
+                source={require('../../../../images/max.png')}
+              />
+              <Text style={styles.studentName}>
+                Max2 Cheung
+              </Text>
+            </View>
+            <View style={styles.student}>
+              <Image
+                style={styles.studentImage}
+                source={require('../../../../images/max.png')}
+              />
+              <Text style={styles.studentName}>
+                Max2 Cheung
+              </Text>
+            </View>
+          </View>
+        );
+        break;
+
+      case 'message':
+        message = messageData.message;
+        break;
+
+      case 'escort':
+        message = 'Sara H is escorting Max C and Josh B to the front gate';
+        break;
+
+      case 'release':
+        message = 'Sara H released Max C and Josh B to Harry C';
+        break;
+    }
+
+    return this._renderMessage(
+      rowKey, containerStyle, sender, messageStyle, message
+    );
+  }
+
+  _renderMessage(rowKey, containerStyle, sender, messageStyle, message) {
+    let senderJSX = null;
+    if (sender !== null) {
+      senderJSX = (
+        <Image
+          style={styles.senderImage}
+          source={require('../../../../images/max.png')}
+        />
+      );
+    }
+
+    if (typeof message === 'string') {
+      message = <Text style={styles.messageText}>{message}</Text>
+    }
+
+    return (
+      <View key={rowKey} style={containerStyle}>
+        {senderJSX}
+        <View style={messageStyle}>
+          {message}
+        </View>
+      </View>
+    );
   }
 }
 

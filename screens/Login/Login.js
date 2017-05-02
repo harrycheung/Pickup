@@ -54,7 +54,7 @@ class Login extends React.Component {
   }
 
   _changeText = (text) => {
-    if (text.length == 10) {
+    if (text.length === 10) {
       this.setState({disabled: false, phoneNumber: text});
     } else {
       this.setState({disabled: true});

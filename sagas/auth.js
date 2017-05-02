@@ -41,7 +41,7 @@ const requestLoginAsync = (phoneNumber) => {
     body: JSON.stringify({phoneNumber}),
   })
   .then((response) => {
-    if (response.status == 200) {
+    if (response.status === 200) {
       return response.text();
     } else {
       throw response;
@@ -77,7 +77,7 @@ const loginAsync = (token) => {
 const fetchStudents = (uid) => {
   return firebase.database().ref('/users/' + uid + '/students').once('value')
     .then((snapshot) => {
-      const students = snapshot.val() == null ? {} : snapshot.val();
+      const students = snapshot.val() === null ? {} : snapshot.val();
       const studentKeys = Object.keys(students);
       return Promise.all(
         studentKeys.map((id) => {
