@@ -107,15 +107,3 @@ export function* deleteStudent(action) {
 export function* watchDeleteStudent() {
   yield takeEvery(Types.DELETE_STUDENT, deleteStudent);
 }
-
-export function* pickup(action) {
-  try {
-    yield put(NavActions.navigate('AwaitingPickup'));
-  } catch (error) {
-    console.log('pickup failed', error);
-  }
-}
-
-export function* watchPickup(action) {
-  yield takeEvery(Types.PICKUP, pickup);
-}

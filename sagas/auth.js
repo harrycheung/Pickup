@@ -9,6 +9,7 @@ import firebase from 'firebase';
 import * as c from '../config/constants';
 import { Types } from '../actions/Auth';
 import { Actions as AuthActions } from '../actions/Auth';
+import { Actions as UserActions } from '../actions/User';
 import { Actions as DataActions } from '../actions/Data';
 import { Actions as NavActions } from '../actions/Navigation';
 
@@ -97,6 +98,7 @@ export function* login(action) {
   try {
     const user = yield call(loginAsync, action.token);
     yield put(AuthActions.loginSucceeded(user));
+    yield put(UserActions.loadUser());
     const students = yield call(fetchStudents, user.uid);
     yield put(DataActions.loadStudents(students));
     yield put(NavActions.resetNavigation('Main'));

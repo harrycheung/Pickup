@@ -25,8 +25,4 @@ class History extends React.Component {
   }
 }
 
-export default StackNavigator({
-  Logout: {
-    screen: History,
-  },
-});
+export default StackNavigator({History: {screen: History}});

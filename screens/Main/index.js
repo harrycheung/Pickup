@@ -10,6 +10,7 @@ import PickupScreen from './Pickup';
 import HistoryScreen from './History';
 import StudentsScreen from './Students';
 import LogoutScreen from './Logout';
+import ProfileScreen from './Profile';
 
 const DrawerComponent = (props) => (
   <View style={{flex: 1}}>
@@ -28,9 +29,10 @@ export default DrawerNavigator({
   Pickup: {screen: PickupScreen},
   History: {screen: HistoryScreen},
   Students: {screen: StudentsScreen},
+  Profile: {screen: ProfileScreen},
   Logout: {screen: LogoutScreen},
 }, {
   drawerWidth: 200,
-  order: ['Pickup', 'Students', 'History', 'Logout'],
+  order: ['Pickup', 'Students', 'History', 'Profile', 'Logout'],
   contentComponent: DrawerComponent,
 });
