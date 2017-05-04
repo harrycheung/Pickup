@@ -3,18 +3,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux';
+import { StyleSheet, Text } from 'react-native';
 
-import * as c from '../../config/constants';
-import styles from './styles';
-import { colors } from '../../config/styles';
-import drawerHeader from '../../components/DrawerHeader';
-import ProfileForm from '../../components/ProfileForm';
-import LinedTextInput from '../LinedTextInput';
-import Picker from '../Picker';
-import Button from '../Button';
+import * as c from '../config/constants';
+import ProfileForm from './ProfileForm';
+import LinedTextInput from './LinedTextInput';
+import Picker from './Picker';
 
 class StudentForm extends React.Component {
   state: {
@@ -53,7 +47,7 @@ class StudentForm extends React.Component {
         submitButtonText={this.props.submitButtonText}
         onSubmit={this._submit.bind(this)}
       >
-        <Text style={[styles.pickerLabel, styles.marge]}>Level</Text>
+        <Text style={[styles.pickerLabel, styles.margin]}>Level</Text>
         <Picker
           style={StyleSheet.flatten(styles.picker)}
           values={c.Levels}
@@ -111,5 +105,18 @@ StudentForm.defaultProps = {
   submitButtonText: 'Done',
   onSubmit: () => {},
 }
+
+const styles = StyleSheet.create({
+  margin: {
+    marginTop: 10,
+  },
+  pickerLabel: {
+    alignSelf: 'flex-start',
+  },
+  picker: {
+    alignSelf: 'stretch',
+    marginTop: 5,
+  }
+});
 
 export default StudentForm;

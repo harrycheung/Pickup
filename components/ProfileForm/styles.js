@@ -29,13 +29,6 @@ export default StyleSheet.create({
     height: 44,
     paddingHorizontal: 5,
   },
-  pickerLabel: {
-    alignSelf: 'flex-start',
-  },
-  picker: {
-    alignSelf: 'stretch',
-    marginTop: 5,
-  },
   submitButton: {
     height: 44,
     alignSelf: 'stretch',
