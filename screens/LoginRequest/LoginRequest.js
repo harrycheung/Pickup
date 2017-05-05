@@ -8,43 +8,86 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 
 import styles from './styles';
+import { colors } from '../../config/styles';
 import Button from '../../components/Button';
 import { Actions as AuthActions } from '../../actions/Auth';
+import LinedTextInput from '../../components/LinedTextInput';
 
 class LoginRequest extends React.Component {
+  state: {
+    disabled: boolean,
+    phoneNumber: string,
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      disabled: true,
+      phoneNumber: '',
+    };
+  }
+
+  componentWillReceiveProps(nextProps: Object) {
+    this.setState({disabled: nextProps.spinning});
+  }
+
   render() {
-    const { params } = this.props.navigation.state;
+    let buttonContent = null;
+    if (this.props.spinning) {
+      buttonContent = (
+        <ActivityIndicator animating={true} color='white' size='small' />
+      );
+    } else if (this.state.phoneNumber !== '') {
+      buttonContent = (
+        <Text style={styles.loginButtonText}>Get magic link again</Text>
+      )
+    } else {
+      buttonContent = (
+        <Text style={styles.loginButtonText}>Get magic link</Text>
+      );
+    }
+
     return (
       <View style={styles.container}>
-        <View style={styles.activityContainer}>
-          <ActivityIndicator
-            animating={this.props.isRequesting}
-            style={styles.activity}
-            size='large'
-          />
-        </View>
+        <Text>Enter your phone number to request a magic link</Text>
+        <LinedTextInput
+          style={styles.input}
+          placeholder='Phone number'
+          maxLength={10}
+          clearButtonMode='while-editing'
+          borderBottomColor={colors.darkGrey}
+          keyboardType='phone-pad'
+          onChangeText={this._changeText.bind(this)}
+        />
         <Button
-          style={styles.resendButton}
-          disabled={this.props.isRequesting}
-          onPress={() => { this.props.requestLogin(params.phoneNumber) }}
+          onPress={this._login.bind(this)}
+          style={styles.loginButton}
+          disabled={this.state.disabled}
         >
-          <Text style={styles.resendButtonText}>Re-send login link</Text>
+          {buttonContent}
         </Button>
-        <View style={{flex: 1}} />
       </View>
     );
+  }
+
+  _changeText(phoneNumber) {
+    const disabled = phoneNumber.length !== 10 || isNaN(phoneNumber);
+    this.setState({disabled, phoneNumber});
+  }
+
+  _login() {
+    this.props.requestLogin(this.state.phoneNumber);
   }
 }
 
 LoginRequest.propTypes = {
-  isRequesting: PropTypes.bool.isRequired,
+  spinning: PropTypes.bool.isRequired,
   requestLogin: PropTypes.func.isRequired,
-  login: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
-  phoneNumber: state.auth.phoneNumber,
-  isRequesting: state.auth.isRequesting,
+  spinning: state.spinner.spinning,
 });
 
 const mapDispatchToProps = (dispatch) => ({

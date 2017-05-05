@@ -22,14 +22,15 @@ class Profile extends React.Component {
   );
 
   render() {
+    const { props } = this;
     return (
       <View style={styles.container}>
         <ProfileForm
-          firstName={this.props.firstName}
-          lastInitial={this.props.lastInitial}
-          submitButtonText='Update'
-          onSubmit={this.props.updateUser}
-          spinning={this.props.spinning}
+          firstName={props.firstName}
+          lastInitial={props.lastInitial}
+          submitButtonText={props.firstName === '' ? 'Save' : 'Update'}
+          onSubmit={props.updateUser}
+          spinning={props.spinning}
         />
       </View>
     );

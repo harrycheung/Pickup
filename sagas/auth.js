@@ -12,21 +12,7 @@ import { Actions as AuthActions } from '../actions/Auth';
 import { Actions as UserActions } from '../actions/User';
 import { Actions as DataActions } from '../actions/Data';
 import { Actions as NavActions } from '../actions/Navigation';
-
-export function* loadAuth() {
-  yield take(Types.LOAD_AUTH);
-  try {
-    const state = yield select();
-    if (state.auth.user != null) {
-      yield put(NavActions.resetNavigation('Main'));
-    } else {
-      yield put(NavActions.resetNavigation('Login'));
-    }
-  } catch (error) {
-    console.log('loadAuth failed');
-    yield put(NavActions.resetNavigation('Login'));
-  }
-}
+import { Actions as SpinnerActions } from '../actions/Spinner';
 
 const requestLoginAsync = (phoneNumber) => {
   const body = JSON.stringify({phoneNumber});
@@ -52,15 +38,17 @@ const requestLoginAsync = (phoneNumber) => {
 
 export function* requestLogin(action) {
   try {
+    yield put(SpinnerActions.start());
     const { phoneNumber } = action;
-    yield put(NavActions.navigate('LoginRequest', {phoneNumber}));
     const response = yield call(requestLoginAsync, phoneNumber);
     yield put(AuthActions.requestLoginSucceeded());
     // TODO: remove this call
-    yield call(login, {token: response});
+    yield put(NavActions.navigate('Login', {token: response}));
   } catch (error) {
     console.log('requestLogin failed', error);
     yield put(AuthActions.requestLoginFailed());
+  } finally {
+    yield put(SpinnerActions.stop());
   }
 }
 
@@ -96,15 +84,25 @@ const fetchStudents = (uid) => {
 
 export function* login(action) {
   try {
+    yield put(SpinnerActions.start());
+    delay(5000);
     const user = yield call(loginAsync, action.token);
     yield put(AuthActions.loginSucceeded(user));
     yield put(UserActions.loadUser());
     const students = yield call(fetchStudents, user.uid);
     yield put(DataActions.loadStudents(students));
-    yield put(NavActions.resetNavigation('Main'));
+    const state = yield select();
+    console.log('state', state);
+    if (state.user.firstName === '') {
+      yield put(NavActions.navigate('CreateProfile'));
+    } else {
+      yield put(NavActions.resetNavigation('Main'));
+    }
   } catch (error) {
     console.log('login failed', error);
     yield put(AuthActions.loginFailed());
+  } finally {
+    yield put(SpinnerActions.stop());
   }
 }
 
@@ -120,7 +118,7 @@ export function* logout() {
   try {
     yield call(logoutAsync);
     yield put(AuthActions.logoutSucceeded());
-    yield put(NavActions.resetNavigation('Login'));
+    yield put(NavActions.resetNavigation('LoginRequest'));
   } catch (error) {
     console.log('logout failed', error);
     yield put(AuthActions.logoutFailed());

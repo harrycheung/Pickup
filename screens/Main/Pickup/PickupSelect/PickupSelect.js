@@ -11,7 +11,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
-import { Actions } from '../../../../actions/Pickup';
+import { Actions as PickupActions } from '../../../../actions/Pickup';
+import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class PickupSelect extends React.Component {
   state: {
@@ -82,15 +83,18 @@ class PickupSelect extends React.Component {
 
 PickupSelect.propTypes = {
   students: PropTypes.array.isRequired,
+  user: PropTypes.object.isRequired,
   pickup: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   students: state.data.students,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(Actions, dispatch),
+  ...bindActionCreators(PickupActions, dispatch),
+  ...bindActionCreators(NavActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PickupSelect);

@@ -12,20 +12,20 @@ export default StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 15,
   },
-  activityContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  activity: {
-    height: 80,
-  },
-  resendButton: {
+  input: {
     height: 44,
     marginTop: 10,
+    paddingHorizontal: 5,
+  },
+  loginButton: {
+    height: 44,
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch',
     backgroundColor: colors.buttonBackground,
   },
-  resendButtonText: {
+  loginButtonText: {
     fontSize: 18,
     color: colors.buttonText,
   },

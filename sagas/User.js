@@ -24,8 +24,13 @@ export function* loadUser(action) {
       const state = yield select();
       uid = state.auth.user.uid;
     }
-    const { firstName, lastInitial } = yield call(loadUserAsync, uid);
-    yield put(UserActions.setUser(firstName, lastInitial));
+    const response = yield call(loadUserAsync, uid);
+    if (response === null) {
+      yield put(UserActions.setUser('', ''));
+    } else {
+      const { firstName, lastInitial } = response;
+      yield put(UserActions.setUser(firstName, lastInitial));
+    }
   } catch (error) {
     console.log('loadUser failed', error);
     // Do nothing?
@@ -40,21 +45,34 @@ const updateUserAsync = (uid, firstName, lastInitial) => {
   return firebase.database().ref('/users/' + uid).update({firstName, lastInitial});
 };
 
-export function* updateUser(action) {
+function* updateUserWithNav(action, navAction) {
   try {
     yield put(SpinnerActions.start());
     const { firstName, lastInitial } = action;
     const state = yield select();
     yield call(updateUserAsync, state.auth.user.uid, firstName, lastInitial);
-    yield put(NavActions.back());
+    yield put(navAction);
   } catch (error) {
     console.log('updateUser failed', error);
     // Do nothing?
   } finally {
     yield put(SpinnerActions.stop());
   }
+
+}
+
+export function* updateUser(action) {
+  yield call(updateUserWithNav, action, NavActions.back());
 }
 
 export function* watchUpdateUser() {
   yield takeEvery(UserTypes.UPDATE, updateUser);
+}
+
+export function* createUser(action) {
+  yield call(updateUserWithNav, action, NavActions.resetNavigation('Main'));
+}
+
+export function* watchCreateUser() {
+  yield takeEvery(UserTypes.CREATE, createUser);
 }

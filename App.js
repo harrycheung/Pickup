@@ -16,7 +16,7 @@ const logger = ({ getState }) => {
     // Call the next dispatch method in the middleware chain.
     console.log('will dispatch', action);
     let returnValue = next(action);
-    console.log('state after dispatch', getState());
+    // console.log('state after dispatch', getState());
 
     // This will likely be the action itself, unless
     // a middleware further in chain changed it.
@@ -55,7 +55,7 @@ class Root extends React.Component {
           store: createStore(AppReducers, previousStore, middleware),
           isStoreLoading: false,
         }, () => {
-          // Rerun saga on previous store          
+          // Rerun saga on previous store
           sagaMiddleware.run(rootSaga);
         });
         // self.setState({store: store, isStoreLoading: false});

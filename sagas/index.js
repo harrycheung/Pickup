@@ -1,6 +1,5 @@
 
 import {
-  loadAuth,
   watchRequestLogin,
   watchLogin,
   watchLogout
@@ -18,13 +17,13 @@ import {
 
 import {
   watchLoadUser,
+  watchCreateUser,
   watchUpdateUser
 } from './User';
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
   yield [
-    loadAuth(),
     watchRequestLogin(),
     watchLogin(),
     watchLogout(),
@@ -33,6 +32,7 @@ export default function* rootSaga() {
     watchDeleteStudent(),
     watchPickup(),
     watchLoadUser(),
+    watchCreateUser(),
     watchUpdateUser()
   ];
 }

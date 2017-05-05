@@ -11,6 +11,7 @@ const initialState = {
 export default (state: Object = initialState, action: Object) => {
   switch (action.type) {
     case Types.SET:
+    case Types.CREATE:
     case Types.UPDATE:
       return {
         ...state, firstName: action.firstName, lastInitial: action.lastInitial

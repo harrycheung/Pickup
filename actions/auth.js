@@ -2,7 +2,6 @@
 // @flow
 
 export const Types = {
-  LOAD_AUTH: 'Auth/LOAD_AUTH',
   REQUEST_LOGIN: 'Auth/REQUEST_LOGIN',
   REQUEST_LOGIN_SUCCEEDED: 'Auth/REQUEST_LOGIN_SUCCEEDED',
   REQUEST_LOGIN_FAILED: 'Auth/REQUEST_LOGIN_FAILED',
@@ -15,7 +14,6 @@ export const Types = {
 };
 
 export const Actions = {
-  loadAuth: () => ({type: Types.LOAD_AUTH}),
   requestLogin: (phoneNumber: string) => ({type: Types.REQUEST_LOGIN, phoneNumber}),
   requestLoginSucceeded: () => ({type: Types.REQUEST_LOGIN_SUCCEEDED}),
   requestLoginFailed: () => ({type: Types.REQUEST_LOGIN_FAILED}),
