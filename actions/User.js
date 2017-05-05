@@ -3,6 +3,7 @@
 
 export const Types = {
   LOAD: 'User/LOAD',
+  LOADED: 'User/LOADED',
   SET: 'User/SET',
   CREATE: 'User/CREATE',
   UPDATE: 'User/UPDATE',
@@ -10,6 +11,7 @@ export const Types = {
 
 export const Actions = {
   loadUser: (uid: string) => ({type: Types.LOAD, uid}),
+  loadedUser: () => ({type: Types.LOADED}),
   setUser: (firstName: string, lastInitial: string) => ({
     type: Types.SET, firstName, lastInitial
   }),

@@ -8,6 +8,7 @@ import firebase from 'firebase';
 
 import * as c from '../config/constants';
 import { Types } from '../actions/Auth';
+import { Types as UserTypes } from '../actions/User';
 import { Actions as AuthActions } from '../actions/Auth';
 import { Actions as UserActions } from '../actions/User';
 import { Actions as DataActions } from '../actions/Data';
@@ -91,6 +92,7 @@ export function* login(action) {
     yield put(UserActions.loadUser());
     const students = yield call(fetchStudents, user.uid);
     yield put(DataActions.loadStudents(students));
+    yield take(UserTypes.LOADED);
     const state = yield select();
     console.log('state', state);
     if (state.user.firstName === '') {

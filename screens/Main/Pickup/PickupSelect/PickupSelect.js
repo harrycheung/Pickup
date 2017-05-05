@@ -23,7 +23,7 @@ class PickupSelect extends React.Component {
     drawerHeader(navigation, screenProps, {
       title: 'Synapse Pickup',
       headerBackTitle: 'Cancel',
-      drawerLabel: 'Synapse Pickup',
+      drawerLabel: 'Home',
     })
   );
 
@@ -36,22 +36,41 @@ class PickupSelect extends React.Component {
   }
 
   render() {
-    const studentViews = this.props.students.map((student) => {
-      const selected = this.state.studentKeys.includes(student.key);
-      const style = [styles.studentImage, selected ? styles.selected : {}];
-      return (
-        <TouchableOpacity
-          key={student.key}
-          style={styles.student}
-          onPress={this._selectStudent.bind(this, student.key)}
-        >
-          <Image style={style} source={require('../../../../images/max.png')} />
-          <Text style={styles.studentName}>
-            {student.firstName} {student.lastInitial}
+    let studentViews = null;
+    if (this.props.students.length == 0) {
+      studentViews = (
+        <View style={styles.message}>
+          <Text style={styles.messageText}>
+            Let's add your student
           </Text>
-        </TouchableOpacity>
+          <Button
+            style={[styles.pickupButton, styles.messageButton]}
+            onPress={() => this.props.navigate('AddStudent')}
+          >
+            <Text style={styles.pickupButtonText}>
+              Add student
+            </Text>
+          </Button>
+        </View>
       );
-    });
+    } else {
+      studentViews = this.props.students.map((student) => {
+        const selected = this.state.studentKeys.includes(student.key);
+        const style = [styles.studentImage, selected ? styles.selected : {}];
+        return (
+          <TouchableOpacity
+            key={student.key}
+            style={styles.student}
+            onPress={this._selectStudent.bind(this, student.key)}
+          >
+            <Image style={style} source={require('../../../../images/max.png')} />
+            <Text style={styles.studentName}>
+              {student.firstName} {student.lastInitial}
+            </Text>
+          </TouchableOpacity>
+        );
+      });
+    }
 
     return (
       <View style={styles.container}>
@@ -61,7 +80,8 @@ class PickupSelect extends React.Component {
         <Button
           style={styles.pickupButton}
           disabled={this.state.studentKeys.length < 1}
-          onPress={this._pickup.bind(this)}>
+          onPress={this._pickup.bind(this)}
+        >
           <Text style={styles.pickupButtonText}>Pickup</Text>
         </Button>
       </View>
@@ -83,13 +103,12 @@ class PickupSelect extends React.Component {
 
 PickupSelect.propTypes = {
   students: PropTypes.array.isRequired,
-  user: PropTypes.object.isRequired,
   pickup: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   students: state.data.students,
-  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

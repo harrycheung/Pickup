@@ -10,6 +10,16 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: colors.background,
   },
+  message: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  messageText: {
+    fontSize: 18,
+  },
+  messageButton: {
+    marginTop: 15,
+  },
   students: {
     flex: 1,
     flexDirection: 'row',

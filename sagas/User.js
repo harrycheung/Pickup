@@ -31,6 +31,7 @@ export function* loadUser(action) {
       const { firstName, lastInitial } = response;
       yield put(UserActions.setUser(firstName, lastInitial));
     }
+    yield put(UserActions.loadedUser());
   } catch (error) {
     console.log('loadUser failed', error);
     // Do nothing?
