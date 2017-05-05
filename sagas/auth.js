@@ -90,14 +90,13 @@ export function* login(action) {
     const user = yield call(loginAsync, action.token);
     yield put(AuthActions.loginSucceeded(user));
     yield put(UserActions.loadUser());
-    const students = yield call(fetchStudents, user.uid);
-    yield put(DataActions.loadStudents(students));
     yield take(UserTypes.LOADED);
     const state = yield select();
-    console.log('state', state);
     if (state.user.firstName === '') {
       yield put(NavActions.navigate('CreateProfile'));
     } else {
+      const students = yield call(fetchStudents, user.uid);
+      yield put(DataActions.loadStudents(students));
       yield put(NavActions.resetNavigation('Main'));
     }
   } catch (error) {
