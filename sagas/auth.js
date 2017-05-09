@@ -9,9 +9,10 @@ import firebase from 'firebase';
 import * as c from '../config/constants';
 import { Types } from '../actions/Auth';
 import { Types as UserTypes } from '../actions/User';
+import { Types as StudentTypes } from '../actions/Student';
 import { Actions as AuthActions } from '../actions/Auth';
 import { Actions as UserActions } from '../actions/User';
-import { Actions as DataActions } from '../actions/Data';
+import { Actions as StudentActions } from '../actions/Student';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
 
@@ -63,30 +64,9 @@ const loginAsync = (token) => {
   return firebase.auth().signInWithCustomToken(token);
 };
 
-// TODO: move this to data saga
-const fetchStudents = (uid) => {
-  return firebase.database().ref('/users/' + uid + '/students').once('value')
-    .then((snapshot) => {
-      const students = snapshot.val() === null ? {} : snapshot.val();
-      const studentKeys = Object.keys(students);
-      return Promise.all(
-        studentKeys.map((id) => {
-          return firebase.database().ref('/students/' + id).once('value')
-            .then((snapshot) => {
-              return Object.assign({}, snapshot.val(), {
-                key: id,
-                relationship: students[id],
-              });
-            });
-        })
-      );
-    });
-}
-
 export function* login(action) {
   try {
     yield put(SpinnerActions.start());
-    delay(5000);
     const user = yield call(loginAsync, action.token);
     yield put(AuthActions.loginSucceeded(user));
     yield put(UserActions.loadUser());
@@ -95,8 +75,8 @@ export function* login(action) {
     if (state.user.firstName === '') {
       yield put(NavActions.navigate('CreateProfile'));
     } else {
-      const students = yield call(fetchStudents, user.uid);
-      yield put(DataActions.loadStudents(students));
+      yield put(StudentActions.loadStudents(state.user.uid));
+      yield take(StudentTypes.LOADED);
       yield put(NavActions.resetNavigation('Main'));
     }
   } catch (error) {

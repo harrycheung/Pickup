@@ -12,7 +12,7 @@ import { Actions as PickupActions } from '../../../../actions/Pickup';
 
 class PickupRequest extends React.Component {
   state: {
-    dataSource: ListView.DataSource,
+    dataSource: ListView.StudentSource,
   };
 
   static navigationOptions = {
@@ -44,7 +44,7 @@ class PickupRequest extends React.Component {
       type: 'release',
       sender: '11111111113',
     }];
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.StudentSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows(messages),
     };
@@ -69,23 +69,23 @@ class PickupRequest extends React.Component {
     );
   }
 
-  _renderRow(messageData, sectionID, rowID) {
+  _renderRow(messageStudent, sectionID, rowID) {
     const rowKey = `${sectionID}-${rowID}`;
     let containerStyle = [styles.messageContainer];
     let messageStyle = [styles.message];
     let sender = null;
     let message = <Text>Unknown message</Text>
 
-    if (messageData.sender === this.props.uid) {
+    if (messageStudent.sender === this.props.uid) {
       containerStyle.push(styles.right);
       messageStyle.push(styles.withoutSender);
     } else {
       containerStyle.push(styles.left);
       messageStyle.push(styles.withSender);
-      sender = messageData.sender;
+      sender = messageStudent.sender;
     }
 
-    switch (messageData.type) {
+    switch (messageStudent.type) {
       case 'request':
         message = (
           <View style={styles.request}>
@@ -124,7 +124,7 @@ class PickupRequest extends React.Component {
         break;
 
       case 'message':
-        message = messageData.message;
+        message = messageStudent.message;
         break;
 
       case 'escort':

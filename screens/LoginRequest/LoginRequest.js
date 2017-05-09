@@ -17,6 +17,7 @@ class LoginRequest extends React.Component {
   state: {
     disabled: boolean,
     phoneNumber: string,
+    requested: boolean,
   };
 
   constructor(props) {
@@ -25,6 +26,7 @@ class LoginRequest extends React.Component {
     this.state = {
       disabled: true,
       phoneNumber: '',
+      requested: false,
     };
   }
 
@@ -38,7 +40,7 @@ class LoginRequest extends React.Component {
       buttonContent = (
         <ActivityIndicator animating={true} color='white' size='small' />
       );
-    } else if (this.state.phoneNumber !== '') {
+    } else if (this.props.requested) {
       buttonContent = (
         <Text style={styles.loginButtonText}>Get magic link again</Text>
       )
@@ -78,6 +80,7 @@ class LoginRequest extends React.Component {
 
   _login() {
     this.props.requestLogin(this.state.phoneNumber);
+    this.setState({requested: true});
   }
 }
 

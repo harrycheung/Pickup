@@ -97,7 +97,7 @@ ManageStudents.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  students: state.data.students,
+  students: state.student.students,
 });
 
 const mapDispatchToProps = (dispatch) => ({

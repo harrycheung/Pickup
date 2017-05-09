@@ -10,10 +10,10 @@ const initialState = {
 export default (state: Object = initialState, action: Object) => {
   switch (action.type) {
     case Types.LOGIN_SUCCEEDED:
-      return {...state, user: action.user};
+      return {user: action.user};
 
     case Types.LOGOUT_SUCCEEDED:
-      return {...state, user: null};
+      return {user: null};
 
     default:
       return state;

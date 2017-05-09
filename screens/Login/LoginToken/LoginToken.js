@@ -32,7 +32,12 @@ class LoginToken extends React.Component {
     if (this.props.spinning) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator animating={true} color='white' size='small' />
+          <ActivityIndicator
+            animating={true}
+            color='darkgrey'
+            size='large'
+          />
+          <Text style={{marginTop: 15}}>Logging in...</Text>
         </View>
       )
     } else {

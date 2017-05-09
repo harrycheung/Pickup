@@ -6,10 +6,11 @@ import {
 } from './Auth';
 
 import {
+  watchLoadStudents,
   watchAddStudent,
   watchEditStudent,
   watchDeleteStudent
-} from './Data';
+} from './Student';
 
 import {
   watchPickup
@@ -27,6 +28,7 @@ export default function* rootSaga() {
     watchRequestLogin(),
     watchLogin(),
     watchLogout(),
+    watchLoadStudents(),
     watchAddStudent(),
     watchEditStudent(),
     watchDeleteStudent(),

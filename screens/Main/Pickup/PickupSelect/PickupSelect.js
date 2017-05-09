@@ -3,7 +3,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -41,7 +47,7 @@ class PickupSelect extends React.Component {
       studentViews = (
         <View style={styles.message}>
           <Text style={styles.messageText}>
-            Let's add your student
+            {"Let's add your student"}
           </Text>
           <Button
             style={[styles.pickupButton, styles.messageButton]}
@@ -108,7 +114,7 @@ PickupSelect.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  students: state.data.students,
+  students: state.student.students,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 import StudentForm from '../../../../components/StudentForm';
-import { Actions as DataActions } from '../../../../actions/Data';
+import { Actions as StudentActions } from '../../../../actions/Student';
 
 class AddStudent extends React.Component {
   static navigationOptions = {
@@ -30,7 +30,7 @@ AddStudent.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(DataActions, dispatch),
+  ...bindActionCreators(StudentActions, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(AddStudent);

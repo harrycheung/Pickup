@@ -2,6 +2,7 @@
 // @flow
 
 import { Types } from '../actions/User';
+import { Types as AuthTypes } from '../actions/Auth';
 
 const initialState = {
   firstName: '',
@@ -13,9 +14,10 @@ export default (state: Object = initialState, action: Object) => {
     case Types.SET:
     case Types.CREATE:
     case Types.UPDATE:
-      return {
-        ...state, firstName: action.firstName, lastInitial: action.lastInitial
-      };
+      return {firstName: action.firstName, lastInitial: action.lastInitial};
+
+    case AuthTypes.LOGOUT:
+      return initialState;
 
     default:
       return state;

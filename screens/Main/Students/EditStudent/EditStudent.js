@@ -12,7 +12,7 @@ import styles from './styles';
 import { colors } from '../../../../config/styles';
 import StudentForm from '../../../../components/StudentForm';
 import Button from '../../../../components/Button';
-import { Actions as DataActions } from '../../../../actions/Data';
+import { Actions as StudentActions } from '../../../../actions/Student';
 
 class EditStudent extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => {
@@ -69,7 +69,7 @@ EditStudent.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(DataActions, dispatch),
+  ...bindActionCreators(StudentActions, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(EditStudent);
