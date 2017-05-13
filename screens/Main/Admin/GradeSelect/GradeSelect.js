@@ -7,29 +7,30 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as c from '../../../../config/constants';
 import styles from './styles';
-import drawerHeader from '../../../components/DrawerHeader';
-import Button from '../../../components/Button';
-import { Actions as NavActions } from '../../../actions/Navigation';
+import drawerHeader from '../../../../components/DrawerHeader';
+import Button from '../../../../components/Button';
+import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class Home extends React.Component {
   state: {
     grades: string[],
   };
 
-  static navigationOptions = {
-    title: 'Escort',
-    drawer: {
-      label: 'Escort',
-    },
-    header: drawerHeader,
-  };
+  static navigationOptions = ({ navigation, screenProps }) => (
+    drawerHeader(navigation, screenProps, {
+      title: 'Admin',
+      drawerLabel: 'Admin',
+      headerBackTitle: '',
+    })
+  );
 
   constructor(props) {
     super(props);
 
     this.state = {
-      grades: ['L1', 'L2', 'L3', 'L4'],
+      grades: c.Levels,
     };
   }
 
@@ -55,7 +56,7 @@ class Home extends React.Component {
   }
 
   _selectLevel(grade) {
-    this.props.navigate('Escort', {grade});
+    this.props.navigate('EscortSelect', {grade});
   }
 }
 

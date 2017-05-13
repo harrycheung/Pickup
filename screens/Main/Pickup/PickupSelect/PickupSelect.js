@@ -17,12 +17,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
-import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class PickupSelect extends React.Component {
   state: {
-    studentKeys: string[],
+    students: string[],
   }
 
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -37,7 +36,7 @@ class PickupSelect extends React.Component {
     super(props);
 
     this.state = {
-      studentKeys: [],
+      students: [],
     };
   }
 
@@ -61,13 +60,13 @@ class PickupSelect extends React.Component {
       );
     } else {
       studentViews = this.props.students.map((student) => {
-        const selected = this.state.studentKeys.includes(student.key);
+        const selected = this.state.students.includes(student);
         const style = [styles.studentImage, selected ? styles.selected : {}];
         return (
           <TouchableOpacity
             key={student.key}
             style={styles.student}
-            onPress={this._selectStudent.bind(this, student.key)}
+            onPress={this._selectStudent.bind(this, student)}
           >
             <Image style={style} source={require('../../../../images/max.png')} />
             <Text style={styles.studentName}>
@@ -85,7 +84,7 @@ class PickupSelect extends React.Component {
         </ScrollView>
         <Button
           style={styles.pickupButton}
-          disabled={this.state.studentKeys.length < 1}
+          disabled={this.state.students.length < 1}
           onPress={this._pickup.bind(this)}
         >
           <Text style={styles.pickupButtonText}>Pickup</Text>
@@ -94,22 +93,22 @@ class PickupSelect extends React.Component {
     );
   }
 
-  _selectStudent(key) {
-    if (this.state.studentKeys.includes(key)) {
-      this.setState({studentKeys: this.state.studentKeys.filter((studentKey) => (studentKey != key))});
+  _selectStudent(selectedStudent) {
+    if (this.state.students.includes(selectedStudent)) {
+      this.setState({students: this.state.students.filter((student) => (student !== selectedStudent))});
     } else {
-      this.setState({studentKeys: this.state.studentKeys.concat([key])});
+      this.setState({students: this.state.students.concat([selectedStudent])});
     }
   }
 
   _pickup() {
-    this.props.pickup(this.state.studentKeys);
+    this.props.navigate('PickupRequest', {students: this.state.students});
+    this.setState({students: []});
   }
 }
 
 PickupSelect.propTypes = {
   students: PropTypes.array.isRequired,
-  pickup: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
 }
 
@@ -118,7 +117,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
 });
 

@@ -9,13 +9,11 @@ import { connect } from 'react-redux';
 import LoginRequestScreen from './LoginRequest';
 import LoginScreen from './Login';
 import MainScreen from './Main';
-import AdminScreen from './Admin';
 
 export const AppNavigator = StackNavigator({
   Main: {screen: MainScreen},
   LoginRequest: {screen: LoginRequestScreen},
   Login: {screen: LoginScreen},
-  Admin: {screen: AdminScreen},
 }, {
   headerMode: 'screen',
   navigationOptions: {

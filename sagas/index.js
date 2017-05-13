@@ -13,10 +13,6 @@ import {
 } from './Student';
 
 import {
-  watchPickup
-} from './Pickup';
-
-import {
   watchLoadUser,
   watchCreateUser,
   watchUpdateUser
@@ -32,7 +28,6 @@ export default function* rootSaga() {
     watchAddStudent(),
     watchEditStudent(),
     watchDeleteStudent(),
-    watchPickup(),
     watchLoadUser(),
     watchCreateUser(),
     watchUpdateUser()

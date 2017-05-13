@@ -7,7 +7,15 @@ import { colors } from '../../../../config/styles';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    marginHorizontal: 15,
   },
+  gradeButton: {
+    height: 44,
+    marginTop: 15,
+    marginHorizontal: 15,
+    backgroundColor: colors.buttonBackground,
+  },
+  gradeButtonText: {
+    fontSize: 18,
+    color: colors.buttonText,
+  }
 });

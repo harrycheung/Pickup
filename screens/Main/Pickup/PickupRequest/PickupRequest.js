@@ -3,16 +3,17 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, ListView, Text, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import firebase from 'firebase';
 
 import styles from './styles';
-import { Actions as PickupActions } from '../../../../actions/Pickup';
+import PickupMessages from '../../../../components/PickupMessages';
 
 class PickupRequest extends React.Component {
   state: {
-    dataSource: ListView.StudentSource,
+    pickup: Object,
   };
 
   static navigationOptions = {
@@ -22,166 +23,102 @@ class PickupRequest extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      pickup: null,
+    };
+  }
+
+  componentDidMount() {
     const messages = [{
       type: 'request',
       sender: '1111111111',
+      createdAt: '1',
     }, {
       type: 'message',
       sender: '1111111112',
       message: 'Is Max having a playdate with Josh?',
+      createdAt: '2',
     }, {
       type: 'message',
       sender: '1111111111',
       message: 'Yes, he is',
+      createdAt: '3',
     }, {
       type: 'message',
-      sender: '11111111112',
+      sender: '1111111112',
       message: 'OK',
+      createdAt: '4',
     }, {
       type: 'escort',
-      sender: '11111111113',
+      sender: '1111111113',
+      createdAt: '5',
     }, {
       type: 'release',
-      sender: '11111111113',
+      sender: '1111111113',
+      createdAt: '6',
     }];
-    const ds = new ListView.StudentSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {
-      dataSource: ds.cloneWithRows(messages),
+
+    const students = this.props.navigation.state.params.students;
+    const studentKeys = students.map((student) => student.key);
+    const grades = Array.from(new Set(students.map((student) => student.grade)));
+    let pickup = {
+      requestor: this.props.uid,
+      students: studentKeys,
+      messages,
+      grades,
+      createdAt: Date.now(),
     };
+    firebase.database().ref('/pickups').push(pickup)
+    .then((pickupRef) => {
+      pickup.key = pickupRef.key;
+      pickup.students = students;
+      return new Promise((resolve) => {
+        //this.setState({pickup}, () => resolve(pickupRef));
+      });
+    })
+    .then((pickupRef) => {
+      pickupRef.child('completedAt').on('value', (snapshot) => {
+        if (snapshot.val() !== null) {
+          console.log('completed', snapshot.val());
+        }
+      });
+    });
   }
 
   componentWillUnmount() {
-    if (this.props.active) {
-      // Must have canceled
-      this.props.pickupCanceled(this.props.request.key);
-    }
+    firebase.database().ref('/pickups/' + this.state.pickup.key).remove();
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow.bind(this)}
-          enableEmptySections={true}
+    if (this.state.pickup === null) {
+      return (
+        <ActivityIndicator
+          style={{flex: 1}}
+          animating={true}
+          color='black'
+          size='large'
         />
-      </View>
-    );
-  }
-
-  _renderRow(messageStudent, sectionID, rowID) {
-    const rowKey = `${sectionID}-${rowID}`;
-    let containerStyle = [styles.messageContainer];
-    let messageStyle = [styles.message];
-    let sender = null;
-    let message = <Text>Unknown message</Text>
-
-    if (messageStudent.sender === this.props.uid) {
-      containerStyle.push(styles.right);
-      messageStyle.push(styles.withoutSender);
+      );
     } else {
-      containerStyle.push(styles.left);
-      messageStyle.push(styles.withSender);
-      sender = messageStudent.sender;
-    }
-
-    switch (messageStudent.type) {
-      case 'request':
-        message = (
-          <View style={styles.request}>
-            <Text style={styles.messageText}>
-              Requesting pickup at the front gate for
-            </Text>
-            <View style={styles.student}>
-              <Image
-                style={styles.studentImage}
-                source={require('../../../../images/max.png')}
-              />
-              <Text style={styles.studentName}>
-                Max Cheung
-              </Text>
-            </View>
-            <View style={styles.student}>
-              <Image
-                style={styles.studentImage}
-                source={require('../../../../images/max.png')}
-              />
-              <Text style={styles.studentName}>
-                Max2 Cheung
-              </Text>
-            </View>
-            <View style={styles.student}>
-              <Image
-                style={styles.studentImage}
-                source={require('../../../../images/max.png')}
-              />
-              <Text style={styles.studentName}>
-                Max2 Cheung
-              </Text>
-            </View>
-          </View>
-        );
-        break;
-
-      case 'message':
-        message = messageStudent.message;
-        break;
-
-      case 'escort':
-        message = 'Sara H is escorting Max C and Josh B to the front gate';
-        break;
-
-      case 'release':
-        message = 'Sara H released Max C and Josh B to Harry C';
-        break;
-    }
-
-    return this._renderMessage(
-      rowKey, containerStyle, sender, messageStyle, message
-    );
-  }
-
-  _renderMessage(rowKey, containerStyle, sender, messageStyle, message) {
-    let senderJSX = null;
-    if (sender !== null) {
-      senderJSX = (
-        <Image
-          style={styles.senderImage}
-          source={require('../../../../images/max.png')}
+      return (
+        <PickupMessages
+          uid={this.props.uid}
+          pickup={this.state.pickup}
         />
       );
     }
-
-    if (typeof message === 'string') {
-      message = <Text style={styles.messageText}>{message}</Text>
-    }
-
-    return (
-      <View key={rowKey} style={containerStyle}>
-        {senderJSX}
-        <View style={messageStyle}>
-          {message}
-        </View>
-      </View>
-    );
   }
 }
 
 PickupRequest.propTypes = {
-  request: PropTypes.object.isRequired,
-  active: PropTypes.bool.isRequired,
   uid: PropTypes.string.isRequired,
-  pickupCanceled: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
-  request: state.pickup.request,
-  active: state.pickup.active,
   uid: state.auth.user.uid,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(PickupActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PickupRequest);

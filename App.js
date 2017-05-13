@@ -14,9 +14,9 @@ import rootSaga from './sagas';
 const logger = ({ getState }) => {
   return (next) => (action) => {
     // Call the next dispatch method in the middleware chain.
-    console.log('will dispatch', action);
+    console.log('DISPATCH:', action);
     let returnValue = next(action);
-    // console.log('state after dispatch', getState());
+    // console.log('STATE:', getState());
 
     // This will likely be the action itself, unless
     // a middleware further in chain changed it.
@@ -50,7 +50,7 @@ class Root extends React.Component {
     AsyncStorage.getItem('reduxStore')
     .then((value) => {
       if (value && value.length) {
-        let previousStore = JSON.parse(value)
+        let previousStore = JSON.parse(value);
         self.setState({
           store: createStore(AppReducers, previousStore, middleware),
           isStoreLoading: false,

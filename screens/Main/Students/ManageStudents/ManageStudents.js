@@ -67,10 +67,10 @@ class ManageStudents extends React.Component {
     );
   }
 
-  _renderRow(student) {
+  _renderRow(student, sectionID, rowID) {
     return (
       <TouchableOpacity
-        key={student.key}
+        key={`${sectionID}-${rowID}`}
         onPress={() => this.props.navigate('EditStudent', {student})}
       >
         <View style={styles.student}>
