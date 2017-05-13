@@ -83,7 +83,12 @@ class PickupMessages extends React.Component {
         <AutoScrollView contentContainerStyle={styles.messagesContainer}>
           {this.state.messages.map((message) => this.renderMessage(message))}
         </AutoScrollView>
-        <View style={styles.composeContainer} />
+        <View style={styles.composeContainer}>
+          <TextInput
+            placeholder='Send a message'
+            returnKeyType='send'
+          />
+        </View>
         {escortButtons}
       </View>
     );

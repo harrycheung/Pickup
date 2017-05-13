@@ -33,9 +33,8 @@ class EscortSelect extends React.Component {
   }
 
   componentDidMount() {
-    let pickupRequest = {}
     firebase.database().ref('/pickups').on('child_added', (snapshot) => {
-      pickupRequest = snapshot.val();
+      let pickupRequest = snapshot.val();
       if (pickupRequest.grades.includes(this.props.navigation.state.params.grade)) {
         pickupRequest.key = snapshot.key;
         Promise.all(pickupRequest.students.map((studentKey) => {
@@ -49,9 +48,8 @@ class EscortSelect extends React.Component {
           return firebase.database().ref('/users/' + pickupRequest.requestor).once('value');
         })
         .then((snapshot) => {
-          const uid = pickupRequest.requestor;
           pickupRequest.requestor = snapshot.val();
-          pickupRequest.requestor.uid = uid;
+          pickupRequest.requestor.uid = snapshot.key;
           const pickupRequests = this.state.pickupRequests.concat(pickupRequest);
           this.setState({
             pickupRequests,
