@@ -8,10 +8,12 @@ import firebase from 'firebase';
 
 import styles from './styles';
 import AutoScrollView from '../AutoScrollView';
+import KeyboardSpacer from '../KeyboardSpacer';
 
 class PickupMessages extends React.Component {
   state: {
     messages: Object[],
+    message: string,
   };
 
   constructor(props: Object) {
@@ -19,6 +21,7 @@ class PickupMessages extends React.Component {
 
     this.state = {
       messages: [],
+      message: '',
     };
   }
 
@@ -28,21 +31,32 @@ class PickupMessages extends React.Component {
       '/pickups/' + pickup.key + '/messages'
     );
     messagesRef.once('value').then((snapshot) => {
-      return Promise.all(snapshot.val().map((message) => {
-        return firebase.database().ref('/users/' + message.sender).once('value')
-        .then((snapshot) => {
-          const senderKey = message.sender;
-          message.sender = snapshot.val();
-          message.sender['key'] = senderKey;
-          return message;
-        });
-      }));
+      let messages = [];
+
+      snapshot.forEach((messageSnapshot) => {
+        let message = messageSnapshot.val();
+        message.key = messageSnapshot.key;
+        messages.push(
+          firebase.database().ref('/users/' + message.sender).once('value')
+          .then((snapshot) => {
+            const senderKey = message.sender;
+            message.sender = snapshot.val();
+            message.sender['key'] = senderKey;
+            return message;
+          })
+        );
+      });
+
+      return Promise.all(messages);
     })
     .then((messages) => {
       this.setState({messages}, () => {
         messagesRef.limitToLast(1).on('child_added', (snapshot) => {
-          if (!(parseInt(snapshot.key) in this.state.messages)) {
-            console.log('blah');
+          const doesNotHasKey = (element, index, array) => {
+            return element.key !== snapshot.key;
+          };
+
+          if (this.state.messages.some(doesNotHasKey)) {
             let message = snapshot.val();
             message['key'] = snapshot.key;
 
@@ -80,16 +94,23 @@ class PickupMessages extends React.Component {
 
     return (
       <View style={styles.container}>
-        <AutoScrollView contentContainerStyle={styles.messagesContainer}>
-          {this.state.messages.map((message) => this.renderMessage(message))}
-        </AutoScrollView>
+        <View style={{flex: 1}}>
+          <AutoScrollView contentContainerStyle={styles.messagesContainer}>
+            {this.state.messages.map((message) => this.renderMessage(message))}
+          </AutoScrollView>
+        </View>
         <View style={styles.composeContainer}>
           <TextInput
+            style={{height: 44, paddingHorizontal: 15}}
             placeholder='Send a message'
             returnKeyType='send'
+            onChangeText={(text) => this.setState({message: text})}
+            onSubmitEditing={this._postMessage.bind(this)}
+            value={this.state.message}
           />
         </View>
         {escortButtons}
+        <KeyboardSpacer />
       </View>
     );
   }
@@ -174,6 +195,22 @@ class PickupMessages extends React.Component {
         </View>
       </View>
     );
+  }
+
+  _postMessage() {
+    const { pickup } = this.props;
+    const messagesRef = firebase.database().ref(
+      '/pickups/' + pickup.key + '/messages'
+    );
+    messagesRef.push({
+      type: 'message',
+      sender: this.props.uid,
+      createdAt: Date.now(),
+      message: this.state.message,
+    })
+    .then((messageRef) => {
+      this.setState({message: ''});
+    });
   }
 }
 

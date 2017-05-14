@@ -29,42 +29,12 @@ class PickupRequest extends React.Component {
   }
 
   componentDidMount() {
-    const messages = [{
-      type: 'request',
-      sender: '1111111111',
-      createdAt: '1',
-    }, {
-      type: 'message',
-      sender: '1111111112',
-      message: 'Is Max having a playdate with Josh?',
-      createdAt: '2',
-    }, {
-      type: 'message',
-      sender: '1111111111',
-      message: 'Yes, he is',
-      createdAt: '3',
-    }, {
-      type: 'message',
-      sender: '1111111112',
-      message: 'OK',
-      createdAt: '4',
-    }, {
-      type: 'escort',
-      sender: '1111111113',
-      createdAt: '5',
-    }, {
-      type: 'release',
-      sender: '1111111113',
-      createdAt: '6',
-    }];
-
     const students = this.props.navigation.state.params.students;
     const studentKeys = students.map((student) => student.key);
     const grades = Array.from(new Set(students.map((student) => student.grade)));
     let pickup = {
       requestor: this.props.uid,
       students: studentKeys,
-      messages,
       grades,
       createdAt: Date.now(),
     };
@@ -73,7 +43,17 @@ class PickupRequest extends React.Component {
       pickup.key = pickupRef.key;
       pickup.students = students;
       return new Promise((resolve) => {
-        //this.setState({pickup}, () => resolve(pickupRef));
+        this.setState({pickup}, () => resolve(pickupRef));
+      });
+    })
+    .then((pickupRef) => {
+      return pickupRef.child('messages').push({
+        type: 'request',
+        sender: this.props.uid,
+        createdAt: Date.now(),
+      })
+      .then((messageRef) => {
+        return pickupRef;
       });
     })
     .then((pickupRef) => {
@@ -86,7 +66,9 @@ class PickupRequest extends React.Component {
   }
 
   componentWillUnmount() {
-    firebase.database().ref('/pickups/' + this.state.pickup.key).remove();
+    if (this.state.pickup !== null) {
+      firebase.database().ref('/pickups/' + this.state.pickup.key).remove();
+    }
   }
 
   render() {
@@ -118,7 +100,4 @@ const mapStateToProps = (state) => ({
   uid: state.auth.user.uid,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(PickupRequest);
+export default connect(mapStateToProps)(PickupRequest);
