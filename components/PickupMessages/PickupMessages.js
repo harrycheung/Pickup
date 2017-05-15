@@ -83,10 +83,8 @@ class PickupMessages extends React.Component {
 
   componentWillUnmount() {
     const { pickup } = this.props;
-    const messagesRef = firebase.database().ref(
-      '/pickups/' + pickup.key + '/messages'
-    )
-    .off();
+    firebase.database().ref('/pickups/' + pickup.key).off();
+    firebase.database().ref('/pickups/' + pickup.key + '/messages').off();
   }
 
   render() {
