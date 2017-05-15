@@ -86,6 +86,7 @@ class PickupRequest extends React.Component {
         <PickupMessages
           uid={this.props.uid}
           pickup={this.state.pickup}
+          onClose={() => {}}
         />
       );
     }

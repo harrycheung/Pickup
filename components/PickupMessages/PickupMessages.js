@@ -27,6 +27,13 @@ class PickupMessages extends React.Component {
 
   componentDidMount() {
     const { pickup } = this.props;
+    firebase.database().ref('/pickups/' + pickup.key)
+    .on('value', (snapshot) => {
+      if (snapshot.val() === null) {
+        this.props.onClose();
+      }
+    });
+
     const messagesRef = firebase.database().ref(
       '/pickups/' + pickup.key + '/messages'
     );
@@ -217,6 +224,7 @@ class PickupMessages extends React.Component {
 PickupMessages.propTypes = {
   uid: PropTypes.string.isRequired,
   pickup: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default PickupMessages;
