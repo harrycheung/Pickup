@@ -3,17 +3,19 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, Text, TextInput, View } from 'react-native';
+import { Alert, Image, Text, TextInput, View } from 'react-native';
 import firebase from 'firebase';
 
 import styles from './styles';
 import AutoScrollView from '../AutoScrollView';
 import KeyboardSpacer from '../KeyboardSpacer';
+import Button from '../Button';
 
 class PickupMessages extends React.Component {
   state: {
     messages: Object[],
     message: string,
+    state: string,
   };
 
   constructor(props: Object) {
@@ -22,6 +24,7 @@ class PickupMessages extends React.Component {
     this.state = {
       messages: [],
       message: '',
+      state: ''
     };
   }
 
@@ -59,13 +62,13 @@ class PickupMessages extends React.Component {
     .then((messages) => {
       this.setState({messages}, () => {
         messagesRef.limitToLast(1).on('child_added', (snapshot) => {
-          const doesNotHasKey = (element, index, array) => {
-            return element.key !== snapshot.key;
+          const hasKey = (element) => {
+            return element.key === snapshot.key;
           };
 
-          if (this.state.messages.some(doesNotHasKey)) {
+          if (!this.state.messages.find(hasKey)) {
             let message = snapshot.val();
-            message['key'] = snapshot.key;
+            message.key = snapshot.key;
 
             firebase.database().ref('/users/' + message.sender).once('value')
             .then((snapshot) => {
@@ -90,11 +93,32 @@ class PickupMessages extends React.Component {
   render() {
     let escortButtons = null;
     if (this.props.uid !== this.props.pickup.requestor) {
-      escortButtons = (
-        <View style={styles.composeContainer}>
-          <Text>escort stuff</Text>
-        </View>
-      )
+      switch (this.state.state) {
+        case 'escorting':
+          escortButtons = (
+            <Button
+              style={styles.escortButton}
+              onPress={this._release.bind(this)}
+            >
+              <Text style={styles.escortButtonText}>
+                Release
+              </Text>
+            </Button>
+          );
+          break;
+
+        default:
+          escortButtons = (
+            <Button
+              style={styles.escortButton}
+              onPress={this._escort.bind(this)}
+            >
+              <Text style={styles.escortButtonText}>
+                Escort
+              </Text>
+            </Button>
+          );
+      }
     }
 
     return (
@@ -190,7 +214,7 @@ class PickupMessages extends React.Component {
     }
 
     return (
-      <View key={message.createdAt} style={containerStyle}>
+      <View key={message.key} style={containerStyle}>
         {senderJSX}
         <View style={messageStyle}>
           {messageJSX}
@@ -202,20 +226,62 @@ class PickupMessages extends React.Component {
     );
   }
 
-  _postMessage() {
-    const { pickup } = this.props;
-    const messagesRef = firebase.database().ref(
-      '/pickups/' + pickup.key + '/messages'
-    );
-    messagesRef.push({
+  _postMessage(message, callback) {
+    let messageData = {
       type: 'message',
       sender: this.props.uid,
       createdAt: Date.now(),
-      message: this.state.message,
-    })
+      message: '',
+    };
+    if (message != null) {
+      messageData.type = message;
+    } else {
+      messageData.message = this.state.message;
+    }
+
+    const { pickup } = this.props;
+    firebase.database().ref('/pickups/' + pickup.key + '/messages')
+    .push(messageData)
     .then((messageRef) => {
-      this.setState({message: ''});
+      this.setState({message: ''}, () => {
+        callback && callback();
+      });
     });
+  }
+
+  _escort() {
+    Alert.alert(
+      'Confirm escort',
+      null,
+      [
+        {text: 'Cancel', onPress: null, style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          this.setState({state: 'escorting'}, () => {
+            this._postMessage('escort');
+          });
+        }}
+      ],
+      {cancelable: false}
+    );
+  }
+
+  _release() {
+    Alert.alert(
+      'Confirm release',
+      null,
+      [
+        {text: 'Cancel', onPress: null, style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          firebase.database().ref('/pickups/' + this.props.pickup.key)
+          .remove()
+          .then(() => {
+            this.componentWillUnmount();
+            this.props.onComplete();
+          });
+        }}
+      ],
+      {cancelable: false}
+    );
   }
 }
 
@@ -223,6 +289,7 @@ PickupMessages.propTypes = {
   uid: PropTypes.string.isRequired,
   pickup: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
+  onComplete: PropTypes.func.isRequired,
 };
 
 export default PickupMessages;

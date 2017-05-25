@@ -24,6 +24,7 @@ class EscortRequest extends React.Component {
           uid={this.props.uid}
           pickup={this.props.navigation.state.params.pickup}
           onClose={this._pickupClosed.bind(this)}
+          onComplete={this._pickupCompleted.bind(this)}
         />
       </View>
     );
@@ -35,6 +36,10 @@ class EscortRequest extends React.Component {
       null,
       [{text: 'OK', onPress: () => this.props.back()}]
     );
+  }
+
+  _pickupCompleted() {
+    this.props.back();
   }
 }
 

@@ -74,5 +74,13 @@ export default StyleSheet.create({
     marginTop: 5,
     fontSize: 10,
     color: 'white',
+  },
+  escortButton: {
+    height: 44,
+    backgroundColor: colors.buttonBackground,
+  },
+  escortButtonText: {
+    fontSize: 18,
+    color: 'white',
   }
 });

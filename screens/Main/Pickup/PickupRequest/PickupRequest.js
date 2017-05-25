@@ -10,6 +10,7 @@ import firebase from 'firebase';
 
 import styles from './styles';
 import PickupMessages from '../../../../components/PickupMessages';
+import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class PickupRequest extends React.Component {
   state: {
@@ -87,6 +88,7 @@ class PickupRequest extends React.Component {
           uid={this.props.uid}
           pickup={this.state.pickup}
           onClose={() => {}}
+          onComplete={() => this.props.back()}
         />
       );
     }
@@ -95,10 +97,15 @@ class PickupRequest extends React.Component {
 
 PickupRequest.propTypes = {
   uid: PropTypes.string.isRequired,
+  back: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   uid: state.auth.user.uid,
 });
 
-export default connect(mapStateToProps)(PickupRequest);
+const mapDispatchToProps = (dispatch) => ({
+  ...bindActionCreators(NavActions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PickupRequest);
