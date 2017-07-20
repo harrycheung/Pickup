@@ -31,11 +31,14 @@ class PickupRequest extends React.Component {
 
   componentDidMount() {
     const students = this.props.navigation.state.params.students;
-    const studentKeys = students.map((student) => student.key);
+    const pickupStudents = students.reduce((students, student) => {
+      students[student.key] = {escort: ''};
+      return students;
+    }, {});
     const grades = Array.from(new Set(students.map((student) => student.grade)));
     let pickup = {
       requestor: this.props.uid,
-      students: studentKeys,
+      students: pickupStudents,
       grades,
       createdAt: Date.now(),
     };

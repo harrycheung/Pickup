@@ -25,38 +25,50 @@ class EscortSelect extends React.Component {
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       pickupRequests: [],
       dataSource: ds.cloneWithRows([]),
     };
   }
 
-  componentDidMount() {
-    firebase.database().ref('/pickups').on('child_added', (snapshot) => {
-      let pickupRequest = snapshot.val();
-      if (pickupRequest.grades.includes(this.props.navigation.state.params.grade)) {
-        pickupRequest.key = snapshot.key;
-        Promise.all(pickupRequest.students.map((studentKey) => {
-          return firebase.database().ref('/students/' + studentKey).once('value')
-          .then((snapshot) => {
-            return Object.assign({}, snapshot.val(), {key: studentKey});
-          });
-        }))
-        .then((students) => {
-          pickupRequest.students = students;
-          return firebase.database().ref('/users/' + pickupRequest.requestor).once('value');
-        })
+  _loadPickup(snapshot): Promise<any> {
+    let pickupRequest = snapshot.val();
+    if (pickupRequest.grades.includes(this.props.navigation.state.params.grade)) {
+      pickupRequest.key = snapshot.key;
+      const { students } = pickupRequest;
+      return Promise.all(Object.keys(students).map((studentKey) => {
+        return firebase.database().ref('/students/' + studentKey).once('value')
         .then((snapshot) => {
-          pickupRequest.requestor = snapshot.val();
-          pickupRequest.requestor.uid = snapshot.key;
-          const pickupRequests = this.state.pickupRequests.concat(pickupRequest);
-          this.setState({
-            pickupRequests,
-            dataSource: this.state.dataSource.cloneWithRows(pickupRequests),
+          return Object.assign({}, snapshot.val(), {
+            key: studentKey,
+            escort: students[studentKey].escort,
           });
         });
-      }
+      }))
+      .then((students) => {
+        pickupRequest.students = students;
+        return firebase.database().ref('/users/' + pickupRequest.requestor).once('value');
+      })
+      .then((snapshot) => {
+        pickupRequest.requestor = snapshot.val();
+        pickupRequest.requestor.uid = snapshot.key;
+        return pickupRequest;
+      });
+    } else {
+      return Promise.reject();
+    }
+  }
+
+  componentDidMount() {
+    firebase.database().ref('/pickups').on('child_added', (snapshot) => {
+      this._loadPickup(snapshot).then((pickupRequest) => {
+        const pickupRequests = this.state.pickupRequests.concat(pickupRequest);
+        this.setState({
+          pickupRequests,
+          dataSource: this.state.dataSource.cloneWithRows(pickupRequests),
+        });
+      });
     });
 
     firebase.database().ref('/pickups').on('child_removed', (snapshot) => {
@@ -66,6 +78,18 @@ class EscortSelect extends React.Component {
       this.setState({
         pickupRequests,
         dataSource: this.state.dataSource.cloneWithRows(pickupRequests),
+      });
+    });
+
+    firebase.database().ref('/pickups').on('child_changed', (snapshot) => {
+      this._loadPickup(snapshot).then((pickupRequest) => {
+        const pickupRequests = this.state.pickupRequests.map((pickup) => {
+          return pickup.key == pickupRequest.key ? pickupRequest : pickup;
+        });
+        this.setState({
+          pickupRequests,
+          dataSource: this.state.dataSource.cloneWithRows(pickupRequests),
+        });
       });
     });
   }
@@ -88,44 +112,125 @@ class EscortSelect extends React.Component {
   }
 
   _renderRow(pickup, sectionID, rowID) {
-    let students = pickup.students.map((student) => {
+    let students = pickup.students.map((student, index) => {
+      let actions = '';
+      if (student.released) {
+        actions = (
+          <View style={styles.actionsContainer}>
+            <Text style={styles.releaseText}>
+              released by someone
+            </Text>
+          </View>
+        );
+      } else if (student.escort == this.props.uid) {
+        actions = (
+          <View style={styles.actionsContainer}>
+            <View style={styles.buttonContainer}>
+              <Button
+                style={[styles.button, styles.cancelButton]}
+                onPress={this._escort.bind(this, rowID, index, '')}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </Button>
+            </View>
+            <View style={styles.actionsSpacer} />
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                onPress={this._release.bind(this, rowID, index)}
+              >
+                <Text style={styles.buttonText}>Release</Text>
+              </Button>
+            </View>
+          </View>
+        );
+      } else if (student.escort == '') {
+        actions = (
+          <View style={styles.actionsContainer}>
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                onPress={this._escort.bind(this, rowID, index, this.props.uid)}
+              >
+                <Text style={styles.buttonText}>Escort</Text>
+              </Button>
+            </View>
+          </View>
+        );
+      } else {
+        actions = (
+          <View style={styles.actionsContainer}>
+            <Text style={styles.releaseText}>
+              escorting by someone
+            </Text>
+          </View>
+        );
+      }
+
       return (
-        <Image
+        <View
           key={student.key}
-          style={styles.studentImage}
-          source={require('../../../../images/max.png')}
-        />
+          style={styles.studentRequest}
+        >
+          <View style={styles.student}>
+            <Image
+              style={styles.studentImage}
+              source={require('../../../../images/max.png')}
+            />
+            <Text style={styles.studentName}>
+              {student.firstName} {student.lastInitial} ({student.grade})
+            </Text>
+          </View>
+          {actions}
+        </View>
       );
     });
     return (
-      <TouchableOpacity
-        key={`${sectionID}-${rowID}`}
-        style={styles.row}
-        onPress={() => this.props.navigate('EscortRequest', {pickup})}
-      >
-        <Image
-          style={styles.requestorImage}
-          source={require('../../../../images/max.png')}
-        />
-        <Text style={styles.requestorName}>
-          {pickup.requestor.firstName} {pickup.requestor.lastInitial}
-        </Text>
+      <View style={[styles.request, styles.row]}>
         {students}
-      </TouchableOpacity>
+        <View style={styles.requestor}>
+          <Image
+            style={styles.requestorImage}
+            source={require('../../../../images/max.png')}
+          />
+          <Text style={styles.requestorText}>
+            {pickup.requestor.firstName} {pickup.requestor.lastInitial}
+             @ front gate
+          </Text>
+        </View>
+      </View>
     );
   }
 
   _renderSeparator(sectionID, rowID) {
     return <View key={`${sectionID}-${rowID}`} style={styles.separator} />
   }
+
+  _updatePickup(pickupIndex, studentIndex, state) {
+    const { pickupRequests } = this.state;
+    let pickup = Object.assign({}, pickupRequests[pickupIndex]);
+    let student = pickup.students[studentIndex];
+    firebase.database().ref('/pickups/' + pickup.key + '/students/' + student.key)
+    .update(state);
+  }
+
+  _escort(pickupIndex, studentIndex, escort) {
+    this._updatePickup(pickupIndex, studentIndex, {escort});
+  }
+
+  _release(pickupIndex, studentIndex) {
+    this._updatePickup(pickupIndex, studentIndex, {released: true});
+  }
 }
 
 
 EscortSelect.propTypes = {
+  uid: PropTypes.string.isRequired,
   navigate: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
+  uid: state.auth.user.uid,
 });
 
 const mapDispatchToProps = (dispatch) => ({
