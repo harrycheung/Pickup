@@ -2,6 +2,7 @@
 // @flow
 
 import React from 'react';
+import { PixelRatio } from 'react-native';
 import PropTypes from 'prop-types';
 import { Image, ListView, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -30,6 +31,8 @@ class EscortSelect extends React.Component {
       pickupRequests: [],
       dataSource: ds.cloneWithRows([]),
     };
+
+    console.log(PixelRatio.get());
   }
 
   _loadPickup(snapshot): Promise<any> {
@@ -122,39 +125,30 @@ class EscortSelect extends React.Component {
             </Text>
           </View>
         );
-      } else if (student.escort == this.props.uid) {
+      } else if (student.escort === this.props.uid) {
         actions = (
           <View style={styles.actionsContainer}>
-            <View style={styles.buttonContainer}>
-              <Button
-                style={[styles.button, styles.cancelButton]}
-                onPress={this._escort.bind(this, rowID, index, '')}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </Button>
-            </View>
+            <Button
+              style={[styles.button, styles.cancelButton]}
+              onPress={this._escort.bind(this, rowID, index, '')}
+              content='Cancel'
+            />
             <View style={styles.actionsSpacer} />
-            <View style={styles.buttonContainer}>
-              <Button
-                style={styles.button}
-                onPress={this._release.bind(this, rowID, index)}
-              >
-                <Text style={styles.buttonText}>Release</Text>
-              </Button>
-            </View>
+            <Button
+              style={styles.button}
+              onPress={this._release.bind(this, rowID, index)}
+              content='Release'
+            />
           </View>
         );
-      } else if (student.escort == '') {
+      } else if (student.escort === '') {
         actions = (
           <View style={styles.actionsContainer}>
-            <View style={styles.buttonContainer}>
-              <Button
-                style={styles.button}
-                onPress={this._escort.bind(this, rowID, index, this.props.uid)}
-              >
-                <Text style={styles.buttonText}>Escort</Text>
-              </Button>
-            </View>
+            <Button
+              style={styles.button}
+              onPress={this._escort.bind(this, rowID, index, this.props.uid)}
+              content='Escort'
+            />
           </View>
         );
       } else {

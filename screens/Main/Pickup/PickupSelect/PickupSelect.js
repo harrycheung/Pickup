@@ -86,9 +86,8 @@ class PickupSelect extends React.Component {
           style={styles.pickupButton}
           disabled={this.state.students.length < 1}
           onPress={this._pickup.bind(this)}
-        >
-          <Text style={styles.pickupButtonText}>Pickup</Text>
-        </Button>
+          text='Pickup'
+        />
       </View>
     );
   }

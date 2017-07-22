@@ -119,9 +119,8 @@ class ProfileForm extends React.Component {
           onPress={this._submit.bind(this)}
           style={styles.submitButton}
           disabled={this.state.disabled}
-        >
-          {buttonContents}
-        </CustomButton>
+          text={buttonContents}
+        />
       </View>
     );
   }

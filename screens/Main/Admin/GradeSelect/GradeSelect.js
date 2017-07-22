@@ -42,9 +42,8 @@ class Home extends React.Component {
           key={grade}
           style={styles.gradeButton}
           onPress={this._selectLevel.bind(this, grade)}
-        >
-          <Text style={styles.gradeButtonText}>{grade}</Text>
-        </Button>
+          content={grade}
+        />
       );
     });
 

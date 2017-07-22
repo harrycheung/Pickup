@@ -41,13 +41,9 @@ class LoginRequest extends React.Component {
         <ActivityIndicator animating={true} color='white' size='small' />
       );
     } else if (this.props.requested) {
-      buttonContent = (
-        <Text style={styles.loginButtonText}>Get magic link again</Text>
-      )
+      buttonContent = 'Get magic link again';
     } else {
-      buttonContent = (
-        <Text style={styles.loginButtonText}>Get magic link</Text>
-      );
+      buttonContent = 'Get magic link';
     }
 
     return (
@@ -66,9 +62,8 @@ class LoginRequest extends React.Component {
           onPress={this._login.bind(this)}
           style={styles.loginButton}
           disabled={this.state.disabled}
-        >
-          {buttonContent}
-        </Button>
+          content={buttonContent}
+        />
       </View>
     );
   }

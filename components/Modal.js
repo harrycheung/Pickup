@@ -30,9 +30,8 @@ class CustomModal extends React.Component {
             <Button
               style={styles.button}
               onPress={this.props.onPressOK}
-            >
-              <Text style={styles.buttonText}>OK</Text>
-            </Button>
+              content='OK'
+            />
           </View>
         </View>
       </Modal>

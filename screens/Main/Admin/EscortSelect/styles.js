@@ -53,16 +53,12 @@ export default StyleSheet.create({
   actionsSpacer: {
     width: 10,
   },
-  buttonContainer: {
-    flex: 1,
-  },
   button: {
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,
     backgroundColor: colors.buttonBackground,
   },
   cancelButton: {
+    flex: 1,
     backgroundColor: 'darkgray',
   },
   buttonText: {
