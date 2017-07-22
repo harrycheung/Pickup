@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import firebase from 'firebase';
 
 import styles from './styles';
+import { gstyles } from '../../../../config/styles';
 import Button from '../../../../components/Button';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
@@ -129,13 +130,14 @@ class EscortSelect extends React.Component {
         actions = (
           <View style={styles.actionsContainer}>
             <Button
-              style={[styles.button, styles.cancelButton]}
+              style={gstyles.flex1}
               onPress={this._escort.bind(this, rowID, index, '')}
               content='Cancel'
+              backgroundColor='darkgrey'
             />
             <View style={styles.actionsSpacer} />
             <Button
-              style={styles.button}
+              style={gstyles.flex1}
               onPress={this._release.bind(this, rowID, index)}
               content='Release'
             />
@@ -145,7 +147,7 @@ class EscortSelect extends React.Component {
         actions = (
           <View style={styles.actionsContainer}>
             <Button
-              style={styles.button}
+              style={gstyles.flex1}
               onPress={this._escort.bind(this, rowID, index, this.props.uid)}
               content='Escort'
             />
@@ -180,7 +182,7 @@ class EscortSelect extends React.Component {
       );
     });
     return (
-      <View style={[styles.request, styles.row]}>
+      <View style={styles.request}>
         {students}
         <View style={styles.requestor}>
           <Image

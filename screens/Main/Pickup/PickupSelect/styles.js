@@ -45,15 +45,5 @@ export default StyleSheet.create({
   selected: {
     borderWidth: 3,
     borderColor: colors.buttonBackground,
-  },
-  pickupButton: {
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.buttonBackground,
-  },
-  pickupButtonText: {
-    fontSize: 18,
-    color: colors.buttonText,
   }
 });

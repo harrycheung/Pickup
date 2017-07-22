@@ -49,13 +49,10 @@ class PickupSelect extends React.Component {
             {"Let's add your student"}
           </Text>
           <Button
-            style={[styles.pickupButton, styles.messageButton]}
+            style={styles.messageButton}
             onPress={() => this.props.navigate('AddStudent')}
-          >
-            <Text style={styles.pickupButtonText}>
-              Add student
-            </Text>
-          </Button>
+            content='Add student'
+          />
         </View>
       );
     } else {
@@ -83,10 +80,9 @@ class PickupSelect extends React.Component {
           {studentViews}
         </ScrollView>
         <Button
-          style={styles.pickupButton}
           disabled={this.state.students.length < 1}
           onPress={this._pickup.bind(this)}
-          text='Pickup'
+          content='Pickup'
         />
       </View>
     );

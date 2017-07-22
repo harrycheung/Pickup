@@ -1,6 +1,8 @@
 
 // @flow
 
+import { StyleSheet } from 'react-native';
+
 export const colors = {
   background: '#f2f2f2',
   errorText: '#FA3256',
@@ -16,3 +18,9 @@ export const colors = {
   black: '#000000',
   white: '#ffffff',
 };
+
+export const gstyles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+  },
+});

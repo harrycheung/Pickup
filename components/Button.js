@@ -24,16 +24,16 @@ class Button extends React.Component {
     }
     return (
       <TouchableOpacity
-        style={[
-          { height: 44 },
-          this.props.disabled ? {opacity: 0.3} : {},
-          this.props.style,
-        ]}
+        style={[{ height: 44, alignSelf: 'stretch' }, this.props.style]}
         onPress={this.props.onPress}
         disabled={this.props.disabled}
       >
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          style={[
+            { flex: 1, justifyContent: 'center', alignItems: 'center' },
+            this.props.disabled ? {opacity: 0.3} : {},
+            { backgroundColor: this.props.backgroundColor || colors.buttonBackground },
+          ]}
         >
           {content}
         </View>
@@ -45,10 +45,9 @@ class Button extends React.Component {
 Button.propTypes = {
   onPress: PropTypes.func,
   disabled: PropTypes.bool,
-  text: PropTypes.string,
   content: PropTypes.any,
   textSize: PropTypes.number,
-  maxHeight: PropTypes.number,
+  backgroundColor: PropTypes.string,
 };
 
 export default Button;

@@ -53,18 +53,6 @@ export default StyleSheet.create({
   actionsSpacer: {
     width: 10,
   },
-  button: {
-    flex: 1,
-    backgroundColor: colors.buttonBackground,
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: 'darkgray',
-  },
-  buttonText: {
-    fontSize: 18,
-    color: colors.buttonText,
-  },
   request: {
     flexDirection: 'column',
     alignItems: 'flex-start',

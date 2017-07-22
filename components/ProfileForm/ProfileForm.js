@@ -72,18 +72,10 @@ class ProfileForm extends React.Component {
     let buttonContents = null;
     if (this.props.spinning) {
       buttonContents = (
-        <ActivityIndicator
-          animating={true}
-          color='white'
-          size='small'
-        />
+        <ActivityIndicator animating={true} color='white' size='small' />
       );
     } else {
-      buttonContents = (
-        <Text style={styles.submitButtonText}>
-          {this.props.submitButtonText}
-        </Text>
-      );
+      buttonContents = this.props.submitButtonText;
     }
 
     return (
@@ -117,9 +109,8 @@ class ProfileForm extends React.Component {
         </View>
         <CustomButton
           onPress={this._submit.bind(this)}
-          style={styles.submitButton}
           disabled={this.state.disabled}
-          text={buttonContents}
+          content={buttonContents}
         />
       </View>
     );

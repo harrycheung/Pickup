@@ -18,18 +18,6 @@ export default StyleSheet.create({
     paddingHorizontal: 5,
   },
   loginButton: {
-    height: 44,
     marginTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    backgroundColor: colors.buttonBackground,
-  },
-  loginButtonText: {
-    fontSize: 18,
-    color: colors.buttonText,
-  },
-  disabled: {
-    opacity: 0.3,
   }
 });

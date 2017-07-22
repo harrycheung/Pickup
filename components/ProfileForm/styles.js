@@ -28,16 +28,5 @@ export default StyleSheet.create({
   input: {
     height: 44,
     paddingHorizontal: 5,
-  },
-  submitButton: {
-    height: 44,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.buttonBackground,
-  },
-  submitButtonText: {
-    fontSize: 18,
-    color: colors.buttonText,
   }
 });
