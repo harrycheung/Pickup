@@ -1,4 +1,8 @@
 
+// @flow
+
+import { all } from 'redux-saga/effects';
+
 import {
   watchRequestLogin,
   watchLogin,
@@ -20,7 +24,7 @@ import {
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
-  yield [
+  yield all([
     watchRequestLogin(),
     watchLogin(),
     watchLogout(),
@@ -31,5 +35,5 @@ export default function* rootSaga() {
     watchLoadUser(),
     watchCreateUser(),
     watchUpdateUser()
-  ];
+  ]);
 }

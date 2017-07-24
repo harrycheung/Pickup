@@ -32,8 +32,6 @@ class EscortSelect extends React.Component {
       pickupRequests: [],
       dataSource: ds.cloneWithRows([]),
     };
-
-    console.log(PixelRatio.get());
   }
 
   _loadPickup(snapshot): Promise<any> {

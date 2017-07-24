@@ -2,7 +2,7 @@
 // @flow
 
 import { delay } from 'redux-saga'; // TODO: remove
-import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import firebase from 'firebase';
 
 import { Types } from '../actions/Student';
