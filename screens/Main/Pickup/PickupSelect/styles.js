@@ -45,5 +45,17 @@ export default StyleSheet.create({
   selected: {
     borderWidth: 3,
     borderColor: colors.buttonBackground,
+  },
+  pickup: {
+    borderWidth: 3,
+    borderColor: colors.buttonBackground,
+    borderRadius: 5,
+    margin: 15,
+    padding: 5,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  pickupButtons: {
+    flexDirection: 'row',
   }
 });

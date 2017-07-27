@@ -23,4 +23,16 @@ export const gstyles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  width10: {
+    width: 10,
+  },
+  font18: {
+    fontSize: 18,
+  },
+  marginTop10: {
+    marginTop: 10,
+  },
+  grayButton: {
+    backgroundColor: 'darkgray',
+  }
 });

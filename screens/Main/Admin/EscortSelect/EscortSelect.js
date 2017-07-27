@@ -131,9 +131,9 @@ class EscortSelect extends React.Component {
               style={gstyles.flex1}
               onPress={this._escort.bind(this, rowID, index, '')}
               content='Cancel'
-              backgroundColor='darkgrey'
+              backgroundColor='darkgray'
             />
-            <View style={styles.actionsSpacer} />
+            <View style={gstyles.width10} />
             <Button
               style={gstyles.flex1}
               onPress={this._release.bind(this, rowID, index)}
@@ -225,6 +225,7 @@ EscortSelect.propTypes = {
 
 const mapStateToProps = (state) => ({
   uid: state.auth.user.uid,
+  state: state,
 });
 
 const mapDispatchToProps = (dispatch) => ({

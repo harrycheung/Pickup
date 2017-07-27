@@ -15,13 +15,20 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
+import { gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
+import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
+import { StudentCache } from '../../../../helpers';
 
 class PickupSelect extends React.Component {
+  props: {
+    students: Object[],
+    navigate: (string) => void,
+  }
   state: {
-    students: string[],
+    students: Object[],
   }
 
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -41,7 +48,30 @@ class PickupSelect extends React.Component {
   }
 
   render() {
-    let studentViews = null;
+    let existingPickup = '';
+    if (this.props.pickup) {
+      existingPickup = (
+        <View style={styles.pickup}>
+          <Text style={gstyles.font18}>Continue your previous pickup?</Text>
+          <View style={[styles.pickupButtons, gstyles.marginTop10]}>
+            <Button
+              style={gstyles.flex1}
+              onPress={() => this.props.resumePickup(this.props.pickup)}
+              content='Cancel'
+              backgroundColor='darkgray'
+            />
+            <View style={{width: 10}} />
+            <Button
+              style={gstyles.flex1}
+              onPress={() => this.props.resumePickup(this.props.pickup)}
+              content='Continue'
+            />
+          </View>
+        </View>
+      );
+    }
+
+    let studentViews = '';
     if (this.props.students.length == 0) {
       studentViews = (
         <View style={styles.message}>
@@ -76,6 +106,7 @@ class PickupSelect extends React.Component {
 
     return (
       <View style={styles.container}>
+        {existingPickup}
         <ScrollView contentContainerStyle={styles.students}>
           {studentViews}
         </ScrollView>
@@ -97,21 +128,27 @@ class PickupSelect extends React.Component {
   }
 
   _pickup() {
-    this.props.navigate('PickupRequest', {students: this.state.students});
+    this.props.createPickup(this.props.uid, this.state.students);
     this.setState({students: []});
   }
 }
 
 PickupSelect.propTypes = {
   students: PropTypes.array.isRequired,
+  createPickup: PropTypes.func.isRequired,
+  pickup: PropTypes.object.isRequired,
   navigate: PropTypes.func.isRequired,
+  resumePickup: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
+  uid: state.auth.user.uid,
   students: state.student.students,
+  pickup: state.pickup.pickup,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
 });
 

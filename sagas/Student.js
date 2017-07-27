@@ -3,37 +3,35 @@
 
 import { delay } from 'redux-saga'; // TODO: remove
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import firebase from 'firebase';
 
+import { fbref } from '../helpers';
 import { Types } from '../actions/Student';
 import { Actions as StudentActions } from '../actions/Student';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
 
 const loadStudentsAsync = (uid) => {
-  return firebase.database().ref('/users/' + uid + '/students').once('value')
-    .then((snapshot) => {
-      const students = snapshot.val() === null ? {} : snapshot.val();
-      const studentKeys = Object.keys(students);
-      return Promise.all(
-        studentKeys.map((id) => {
-          return firebase.database().ref('/students/' + id).once('value')
-            .then((snapshot) => {
-              return Object.assign({}, snapshot.val(), {
-                key: id,
-                relationship: students[id],
-              });
+  return fbref('/users/' + uid + '/students').once('value').then((snapshot) => {
+    const students = snapshot.val() === null ? {} : snapshot.val();
+    const studentKeys = Object.keys(students);
+    return Promise.all(
+      studentKeys.map((id) => {
+        return fbref('/students/' + id).once('value')
+          .then((snapshot) => {
+            return Object.assign({}, snapshot.val(), {
+              key: id,
+              relationship: students[id],
             });
-        })
-      );
-    });
+          });
+      })
+    );
+  });
 }
 
 // Don't need spinner
 export function* loadStudents(action) {
   try {
-    const state = yield select();
-    const students = yield call(loadStudentsAsync, state.auth.user.uid);
+    const students = yield call(loadStudentsAsync, action.uid);
     yield put(StudentActions.setStudents(students));
     yield put(StudentActions.loadedStudents());
   } catch (error) {
@@ -47,22 +45,21 @@ export function* watchLoadStudents() {
 }
 
 const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => {
-  return firebase.database().ref('/students').push()
-    .then((studentRef) => {
-      var relationships = {};
-      relationships[uid] = relationship;
-      var studentUpdate = {};
-      studentUpdate['students/' + studentRef.key] = {
-        firstName,
-        lastInitial,
-        grade,
-        relationships,
-      };
-      studentUpdate['users/' + uid + '/students/' + studentRef.key] = relationship;
-      return firebase.database().ref('/').update(studentUpdate).then(() => {
-        return studentRef.key;
-      });
+  return fbref('/students').push().then((studentRef) => {
+    var relationships = {};
+    relationships[uid] = relationship;
+    var studentUpdate = {};
+    studentUpdate['students/' + studentRef.key] = {
+      firstName,
+      lastInitial,
+      grade,
+      relationships,
+    };
+    studentUpdate['users/' + uid + '/students/' + studentRef.key] = relationship;
+    return fbref('/').update(studentUpdate).then(() => {
+      return studentRef.key;
     });
+  });
 };
 
 export function* addStudent(action) {
@@ -103,7 +100,7 @@ const editStudentAsync = (uid, student) => {
     relationships,
   };
   studentUpdate['users/' + uid + '/students/' + key] = relationship;
-  return firebase.database().ref('/').update(studentUpdate);
+  return fbref('/').update(studentUpdate);
 };
 
 export function* editStudent(action) {
@@ -126,7 +123,7 @@ const deleteStudentAsync = (uid, key) => {
   var studentUpdate = {};
   studentUpdate['students/' + key] = null;
   studentUpdate['users/' + uid + '/students/' + key] = null;
-  return firebase.database().ref('/').update(studentUpdate);
+  return fbref('/').update(studentUpdate);
 };
 
 export function* deleteStudent(action) {

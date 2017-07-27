@@ -7,14 +7,17 @@ import CryptoJS from 'crypto-js';
 import firebase from 'firebase';
 
 import * as c from '../config/constants';
+import { fbref } from '../helpers';
 import { Types } from '../actions/Auth';
 import { Types as UserTypes } from '../actions/User';
 import { Types as StudentTypes } from '../actions/Student';
+import { Types as PickupTypes } from '../actions/Pickup';
 import { Actions as AuthActions } from '../actions/Auth';
 import { Actions as UserActions } from '../actions/User';
 import { Actions as StudentActions } from '../actions/Student';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
+import { Actions as PickupActions } from '../actions/Pickup';
 
 const requestLoginAsync = (phoneNumber) => {
   const body = JSON.stringify({phoneNumber});
@@ -64,6 +67,24 @@ const loginAsync = (token) => {
   return firebase.auth().signInWithCustomToken(token);
 };
 
+const getActivePickup = (uid) => {
+  return fbref('/pickups')
+  .orderByChild('requestor').equalTo(uid).limitToFirst(1).once('value')
+  .then((snapshot) => {
+    let pickup = {};
+    snapshot.forEach((pickupSnapshot) => {
+      pickup = pickupSnapshot.val();
+      pickup.key = pickupSnapshot.key;
+      let students = [];
+      for (let studentKey in pickup.students) {
+        students.push(Object.assign({}, pickup.students[studentKey], {key: studentKey}));
+      }
+      pickup.students = students;
+    });
+    return pickup;
+  });
+};
+
 export function* login(action) {
   try {
     yield put(SpinnerActions.start());
@@ -75,8 +96,10 @@ export function* login(action) {
     if (state.user.firstName === '') {
       yield put(NavActions.navigate('CreateProfile'));
     } else {
-      yield put(StudentActions.loadStudents(state.user.uid));
+      yield put(StudentActions.loadStudents(state.auth.user.uid));
       yield take(StudentTypes.LOADED);
+      const pickup = yield call(getActivePickup, state.auth.user.uid);
+      yield put(PickupActions.loadPickup(pickup));
       yield put(NavActions.resetNavigation('Main'));
     }
   } catch (error) {

@@ -22,6 +22,12 @@ import {
   watchUpdateUser
 } from './User';
 
+import {
+  watchCreatePickup,
+  watchCancelPickup,
+  watchResumePickup
+} from './Pickup';
+
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
   yield all([
@@ -34,6 +40,9 @@ export default function* rootSaga() {
     watchDeleteStudent(),
     watchLoadUser(),
     watchCreateUser(),
-    watchUpdateUser()
+    watchUpdateUser(),
+    watchCreatePickup(),
+    watchCancelPickup(),
+    watchResumePickup()
   ]);
 }

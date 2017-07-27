@@ -4,12 +4,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Image, Text, TextInput, View } from 'react-native';
-import firebase from 'firebase';
 
 import styles from './styles';
+import { gstyles } from '../../config/styles';
+import { fbref } from '../../helpers';
 import AutoScrollView from '../AutoScrollView';
 import KeyboardSpacer from '../KeyboardSpacer';
-import Button from '../Button';
+import { StudentCache } from '../../helpers';
 
 class PickupMessages extends React.Component {
   state: {
@@ -24,34 +25,29 @@ class PickupMessages extends React.Component {
     this.state = {
       messages: [],
       message: '',
-      state: ''
+      state: '',
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { pickup } = this.props;
-    firebase.database().ref('/pickups/' + pickup.key)
-    .on('value', (snapshot) => {
+    fbref('/pickups/' + pickup.key).on('value', (snapshot) => {
       if (snapshot.val() === null) {
         this.props.onClose();
       }
     });
 
-    const messagesRef = firebase.database().ref(
-      '/pickups/' + pickup.key + '/messages'
-    );
+    const messagesRef = fbref('/pickups/' + pickup.key + '/messages');
     messagesRef.once('value').then((snapshot) => {
       let messages = [];
-
       snapshot.forEach((messageSnapshot) => {
         let message = messageSnapshot.val();
         message.key = messageSnapshot.key;
         messages.push(
-          firebase.database().ref('/users/' + message.sender).once('value')
-          .then((snapshot) => {
+          fbref('/users/' + message.sender).once('value').then((snapshot) => {
             const senderKey = message.sender;
             message.sender = snapshot.val();
-            message.sender['key'] = senderKey;
+            message.sender.key = senderKey;
             return message;
           })
         );
@@ -70,8 +66,7 @@ class PickupMessages extends React.Component {
             let message = snapshot.val();
             message.key = snapshot.key;
 
-            firebase.database().ref('/users/' + message.sender).once('value')
-            .then((snapshot) => {
+            fbref('/users/' + message.sender).once('value').then((snapshot) => {
               const senderKey = message.sender;
               message.sender = snapshot.val();
               message.sender['key'] = senderKey;
@@ -85,61 +80,31 @@ class PickupMessages extends React.Component {
   }
 
   componentWillUnmount() {
-    const { pickup } = this.props;
-    firebase.database().ref('/pickups/' + pickup.key).off();
-    firebase.database().ref('/pickups/' + pickup.key + '/messages').off();
+    fbref('/pickups/' + this.props.pickup.key).off();
+    fbref('/pickups/' + this.props.pickup.key + '/messages').off();
   }
 
   render() {
-    let escortButtons = null;
-    if (this.props.uid !== this.props.pickup.requestor) {
-      switch (this.state.state) {
-        case 'escorting':
-          escortButtons = (
-            <Button
-              style={styles.escortButton}
-              onPress={this._release.bind(this)}
-            >
-              <Text style={styles.escortButtonText}>
-                Release
-              </Text>
-            </Button>
-          );
-          break;
-
-        default:
-          escortButtons = (
-            <Button
-              style={styles.escortButton}
-              onPress={this._escort.bind(this)}
-            >
-              <Text style={styles.escortButtonText}>
-                Escort
-              </Text>
-            </Button>
-          );
-      }
-    }
+    const messages = this.state.messages.map((message) => this.renderMessage(message));
 
     return (
       <View style={styles.container}>
-        <View style={{flex: 1}}>
+        <View style={gstyles.flex1}>
           <AutoScrollView contentContainerStyle={styles.messagesContainer}>
-            {this.state.messages.map((message) => this.renderMessage(message))}
+            {messages}
           </AutoScrollView>
+          <View style={styles.composeContainer}>
+            <TextInput
+              style={{height: 44, paddingHorizontal: 15}}
+              placeholder='Send a message'
+              returnKeyType='send'
+              onChangeText={(text) => this.setState({message: text})}
+              onSubmitEditing={this._postMessage.bind(this)}
+              value={this.state.message}
+            />
+          </View>
+          <KeyboardSpacer />
         </View>
-        <View style={styles.composeContainer}>
-          <TextInput
-            style={{height: 44, paddingHorizontal: 15}}
-            placeholder='Send a message'
-            returnKeyType='send'
-            onChangeText={(text) => this.setState({message: text})}
-            onSubmitEditing={this._postMessage.bind(this)}
-            value={this.state.message}
-          />
-        </View>
-        {escortButtons}
-        <KeyboardSpacer />
       </View>
     );
   }
@@ -163,7 +128,7 @@ class PickupMessages extends React.Component {
 
     switch (message.type) {
       case 'request':
-        const students = this.props.pickup.students.map((student) => {
+        const studentsJSX = this.props.students.map((student) => {
           return (
             <View key={student.key} style={styles.student}>
               <Image
@@ -181,7 +146,7 @@ class PickupMessages extends React.Component {
             <Text style={styles.messageText}>
               {fullName(message.sender)} at the front gate
             </Text>
-            {students}
+            {studentsJSX}
           </View>
         );
         break;
@@ -240,7 +205,7 @@ class PickupMessages extends React.Component {
     }
 
     const { pickup } = this.props;
-    firebase.database().ref('/pickups/' + pickup.key + '/messages')
+    fbref('/pickups/' + pickup.key + '/messages')
     .push(messageData)
     .then((messageRef) => {
       this.setState({message: ''}, () => {
@@ -272,7 +237,7 @@ class PickupMessages extends React.Component {
       [
         {text: 'Cancel', onPress: null, style: 'cancel'},
         {text: 'OK', onPress: () => {
-          firebase.database().ref('/pickups/' + this.props.pickup.key)
+          fbref('/pickups/' + this.props.pickup.key)
           .remove()
           .then(() => {
             this.componentWillUnmount();
@@ -288,6 +253,7 @@ class PickupMessages extends React.Component {
 PickupMessages.propTypes = {
   uid: PropTypes.string.isRequired,
   pickup: PropTypes.object.isRequired,
+  students: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
 };

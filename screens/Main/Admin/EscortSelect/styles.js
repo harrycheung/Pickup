@@ -50,9 +50,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  actionsSpacer: {
-    width: 10,
-  },
   request: {
     flexDirection: 'column',
     alignItems: 'flex-start',
