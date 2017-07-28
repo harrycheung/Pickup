@@ -4,7 +4,8 @@
  * @flow
  */
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Keyboard,
   LayoutAnimation,
@@ -36,7 +37,7 @@ const defaultAnimation = {
   }
 };
 
-class KeyboardSpacer extends Component {
+class KeyboardSpacer extends React.Component {
   static propTypes = {
     topSpacing: PropTypes.number,
     onToggle: PropTypes.func,
