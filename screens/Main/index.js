@@ -19,11 +19,9 @@ class Drawer extends React.Component {
   render() {
     let drawerProps = this.props;
     if (!this.props.admin) {
-      drawerProps = update(this.props, {navigation: {state: {routes: {$set:
-        drawerProps.navigation.state.routes.filter((route) => {
-          return !route.key.includes('Admin');
-        })
-      }}}});
+      drawerProps = update(this.props, {items: {$set:
+        drawerProps.items.filter((route) => !route.key.includes('Admin'))
+      }});
     }
     return (
       <View style={{flex: 1}}>
