@@ -71,7 +71,7 @@ const getActivePickup = (uid) => {
   return fbref('/pickups')
   .orderByChild('requestor').equalTo(uid).limitToFirst(1).once('value')
   .then((snapshot) => {
-    let pickup = {};
+    let pickup = null;
     snapshot.forEach((pickupSnapshot) => {
       pickup = pickupSnapshot.val();
       pickup.key = pickupSnapshot.key;

@@ -7,7 +7,7 @@ import { Alert, Image, Text, TextInput, View } from 'react-native';
 
 import styles from './styles';
 import { gstyles } from '../../config/styles';
-import { fbref } from '../../helpers';
+import { fbref, fullName } from '../../helpers';
 import AutoScrollView from '../AutoScrollView';
 import KeyboardSpacer from '../KeyboardSpacer';
 import { StudentCache } from '../../helpers';
@@ -29,7 +29,7 @@ class PickupMessages extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { pickup } = this.props;
     fbref('/pickups/' + pickup.key).on('value', (snapshot) => {
       if (snapshot.val() === null) {
@@ -110,8 +110,6 @@ class PickupMessages extends React.Component {
   }
 
   renderMessage(message: Object) {
-    const fullName = (user) => `${user.firstName} ${user.lastInitial}`;
-
     let containerStyle = [styles.messageContainer];
     let messageStyle = [styles.message];
     let sender = null;
@@ -191,62 +189,9 @@ class PickupMessages extends React.Component {
     );
   }
 
-  _postMessage(message, callback) {
-    let messageData = {
-      type: 'message',
-      sender: this.props.uid,
-      createdAt: Date.now(),
-      message: '',
-    };
-    if (message != null) {
-      messageData.type = message;
-    } else {
-      messageData.message = this.state.message;
-    }
-
-    const { pickup } = this.props;
-    fbref('/pickups/' + pickup.key + '/messages')
-    .push(messageData)
-    .then((messageRef) => {
-      this.setState({message: ''}, () => {
-        callback && callback();
-      });
-    });
-  }
-
-  _escort() {
-    Alert.alert(
-      'Confirm escort',
-      null,
-      [
-        {text: 'Cancel', onPress: null, style: 'cancel'},
-        {text: 'OK', onPress: () => {
-          this.setState({state: 'escorting'}, () => {
-            this._postMessage('escort');
-          });
-        }}
-      ],
-      {cancelable: false}
-    );
-  }
-
-  _release() {
-    Alert.alert(
-      'Confirm release',
-      null,
-      [
-        {text: 'Cancel', onPress: null, style: 'cancel'},
-        {text: 'OK', onPress: () => {
-          fbref('/pickups/' + this.props.pickup.key)
-          .remove()
-          .then(() => {
-            this.componentWillUnmount();
-            this.props.onComplete();
-          });
-        }}
-      ],
-      {cancelable: false}
-    );
+  _postMessage() {
+    this.props.postMessage(this.props.pickup, this.props.uid, this.state.message);
+    this.setState({message: ''});
   }
 }
 
@@ -254,6 +199,7 @@ PickupMessages.propTypes = {
   uid: PropTypes.string.isRequired,
   pickup: PropTypes.object.isRequired,
   students: PropTypes.array.isRequired,
+  postMessage: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
 };

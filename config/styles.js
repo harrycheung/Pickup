@@ -26,6 +26,9 @@ export const gstyles = StyleSheet.create({
   width10: {
     width: 10,
   },
+  font14: {
+    fontSize: 14,
+  },
   font18: {
     fontSize: 18,
   },

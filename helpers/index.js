@@ -13,5 +13,7 @@ export const fbref = (ref: string) => {
   return firebase.database().ref(ref);
 };
 
+export const fullName = (user) => `${user.firstName} ${user.lastInitial}`;
+
 export const StudentCache = new Cache('students');
 export const PickupCache = new Cache('pickups');

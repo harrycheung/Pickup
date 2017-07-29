@@ -11,7 +11,7 @@ import { StudentCache } from '../helpers';
 
 const createPickupAsync = (requestor, students) => {
   const pickupStudents = students.reduce((students, student) => {
-    students[student.key] = {escort: ''};
+    students[student.key] = {escort: {uid: '', name: ''}};
     return students;
   }, {});
   const grades = Array.from(new Set(students.map((student) => student.grade)));
@@ -70,14 +70,6 @@ export function* watchCancelPickup() {
   yield takeEvery(Types.CANCEL, cancelPickup);
 }
 
-export function* loadPickup(action) {
-  yield put(PickupActions.loadedPickup(pickup));
-}
-
-export function* watchLoadPickup() {
-  yield takeEvery(Types.LOAD, loadPickup);
-}
-
 const loadStudentsAsync = (pickup) => {
   let students = [];
   for (let studentKey in pickup.students) {
@@ -100,4 +92,23 @@ export function* resumePickup(action) {
 
 export function* watchResumePickup() {
   yield takeEvery(Types.RESUME, resumePickup);
+}
+
+export function* postMessage(action) {
+  try {
+    let messageData = {
+      type: 'message',
+      sender: action.sender,
+      createdAt: Date.now(),
+      message: action.message,
+    };
+
+    fbref('/pickups/' + action.pickup.key + '/messages').push(messageData);
+  } catch (error) {
+    console.log('postMessage failed', error);
+  }
+}
+
+export function* watchPostMessage() {
+  yield takeEvery(Types.POST_MESSAGE, postMessage);
 }

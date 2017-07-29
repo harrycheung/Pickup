@@ -5,8 +5,9 @@ export const Types = {
   CREATE: 'Pickup/CREATE',
   CREATED: 'Pickup/CREATED',
   CANCEL: 'Pickup/CANCEL',
-  LOAD: 'Pickup/LOAD',
   RESUME: 'Pickup/RESUME',
+  LOAD: 'Pickup/LOAD',
+  POST_MESSAGE: 'Pickup/POST_MESSAGE',
 };
 
 export const Actions = {
@@ -15,6 +16,9 @@ export const Actions = {
   }),
   createdPickup: (pickup: Object) => ({type: Types.CREATED, pickup}),
   cancelPickup: (pickup: Object) => ({type: Types.CANCEL, pickup}),
-  loadPickup: (pickup: Object) => ({type: Types.LOAD, pickup}),
   resumePickup: (pickup: Object) => ({type: Types.RESUME, pickup}),
+  loadPickup: (pickup: Object) => ({type: Types.LOAD, pickup}),
+  postMessage: (pickup: Object, sender: string, message: string) => ({
+    type: Types.POST_MESSAGE, pickup, sender, message
+  }),
 }

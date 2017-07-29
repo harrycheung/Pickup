@@ -24,6 +24,7 @@ class PickupRequest extends React.Component {
         uid={this.props.uid}
         pickup={this.props.pickup}
         students={this.props.navigation.state.params.students}
+        postMessage={this.props.postMessage}
         onClose={() => {}}
         onComplete={() => this.props.back()}
       />
@@ -40,6 +41,7 @@ PickupRequest.propTypes = {
   uid: PropTypes.string.isRequired,
   pickup: PropTypes.object.isRequired,
   cancelPickup: PropTypes.func.isRequired,
+  postMessage: PropTypes.func.isRequired,
   navigateBack: PropTypes.func.isRequired,
 };
 

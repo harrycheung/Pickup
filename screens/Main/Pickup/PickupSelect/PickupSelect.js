@@ -3,13 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -24,8 +18,13 @@ import { StudentCache } from '../../../../helpers';
 
 class PickupSelect extends React.Component {
   props: {
+    uid: string,
+    pickup: Object,
     students: Object[],
     navigate: (string) => void,
+    createPickup: (string, Array<Object>) => void,
+    cancelPickup: (Object) => void,
+    resumePickup: (Object) => void,
   }
   state: {
     students: Object[],
@@ -48,7 +47,7 @@ class PickupSelect extends React.Component {
   }
 
   render() {
-    let existingPickup = '';
+    let existingPickup = null;
     if (this.props.pickup) {
       existingPickup = (
         <View style={styles.pickup}>
@@ -56,7 +55,7 @@ class PickupSelect extends React.Component {
           <View style={[styles.pickupButtons, gstyles.marginTop10]}>
             <Button
               style={gstyles.flex1}
-              onPress={() => this.props.resumePickup(this.props.pickup)}
+              onPress={() => this.props.cancelPickup(this.props.pickup)}
               content='Cancel'
               backgroundColor='darkgray'
             />
@@ -71,7 +70,7 @@ class PickupSelect extends React.Component {
       );
     }
 
-    let studentViews = '';
+    let studentViews = null;
     if (this.props.students.length == 0) {
       studentViews = (
         <View style={styles.message}>
@@ -136,9 +135,10 @@ class PickupSelect extends React.Component {
 PickupSelect.propTypes = {
   students: PropTypes.array.isRequired,
   createPickup: PropTypes.func.isRequired,
-  pickup: PropTypes.object.isRequired,
+  pickup: PropTypes.object,
   navigate: PropTypes.func.isRequired,
   resumePickup: PropTypes.func.isRequired,
+  cancelPickup: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({

@@ -2,17 +2,17 @@
 // @flow
 
 import React from 'react';
-import { PixelRatio } from 'react-native';
 import PropTypes from 'prop-types';
-import { Image, ListView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ListView, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import firebase from 'firebase';
 
 import styles from './styles';
 import { gstyles } from '../../../../config/styles';
+import { fbref, fullName } from '../../../../helpers';
 import Button from '../../../../components/Button';
 import { Actions as NavActions } from '../../../../actions/Navigation';
+import { Actions as PickupActions } from '../../../../actions/Pickup';
 
 class EscortSelect extends React.Component {
   state: {
@@ -40,17 +40,17 @@ class EscortSelect extends React.Component {
       pickupRequest.key = snapshot.key;
       const { students } = pickupRequest;
       return Promise.all(Object.keys(students).map((studentKey) => {
-        return firebase.database().ref('/students/' + studentKey).once('value')
-        .then((snapshot) => {
+        return fbref('/students/' + studentKey).once('value').then((snapshot) => {
           return Object.assign({}, snapshot.val(), {
             key: studentKey,
             escort: students[studentKey].escort,
+            released: students[studentKey].released,
           });
         });
       }))
       .then((students) => {
         pickupRequest.students = students;
-        return firebase.database().ref('/users/' + pickupRequest.requestor).once('value');
+        return fbref('/users/' + pickupRequest.requestor).once('value');
       })
       .then((snapshot) => {
         pickupRequest.requestor = snapshot.val();
@@ -63,7 +63,7 @@ class EscortSelect extends React.Component {
   }
 
   componentDidMount() {
-    firebase.database().ref('/pickups').on('child_added', (snapshot) => {
+    fbref('/pickups').on('child_added', (snapshot) => {
       this._loadPickup(snapshot).then((pickupRequest) => {
         const pickupRequests = this.state.pickupRequests.concat(pickupRequest);
         this.setState({
@@ -73,7 +73,7 @@ class EscortSelect extends React.Component {
       });
     });
 
-    firebase.database().ref('/pickups').on('child_removed', (snapshot) => {
+    fbref('/pickups').on('child_removed', (snapshot) => {
       const pickupRequests = this.state.pickupRequests.filter((request) => {
         return request.key !== snapshot.key;
       });
@@ -83,7 +83,7 @@ class EscortSelect extends React.Component {
       });
     });
 
-    firebase.database().ref('/pickups').on('child_changed', (snapshot) => {
+    fbref('/pickups').on('child_changed', (snapshot) => {
       this._loadPickup(snapshot).then((pickupRequest) => {
         const pickupRequests = this.state.pickupRequests.map((pickup) => {
           return pickup.key == pickupRequest.key ? pickupRequest : pickup;
@@ -97,10 +97,11 @@ class EscortSelect extends React.Component {
   }
 
   componentWillUnmount() {
-    firebase.database().ref('/pickups').off();
+    fbref('/pickups').off();
   }
 
   render() {
+    console.log(this.props.user);
     return (
       <View style={styles.container}>
         <ListView
@@ -115,50 +116,48 @@ class EscortSelect extends React.Component {
 
   _renderRow(pickup, sectionID, rowID) {
     let students = pickup.students.map((student, index) => {
-      let actions = '';
+      const escort = student.escort.uid === this.props.uid;
+      let actions = [];
       if (student.released) {
-        actions = (
-          <View style={styles.actionsContainer}>
-            <Text style={styles.releaseText}>
-              released by someone
-            </Text>
-          </View>
-        );
-      } else if (student.escort === this.props.uid) {
-        actions = (
-          <View style={styles.actionsContainer}>
-            <Button
-              style={gstyles.flex1}
-              onPress={this._escort.bind(this, rowID, index, '')}
-              content='Cancel'
-              backgroundColor='darkgray'
-            />
-            <View style={gstyles.width10} />
-            <Button
-              style={gstyles.flex1}
-              onPress={this._release.bind(this, rowID, index)}
-              content='Release'
-            />
-          </View>
-        );
-      } else if (student.escort === '') {
-        actions = (
-          <View style={styles.actionsContainer}>
-            <Button
-              style={gstyles.flex1}
-              onPress={this._escort.bind(this, rowID, index, this.props.uid)}
-              content='Escort'
-            />
-          </View>
-        );
+        actions = [(
+          <Text key='a' style={gstyles.font18}>
+            released by {escort ? 'You' : student.escort.name}
+          </Text>
+        )];
+      } else if (student.escort.uid === this.props.uid) {
+        actions = [(
+          <Button
+            key='a'
+            style={gstyles.flex1}
+            onPress={this._cancelEscort.bind(this, pickup, student)}
+            content='Cancel'
+            backgroundColor='darkgray'
+          />
+        ),(
+          <View key='b' style={gstyles.width10} />
+        ),(
+          <Button
+            key='c'
+            style={gstyles.flex1}
+            onPress={this._release.bind(this, pickup, student)}
+            content='Release'
+          />
+        )];
+      } else if (student.escort.uid === '') {
+        actions = [(
+          <Button
+            key='a'
+            style={gstyles.flex1}
+            onPress={this._escort.bind(this, pickup, student)}
+            content='Escort'
+          />
+        )];
       } else {
-        actions = (
-          <View style={styles.actionsContainer}>
-            <Text style={styles.releaseText}>
-              escorting by someone
-            </Text>
-          </View>
-        );
+        actions = [(
+          <Text key='a' style={gstyles.font14}>
+            escorted by {escort ? 'You' : student.escort.name}
+          </Text>
+        )];
       }
 
       return (
@@ -175,7 +174,9 @@ class EscortSelect extends React.Component {
               {student.firstName} {student.lastInitial} ({student.grade})
             </Text>
           </View>
-          {actions}
+          <View style={styles.actionsContainer}>
+            {actions}
+          </View>
         </View>
       );
     });
@@ -200,35 +201,61 @@ class EscortSelect extends React.Component {
     return <View key={`${sectionID}-${rowID}`} style={styles.separator} />
   }
 
-  _updatePickup(pickupIndex, studentIndex, state) {
-    const { pickupRequests } = this.state;
-    let pickup = Object.assign({}, pickupRequests[pickupIndex]);
-    let student = pickup.students[studentIndex];
-    firebase.database().ref('/pickups/' + pickup.key + '/students/' + student.key)
-    .update(state);
+  _updatePickup(pickup, student, state) {
+    fbref('/pickups/' + pickup.key + '/students/' + student.key).update(state);
   }
 
-  _escort(pickupIndex, studentIndex, escort) {
-    this._updatePickup(pickupIndex, studentIndex, {escort});
+  _escort(pickup, student) {
+    this._updatePickup(pickup, student,
+      {escort: {uid: this.props.uid, name: fullName(this.props.user)}}
+    );
+    this.props.postMessage(pickup, this.props.uid,
+      `${fullName(this.props.user)} escorting ${fullName(student)}`
+    );
   }
 
-  _release(pickupIndex, studentIndex) {
-    this._updatePickup(pickupIndex, studentIndex, {released: true});
+  _cancelEscort(pickup, student) {
+    this._updatePickup(pickup, student,
+      {escort: {uid: '', name: ''}, released: false}
+    );
+    this.props.postMessage(pickup, this.props.uid,
+      `${fullName(this.props.user)} canceled escort of ${fullName(student)}`
+    );
+  }
+
+  _release(pickup, student) {
+    Alert.alert(
+      'Confirm release',
+      null,
+      [
+        {text: 'Cancel', onPress: null, style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          this._updatePickup(pickup, student, {released: true});
+          this.props.postMessage(pickup, this.props.uid,
+            `${fullName(this.props.user)} released ${fullName(student)} to ${fullName(pickup.requestor)}`
+          );
+        }}
+      ],
+      {cancelable: false}
+    )
   }
 }
 
 
 EscortSelect.propTypes = {
   uid: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
   navigate: PropTypes.func.isRequired,
+  postMessage: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   uid: state.auth.user.uid,
-  state: state,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
 });
 
