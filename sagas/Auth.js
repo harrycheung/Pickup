@@ -2,7 +2,7 @@
 // @flow
 
 import { delay } from 'redux-saga'; // TODO: remove
-import { call, put, select, take, takeLatest } from 'redux-saga/effects';
+import { call, fork, put, select, take, takeLatest } from 'redux-saga/effects';
 import CryptoJS from 'crypto-js';
 import firebase from 'firebase';
 
@@ -85,50 +85,49 @@ const getActivePickup = (uid) => {
   });
 };
 
-export function* login(action) {
-  try {
-    yield put(SpinnerActions.start());
-    const user = yield call(loginAsync, action.token);
-    yield put(AuthActions.loginSucceeded(user));
-    yield put(UserActions.loadUser());
-    yield take(UserTypes.LOADED);
-    const state = yield select();
-    if (state.user.firstName === '') {
-      yield put(NavActions.navigate('CreateProfile'));
-    } else {
-      yield put(StudentActions.loadStudents(state.auth.user.uid));
-      yield take(StudentTypes.LOADED);
-      const pickup = yield call(getActivePickup, state.auth.user.uid);
-      yield put(PickupActions.loadPickup(pickup));
-      yield put(NavActions.resetNavigation('Main'));
-    }
-  } catch (error) {
-    console.log('login failed', error);
-    yield put(AuthActions.loginFailed());
-  } finally {
-    yield put(SpinnerActions.stop());
-  }
-}
-
-export function* watchLogin() {
-  yield takeLatest(Types.LOGIN, login);
-}
-
 const logoutAsync = () => {
   return firebase.auth().signOut();
 };
 
-export function* logout() {
-  try {
-    yield call(logoutAsync);
-    yield put(AuthActions.logoutSucceeded());
-    yield put(NavActions.resetNavigation('LoginRequest'));
-  } catch (error) {
-    console.log('logout failed', error);
-    yield put(AuthActions.logoutFailed());
+export function* login() {
+  while (true) {
+    const { token } = yield take(Types.LOGIN);
+    try {
+      try {
+        yield put(SpinnerActions.start());
+        const user = yield call(loginAsync, token);
+        yield put(AuthActions.loginSucceeded(user));
+        yield put(UserActions.loadUser());
+        yield take(UserTypes.LOADED);
+        const state = yield select();
+        if (state.user.firstName === '') {
+          yield put(NavActions.navigate('CreateProfile'));
+        } else {
+          yield put(StudentActions.loadStudents(state.auth.user.uid));
+          yield take(StudentTypes.LOADED);
+          const pickup = yield call(getActivePickup, state.auth.user.uid);
+          yield put(PickupActions.loadPickup(pickup));
+          yield put(NavActions.resetNavigation('Main'));
+        }
+      } finally {
+        yield put(SpinnerActions.stop());
+      }
+      yield take(Types.LOGOUT);
+      try {
+        yield put(SpinnerActions.start());
+        yield call(logoutAsync);
+        yield put(AuthActions.logoutSucceeded());
+        yield put(NavActions.resetNavigation('LoginRequest'));
+      } finally {
+        yield put(SpinnerActions.stop());
+      }
+    } catch (error) {
+      console.log('login failed', error);
+      yield put(AuthActions.loginFailed());
+    }
   }
 }
 
-export function* watchLogout() {
-  yield takeLatest(Types.LOGOUT, logout);
+export function* watchLogin() {
+  yield fork(login);
 }
