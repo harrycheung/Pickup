@@ -7,7 +7,7 @@ const initialState = {
   user: null,
 };
 
-export default (state: Object = initialState, action: Object) => {
+export default (state: Object = initialState, action: { type: string, user: Object }) => {
   switch (action.type) {
     case Types.LOGIN_SUCCEEDED:
       return {user: action.user};

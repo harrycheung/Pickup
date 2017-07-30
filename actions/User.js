@@ -10,7 +10,7 @@ export const Types = {
 };
 
 export const Actions = {
-  loadUser: (uid: string) => ({type: Types.LOAD, uid}),
+  loadUser: (uid?: string) => ({type: Types.LOAD, uid}),
   loadedUser: () => ({type: Types.LOADED}),
   setUser: (firstName: string, lastInitial: string, admin: boolean) => ({
     type: Types.SET, firstName, lastInitial, admin
