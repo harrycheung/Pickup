@@ -37,7 +37,7 @@ describe('Auth login saga', () => {
   });
 
   it('will put a successful login', () => {
-    expect(gen.next(dummyUser).value).toEqual(put(AuthActions.loginSucceeded(dummyUser)));
+    expect(gen.next(dummyUser).value).toEqual(put(AuthActions.setUser(dummyUser)));
   });
 
   it('will begin loading the user', () => {
@@ -52,12 +52,12 @@ describe('Auth login saga', () => {
     expect(gen.next().value).toEqual(select(Auth.getState));
   });
 
-  describe('User is new', () => {
-    let clone = gen.clone();
-    it('will navigate to CreateProfile screen', () => {
-      expect(clone.next(newUserState).value).toEqual(put(NavActions.navigate('CreateProfile')));
-    });
-  });
+  // describe('User is new', () => {
+  //   let clone = gen.clone();
+  //   it('will navigate to CreateProfile screen', () => {
+  //     expect(clone.next(newUserState).value).toEqual(put(NavActions.navigate('CreateProfile')));
+  //   });
+  // });
 
   describe('User is logging back in', () => {
     it('will load students', () => {

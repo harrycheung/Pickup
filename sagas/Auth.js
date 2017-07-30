@@ -4,26 +4,20 @@
 import { delay } from 'redux-saga'; // TODO: remove
 import { call, fork, put, select, take, takeLatest } from 'redux-saga/effects';
 import CryptoJS from 'crypto-js';
-import firebase from 'firebase';
 
-import * as c from '../config/constants';
-import { fbref } from '../helpers';
-import { Types } from '../actions/Auth';
-import { Types as UserTypes } from '../actions/User';
-import { Types as StudentTypes } from '../actions/Student';
-import { Types as PickupTypes } from '../actions/Pickup';
-import { Actions as AuthActions } from '../actions/Auth';
-import { Actions as UserActions } from '../actions/User';
-import { Actions as StudentActions } from '../actions/Student';
+import { FBauth, FBref, FBfunctions } from '../helpers/firebase';
+import { Actions as AuthActions, Types as AuthTypes} from '../actions/Auth';
+import { Actions as UserActions, Types as UserTypes } from '../actions/User';
+import { Actions as StudentActions, Types as StudentTypes } from '../actions/Student';
+import { Actions as PickupActions, Types as PickupTypes } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
-import { Actions as PickupActions } from '../actions/Pickup';
 
 const requestLoginAsync = (phoneNumber) => {
   const body = JSON.stringify({phoneNumber});
   const hmac = CryptoJS.HmacSHA1(body, 'secret').toString(CryptoJS.enc.Hex);
 
-  return fetch('https://' + c.FirebaseFunctions + '/requestLogin', {
+  return fetch('https://' + FBfunctions + '/requestLogin', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -51,24 +45,22 @@ export function* requestLogin(action) {
     yield put(NavActions.navigate('Login', {token: response}));
   } catch (error) {
     console.log('requestLogin failed', error);
-    yield put(AuthActions.requestLoginFailed());
+    yield put(AuthActions.authFailure());
   } finally {
     yield put(SpinnerActions.stop());
   }
 }
 
 export function* watchRequestLogin() {
-  yield takeLatest(Types.REQUEST_LOGIN, requestLogin);
+  yield takeLatest(AuthTypes.REQUEST_LOGIN, requestLogin);
 }
 
-firebase.initializeApp(c.FirebaseConfig);
-
 export const loginAsync = (token) => {
-  return firebase.auth().signInWithCustomToken(token);
+  return FBauth.signInWithCustomToken(token);
 };
 
 export const getActivePickup = (uid) => {
-  return fbref('/pickups')
+  return FBref('/pickups')
   .orderByChild('requestor').equalTo(uid).limitToFirst(1).once('value')
   .then((snapshot) => {
     let pickup = null;
@@ -86,19 +78,19 @@ export const getActivePickup = (uid) => {
 };
 
 const logoutAsync = () => {
-  return firebase.auth().signOut();
+  return FBauth.signOut();
 };
 
 export const getState = state => state;
 
 export function* login() {
   while (true) {
-    const { token } = yield take(Types.LOGIN);
+    const { token } = yield take(AuthTypes.LOGIN);
     try {
       try {
         yield put(SpinnerActions.start());
         const user = yield call(loginAsync, token);
-        yield put(AuthActions.loginSucceeded(user));
+        yield put(AuthActions.setUser(user));
         yield put(UserActions.loadUser());
         yield take(UserTypes.LOADED);
         const state = yield select(getState);
@@ -114,18 +106,18 @@ export function* login() {
       } finally {
         yield put(SpinnerActions.stop());
       }
-      yield take(Types.LOGOUT);
+      yield take(AuthTypes.LOGOUT);
       try {
         yield put(SpinnerActions.start());
         yield call(logoutAsync);
-        yield put(AuthActions.logoutSucceeded());
+        yield put(AuthActions.clear());
         yield put(NavActions.resetNavigation('LoginRequest'));
       } finally {
         yield put(SpinnerActions.stop());
       }
     } catch (error) {
-      console.log('login failed', error);
-      yield put(AuthActions.loginFailed());
+      console.log('Authentication failed', error);
+      yield put(AuthActions.authFailure());
     }
   }
 }

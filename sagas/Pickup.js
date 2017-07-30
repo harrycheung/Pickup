@@ -3,7 +3,7 @@
 
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import { fbref } from '../helpers';
+import { FBref } from '../helpers/firebase';
 import { Types } from '../actions/Pickup';
 import { Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
@@ -21,7 +21,7 @@ const createPickupAsync = (requestor, students) => {
     grades,
     createdAt: Date.now(),
   };
-  fbref('/pickups').push(pickup).then((pickupRef) => {
+  FBref('/pickups').push(pickup).then((pickupRef) => {
     return pickupRef.child('messages').push({
       type: 'request',
       sender: requestor,
@@ -54,7 +54,7 @@ export function* watchCreatePickup() {
 }
 
 const cancelPickupAsync = (pickupKey) => {
-  fbref('/pickups/' + pickupKey).remove();
+  FBref('/pickups/' + pickupKey).remove();
 };
 
 export function* cancelPickup(action) {
@@ -103,7 +103,7 @@ export function* postMessage(action) {
       message: action.message,
     };
 
-    fbref('/pickups/' + action.pickup.key + '/messages').push(messageData);
+    FBref('/pickups/' + action.pickup.key + '/messages').push(messageData);
   } catch (error) {
     console.log('postMessage failed', error);
   }

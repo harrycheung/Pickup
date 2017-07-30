@@ -9,7 +9,8 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 import { gstyles } from '../../../../config/styles';
-import { fbref, fullName } from '../../../../helpers';
+import { fullName } from '../../../../helpers';
+import { FBref } from '../../../../helpers/firebase';
 import Button from '../../../../components/Button';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
@@ -40,7 +41,7 @@ class EscortSelect extends React.Component {
       pickupRequest.key = snapshot.key;
       const { students } = pickupRequest;
       return Promise.all(Object.keys(students).map((studentKey) => {
-        return fbref('/students/' + studentKey).once('value').then((snapshot) => {
+        return FBref('/students/' + studentKey).once('value').then((snapshot) => {
           return Object.assign({}, snapshot.val(), {
             key: studentKey,
             escort: students[studentKey].escort,
@@ -50,7 +51,7 @@ class EscortSelect extends React.Component {
       }))
       .then((students) => {
         pickupRequest.students = students;
-        return fbref('/users/' + pickupRequest.requestor).once('value');
+        return FBref('/users/' + pickupRequest.requestor).once('value');
       })
       .then((snapshot) => {
         pickupRequest.requestor = snapshot.val();
@@ -63,7 +64,7 @@ class EscortSelect extends React.Component {
   }
 
   componentDidMount() {
-    fbref('/pickups').on('child_added', (snapshot) => {
+    FBref('/pickups').on('child_added', (snapshot) => {
       this._loadPickup(snapshot).then((pickupRequest) => {
         const pickupRequests = this.state.pickupRequests.concat(pickupRequest);
         this.setState({
@@ -73,7 +74,7 @@ class EscortSelect extends React.Component {
       });
     });
 
-    fbref('/pickups').on('child_removed', (snapshot) => {
+    FBref('/pickups').on('child_removed', (snapshot) => {
       const pickupRequests = this.state.pickupRequests.filter((request) => {
         return request.key !== snapshot.key;
       });
@@ -83,7 +84,7 @@ class EscortSelect extends React.Component {
       });
     });
 
-    fbref('/pickups').on('child_changed', (snapshot) => {
+    FBref('/pickups').on('child_changed', (snapshot) => {
       this._loadPickup(snapshot).then((pickupRequest) => {
         const pickupRequests = this.state.pickupRequests.map((pickup) => {
           return pickup.key == pickupRequest.key ? pickupRequest : pickup;
@@ -97,7 +98,7 @@ class EscortSelect extends React.Component {
   }
 
   componentWillUnmount() {
-    fbref('/pickups').off();
+    FBref('/pickups').off();
   }
 
   render() {
@@ -202,7 +203,7 @@ class EscortSelect extends React.Component {
   }
 
   _updatePickup(pickup, student, state) {
-    fbref('/pickups/' + pickup.key + '/students/' + student.key).update(state);
+    FBref('/pickups/' + pickup.key + '/students/' + student.key).update(state);
   }
 
   _escort(pickup, student) {

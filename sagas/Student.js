@@ -4,19 +4,19 @@
 import { delay } from 'redux-saga'; // TODO: remove
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
-import { fbref } from '../helpers';
+import { FBref } from '../helpers/firebase';
 import { Types } from '../actions/Student';
 import { Actions as StudentActions } from '../actions/Student';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
 
 const loadStudentsAsync = (uid) => {
-  return fbref('/users/' + uid + '/students').once('value').then((snapshot) => {
+  return FBref('/users/' + uid + '/students').once('value').then((snapshot) => {
     const students = snapshot.val() === null ? {} : snapshot.val();
     const studentKeys = Object.keys(students);
     return Promise.all(
       studentKeys.map((id) => {
-        return fbref('/students/' + id).once('value')
+        return FBref('/students/' + id).once('value')
           .then((snapshot) => {
             return Object.assign({}, snapshot.val(), {
               key: id,
@@ -45,7 +45,7 @@ export function* watchLoadStudents() {
 }
 
 const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => {
-  return fbref('/students').push().then((studentRef) => {
+  return FBref('/students').push().then((studentRef) => {
     var relationships = {};
     relationships[uid] = relationship;
     var studentUpdate = {};
@@ -56,7 +56,7 @@ const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => {
       relationships,
     };
     studentUpdate['users/' + uid + '/students/' + studentRef.key] = relationship;
-    return fbref('/').update(studentUpdate).then(() => {
+    return FBref('/').update(studentUpdate).then(() => {
       return studentRef.key;
     });
   });
@@ -100,7 +100,7 @@ const editStudentAsync = (uid, student) => {
     relationships,
   };
   studentUpdate['users/' + uid + '/students/' + key] = relationship;
-  return fbref('/').update(studentUpdate);
+  return FBref('/').update(studentUpdate);
 };
 
 export function* editStudent(action) {
@@ -123,7 +123,7 @@ const deleteStudentAsync = (uid, key) => {
   var studentUpdate = {};
   studentUpdate['students/' + key] = null;
   studentUpdate['users/' + uid + '/students/' + key] = null;
-  return fbref('/').update(studentUpdate);
+  return FBref('/').update(studentUpdate);
 };
 
 export function* deleteStudent(action) {

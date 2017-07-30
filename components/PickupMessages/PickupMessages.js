@@ -7,7 +7,8 @@ import { Alert, Image, Text, TextInput, View } from 'react-native';
 
 import styles from './styles';
 import { gstyles } from '../../config/styles';
-import { fbref, fullName } from '../../helpers';
+import { fullName } from '../../helpers';
+import { FBref } from '../../helpers/firebase';
 import AutoScrollView from '../AutoScrollView';
 import KeyboardSpacer from '../KeyboardSpacer';
 import { StudentCache } from '../../helpers';
@@ -31,20 +32,20 @@ class PickupMessages extends React.Component {
 
   componentDidMount() {
     const { pickup } = this.props;
-    fbref('/pickups/' + pickup.key).on('value', (snapshot) => {
+    FBref('/pickups/' + pickup.key).on('value', (snapshot) => {
       if (snapshot.val() === null) {
         this.props.onClose();
       }
     });
 
-    const messagesRef = fbref('/pickups/' + pickup.key + '/messages');
+    const messagesRef = FBref('/pickups/' + pickup.key + '/messages');
     messagesRef.once('value').then((snapshot) => {
       let messages = [];
       snapshot.forEach((messageSnapshot) => {
         let message = messageSnapshot.val();
         message.key = messageSnapshot.key;
         messages.push(
-          fbref('/users/' + message.sender).once('value').then((snapshot) => {
+          FBref('/users/' + message.sender).once('value').then((snapshot) => {
             const senderKey = message.sender;
             message.sender = snapshot.val();
             message.sender.key = senderKey;
@@ -66,7 +67,7 @@ class PickupMessages extends React.Component {
             let message = snapshot.val();
             message.key = snapshot.key;
 
-            fbref('/users/' + message.sender).once('value').then((snapshot) => {
+            FBref('/users/' + message.sender).once('value').then((snapshot) => {
               const senderKey = message.sender;
               message.sender = snapshot.val();
               message.sender['key'] = senderKey;
@@ -80,8 +81,8 @@ class PickupMessages extends React.Component {
   }
 
   componentWillUnmount() {
-    fbref('/pickups/' + this.props.pickup.key).off();
-    fbref('/pickups/' + this.props.pickup.key + '/messages').off();
+    FBref('/pickups/' + this.props.pickup.key).off();
+    FBref('/pickups/' + this.props.pickup.key + '/messages').off();
   }
 
   render() {

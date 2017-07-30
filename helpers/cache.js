@@ -1,9 +1,7 @@
 
 // @flow
 
-import firebase from 'firebase';
-
-import { fbref } from '.';
+import { FBref } from './firebase';
 
 class Cache {
   path: string;
@@ -18,7 +16,7 @@ class Cache {
     if (key in this.cache) {
       return Promise.resolve(this.cache[key]);
     } else {
-      return fbref(`${this.path}/${key}`).once('value').then((snapshot) => {
+      return FBref(`${this.path}/${key}`).once('value').then((snapshot) => {
         const student = snapshot.val();
         student.key = snapshot.key;
         if (snapshot !== null) {
