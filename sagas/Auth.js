@@ -63,11 +63,11 @@ export function* watchRequestLogin() {
 
 firebase.initializeApp(c.FirebaseConfig);
 
-const loginAsync = (token) => {
+export const loginAsync = (token) => {
   return firebase.auth().signInWithCustomToken(token);
 };
 
-const getActivePickup = (uid) => {
+export const getActivePickup = (uid) => {
   return fbref('/pickups')
   .orderByChild('requestor').equalTo(uid).limitToFirst(1).once('value')
   .then((snapshot) => {
@@ -89,6 +89,8 @@ const logoutAsync = () => {
   return firebase.auth().signOut();
 };
 
+export const getState = state => state;
+
 export function* login() {
   while (true) {
     const { token } = yield take(Types.LOGIN);
@@ -99,7 +101,7 @@ export function* login() {
         yield put(AuthActions.loginSucceeded(user));
         yield put(UserActions.loadUser());
         yield take(UserTypes.LOADED);
-        const state = yield select();
+        const state = yield select(getState);
         if (state.user.firstName === '') {
           yield put(NavActions.navigate('CreateProfile'));
         } else {
