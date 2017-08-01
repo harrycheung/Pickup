@@ -5,7 +5,6 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/Ionicons';
 import update from 'react-addons-update';
 
 import PickupScreen from './Pickup';

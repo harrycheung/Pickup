@@ -16,12 +16,13 @@ const createPickupAsync = (requestor, students) => {
   }, {});
   const grades = Array.from(new Set(students.map((student) => student.grade)));
   let pickup = {
+    key: '',
     requestor,
     students: pickupStudents,
     grades,
     createdAt: Date.now(),
   };
-  FBref('/pickups').push(pickup).then((pickupRef) => {
+  return FBref('/pickups').push(pickup).then((pickupRef) => {
     return pickupRef.child('messages').push({
       type: 'request',
       sender: requestor,

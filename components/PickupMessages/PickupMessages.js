@@ -127,7 +127,7 @@ class PickupMessages extends React.Component {
 
     switch (message.type) {
       case 'request':
-        const studentsJSX = this.props.students.map((student) => {
+        const studentsJSX = this.props.pickup.students.map((student) => {
           return (
             <View key={student.key} style={styles.student}>
               <Image
@@ -199,7 +199,6 @@ class PickupMessages extends React.Component {
 PickupMessages.propTypes = {
   uid: PropTypes.string.isRequired,
   pickup: PropTypes.object.isRequired,
-  students: PropTypes.array.isRequired,
   postMessage: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
