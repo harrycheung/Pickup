@@ -23,17 +23,15 @@ class PickupRequest extends React.Component {
       <PickupMessages
         uid={this.props.uid}
         pickup={this.props.pickup}
-        students={this.props.navigation.state.params.students}
         postMessage={this.props.postMessage}
         onClose={() => {}}
-        onComplete={() => this.props.back()}
+        onComplete={() => this.props.navigateBack()}
       />
     );
   }
 
-  _cancel() {
+  componentWillUnmount() {
     this.props.cancelPickup(this.props.pickup);
-    this.props.navigateBack();
   }
 }
 

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
 import { gstyles } from '../../../../config/styles';
@@ -43,12 +42,17 @@ class PickupSelect extends React.Component {
 
     this.state = {
       students: [],
+      showExistingPickup: props.pickup !== null,
     };
+  }
+
+  componentWilReceiveProps(nextProps) {
+    this.setState = {showExistingPickup: nextProps.pickup !== null};
   }
 
   render() {
     let existingPickup = null;
-    if (this.props.pickup) {
+    if (this.state.showExistingPickup) {
       existingPickup = (
         <View style={styles.pickup}>
           <Text style={gstyles.font18}>Continue your previous pickup?</Text>
