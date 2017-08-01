@@ -42,7 +42,7 @@ export function* requestLogin(action) {
     const response = yield call(requestLoginAsync, phoneNumber);
     yield put(AuthActions.requestLoginSucceeded());
     // TODO: remove this call
-    yield put(NavActions.navigate('Login', {token: response}));
+    yield put(NavActions.resetNavigation('Login', {token: response}));
   } catch (error) {
     console.log('requestLogin failed', error);
     yield put(AuthActions.authFailure());
@@ -107,17 +107,14 @@ export function* login() {
         yield put(SpinnerActions.stop());
       }
       yield take(AuthTypes.LOGOUT);
-      try {
-        yield put(SpinnerActions.start());
-        yield call(logoutAsync);
-        yield put(AuthActions.clear());
-        yield put(NavActions.resetNavigation('LoginRequest'));
-      } finally {
-        yield put(SpinnerActions.stop());
-      }
+      yield call(logoutAsync);
+      yield put(AuthActions.clear());
+      yield put(NavActions.resetNavigation('LoginRequest'));
     } catch (error) {
       console.log('Authentication failed', error);
       yield put(AuthActions.authFailure());
+      yield put(AuthActions.clear());
+      yield put(NavActions.resetNavigation('LoginRequest'));
     }
   }
 }
