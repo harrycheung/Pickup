@@ -46,80 +46,81 @@ class PickupSelect extends React.Component {
     };
   }
 
-  componentWilReceiveProps(nextProps) {
-    this.setState = {showExistingPickup: nextProps.pickup !== null};
+  componentWillReceiveProps(nextProps) {
+    this.setState({showExistingPickup: nextProps.pickup !== null});
   }
 
   render() {
     let existingPickup = null;
     if (this.state.showExistingPickup) {
-      existingPickup = (
-        <View style={styles.pickup}>
-          <Text style={gstyles.font18}>Continue your previous pickup?</Text>
-          <View style={[styles.pickupButtons, gstyles.marginTop10]}>
-            <Button
-              style={gstyles.flex1}
-              onPress={() => this.props.cancelPickup(this.props.pickup)}
-              content='Cancel'
-              backgroundColor='darkgray'
-            />
-            <View style={{width: 10}} />
-            <Button
-              style={gstyles.flex1}
-              onPress={() => this.props.resumePickup(this.props.pickup)}
-              content='Continue'
-            />
+      return (
+        <View style={[gstyles.flex1, gstyles.flexStart]}>
+          <View style={styles.pickup}>
+            <Text style={gstyles.font18}>Continue your previous pickup?</Text>
+            <View style={[styles.pickupButtons, gstyles.marginTop10]}>
+              <Button
+                style={gstyles.flex1}
+                onPress={() => this.props.cancelPickup(this.props.pickup)}
+                content='Cancel'
+                backgroundColor='darkgray'
+              />
+              <View style={{width: 10}} />
+              <Button
+                style={gstyles.flex1}
+                onPress={() => this.props.resumePickup(this.props.pickup)}
+                content='Continue'
+              />
+            </View>
           </View>
         </View>
       );
-    }
+    } else {
+      let studentViews = null;
+      if (this.props.students.length == 0) {
+        studentViews = (
+          <View style={styles.message}>
+            <Text style={styles.messageText}>
+              {"Let's add your student"}
+            </Text>
+            <Button
+              style={styles.messageButton}
+              onPress={() => this.props.navigate('AddStudent')}
+              content='Add student'
+            />
+          </View>
+        );
+      } else {
+        studentViews = this.props.students.map((student) => {
+          const selected = this.state.students.includes(student);
+          const style = [styles.studentImage, selected ? styles.selected : {}];
+          return (
+            <TouchableOpacity
+              key={student.key}
+              style={styles.student}
+              onPress={this._selectStudent.bind(this, student)}
+            >
+              <Image style={style} source={require('../../../../images/max.png')} />
+              <Text style={styles.studentName}>
+                {student.firstName} {student.lastInitial}
+              </Text>
+            </TouchableOpacity>
+          );
+        });
+      }
 
-    let studentViews = null;
-    if (this.props.students.length == 0) {
-      studentViews = (
-        <View style={styles.message}>
-          <Text style={styles.messageText}>
-            {"Let's add your student"}
-          </Text>
+      return (
+        <View style={[gstyles.flex1, gstyles.flexStart]}>
+          <ScrollView contentContainerStyle={styles.students}>
+            {studentViews}
+          </ScrollView>
           <Button
-            style={styles.messageButton}
-            onPress={() => this.props.navigate('AddStudent')}
-            content='Add student'
+            disabled={this.state.students.length < 1}
+            onPress={this._pickup.bind(this)}
+            content='Pickup'
           />
         </View>
       );
-    } else {
-      studentViews = this.props.students.map((student) => {
-        const selected = this.state.students.includes(student);
-        const style = [styles.studentImage, selected ? styles.selected : {}];
-        return (
-          <TouchableOpacity
-            key={student.key}
-            style={styles.student}
-            onPress={this._selectStudent.bind(this, student)}
-          >
-            <Image style={style} source={require('../../../../images/max.png')} />
-            <Text style={styles.studentName}>
-              {student.firstName} {student.lastInitial}
-            </Text>
-          </TouchableOpacity>
-        );
-      });
     }
-
-    return (
-      <View style={styles.container}>
-        {existingPickup}
-        <ScrollView contentContainerStyle={styles.students}>
-          {studentViews}
-        </ScrollView>
-        <Button
-          disabled={this.state.students.length < 1}
-          onPress={this._pickup.bind(this)}
-          content='Pickup'
-        />
-      </View>
-    );
   }
 
   _selectStudent(selectedStudent) {

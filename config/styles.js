@@ -23,6 +23,13 @@ export const gstyles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  flexCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flexStart: {
+    justifyContent: 'flex-start',
+  },
   width10: {
     width: 10,
   },

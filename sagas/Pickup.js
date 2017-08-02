@@ -55,7 +55,7 @@ export function* watchCreatePickup() {
 }
 
 const cancelPickupAsync = (pickupKey) => {
-  FBref('/pickups/' + pickupKey).remove();
+  FBref(`/pickups/${pickupKey}`).remove();
 };
 
 export function* cancelPickup(action) {
