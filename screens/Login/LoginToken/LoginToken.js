@@ -15,6 +15,10 @@ class LoginToken extends React.Component {
     message: string,
   };
 
+  static navigationOptions = {
+    header: null,
+  };
+
   constructor(props) {
     super(props);
 
