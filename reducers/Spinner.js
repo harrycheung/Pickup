@@ -3,17 +3,15 @@
 
 import { Types } from '../actions/Spinner';
 
-const initialState = {
-  spinning: false,
-};
+const initialState = false;
 
 export default (state: Object = initialState, action: Object) => {
   switch (action.type) {
     case Types.START:
-      return {spinning: true};
+      return true;
 
     case Types.STOP:
-      return initialState
+      return initialState;
 
     default:
       return state;

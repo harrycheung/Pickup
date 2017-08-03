@@ -47,7 +47,7 @@ Profile.propTypes = {
 const mapStateToProps = (state) => ({
   firstName: state.user.firstName,
   lastInitial: state.user.lastInitial,
-  spinning: state.spinner.spinning,
+  spinning: state.spinner,
 });
 
 const mapDispatchToProps = (dispatch) => ({

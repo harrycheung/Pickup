@@ -61,7 +61,7 @@ LoginToken.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  spinning: state.spinner.spinning,
+  spinning: state.spinner,
 });
 
 const mapDispatchToProps = (dispatch) => ({
