@@ -4,7 +4,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, View } from 'react-native';
-import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -41,8 +40,4 @@ const mapDispatchToProps = (dispatch) => ({
   ...bindActionCreators(AuthActions, dispatch),
 });
 
-export default StackNavigator({
-  Logout: {
-    screen: connect(null, mapDispatchToProps)(Logout),
-  },
-});
+export default connect(null, mapDispatchToProps)(Logout);
