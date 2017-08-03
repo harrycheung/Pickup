@@ -11,7 +11,7 @@ export const Types = {
 };
 
 export const Actions = {
-  createPickup: (requestor: string, students: Object[]) => ({
+  createPickup: (requestor: Object, students: Object[]) => ({
     type: Types.CREATE, requestor, students
   }),
   createdPickup: (pickup: Object) => ({type: Types.CREATED, pickup}),

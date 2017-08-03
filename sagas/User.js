@@ -26,10 +26,10 @@ export function* loadUser(action) {
     }
     const response = yield call(loadUserAsync, uid);
     if (response === null) {
-      yield put(UserActions.setUser('', '', false));
+      yield put(UserActions.setUser('', '', '', false));
     } else {
       const { firstName, lastInitial, admin = false } = response;
-      yield put(UserActions.setUser(firstName, lastInitial, admin));
+      yield put(UserActions.setUser(uid, firstName, lastInitial, admin));
     }
     yield put(UserActions.loadedUser());
   } catch (error) {

@@ -61,7 +61,7 @@ export const loginAsync = (token) => {
 
 export const getActivePickup = (uid) => {
   return FBref('/pickups')
-  .orderByChild('requestor').equalTo(uid).limitToFirst(1).once('value')
+  .orderByChild('requestor/uid').equalTo(uid).limitToFirst(1).once('value')
   .then((snapshot) => {
     let pickup = null;
     snapshot.forEach((pickupSnapshot) => {
@@ -69,7 +69,7 @@ export const getActivePickup = (uid) => {
       pickup.key = pickupSnapshot.key;
       let students = [];
       for (let studentKey in pickup.students) {
-        students.push(Object.assign({}, pickup.students[studentKey], {key: studentKey}));
+        students.push(Object.assign(pickup.students[studentKey], {key: studentKey}));
       }
       pickup.students = students;
     });

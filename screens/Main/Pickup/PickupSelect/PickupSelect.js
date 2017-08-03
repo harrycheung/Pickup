@@ -17,16 +17,17 @@ import { StudentCache } from '../../../../helpers';
 
 class PickupSelect extends React.Component {
   props: {
-    uid: string,
+    user: Object,
     pickup: Object,
     students: Object[],
     navigate: (string) => void,
-    createPickup: (string, Array<Object>) => void,
+    createPickup: (Object, Array<Object>) => void,
     cancelPickup: (Object) => void,
     resumePickup: (Object) => void,
   }
   state: {
     students: Object[],
+    showExistingPickup: boolean,
   }
 
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -132,12 +133,13 @@ class PickupSelect extends React.Component {
   }
 
   _pickup() {
-    this.props.createPickup(this.props.uid, this.state.students);
+    this.props.createPickup(this.props.user, this.state.students);
     this.setState({students: []});
   }
 }
 
 PickupSelect.propTypes = {
+  user: PropTypes.object.isRequired,
   students: PropTypes.array.isRequired,
   createPickup: PropTypes.func.isRequired,
   pickup: PropTypes.object,
@@ -147,7 +149,7 @@ PickupSelect.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  uid: state.auth.user.uid,
+  user: state.user,
   students: state.student.students,
   pickup: state.pickup.pickup,
 });

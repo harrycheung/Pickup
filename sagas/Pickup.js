@@ -4,6 +4,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
+import { fullName } from '../helpers';
 import { Types } from '../actions/Pickup';
 import { Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
@@ -11,12 +12,11 @@ import { StudentCache } from '../helpers';
 
 const createPickupAsync = (requestor, students) => {
   const pickupStudents = students.reduce((students, student) => {
-    students[student.key] = {escort: {uid: '', name: ''}};
+    students[student.key] = {name: fullName(student), escort: {uid: '', name: ''}};
     return students;
   }, {});
   const grades = Array.from(new Set(students.map((student) => student.grade)));
   let pickup = {
-    key: '',
     requestor,
     students: pickupStudents,
     grades,
@@ -34,7 +34,7 @@ const createPickupAsync = (requestor, students) => {
   })
   .then((pickupRef) => {
     pickup.key = pickupRef.key;
-    pickup.students = students;
+    pickup.students = pickupStudents;
     return pickup;
   });
 }
@@ -84,8 +84,7 @@ const loadStudentsAsync = (pickup) => {
 
 export function* resumePickup(action) {
   try {
-    const students = yield call(loadStudentsAsync, action.pickup);
-    yield put(NavActions.navigate('PickupRequest', {students}));
+    yield put(NavActions.navigate('PickupRequest'));
   } catch (error) {
     console.log('resumePickup failed', error);
   }

@@ -21,7 +21,7 @@ class PickupRequest extends React.Component {
   render() {
     return (
       <PickupMessages
-        uid={this.props.uid}
+        user={this.props.user}
         pickup={this.props.pickup}
         postMessage={this.props.postMessage}
         onClose={() => {}}
@@ -36,7 +36,7 @@ class PickupRequest extends React.Component {
 }
 
 PickupRequest.propTypes = {
-  uid: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
   pickup: PropTypes.object.isRequired,
   cancelPickup: PropTypes.func.isRequired,
   postMessage: PropTypes.func.isRequired,
@@ -44,7 +44,7 @@ PickupRequest.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  uid: state.auth.user.uid,
+  user: state.user,
   pickup: state.pickup.pickup,
 });
 
