@@ -9,6 +9,7 @@ import { fullName } from '../helpers';
 import { Types } from '../actions/Pickup';
 import { Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
+import { Actions as MessageActions } from '../actions/Message';
 import { StudentCache } from '../helpers';
 
 const createPickupAsync = (requestor, students) => {
@@ -157,6 +158,7 @@ export function* listenPickup() {
           const snapshot = yield take(channel);
           if (snapshot.val() === null) {
             yield put(NavActions.back());
+            yield put(MessageActions.showMessage('Pickup canceled', 3000));
             yield put(PickupActions.canceledPickup());
           }
         }

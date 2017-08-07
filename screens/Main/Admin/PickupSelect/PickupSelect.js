@@ -13,6 +13,7 @@ import { colors, gstyles } from '../../../../config/styles';
 import { time } from '../../../../helpers';
 import { FBref } from '../../../../helpers/firebase';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
+import MessageView from '../../../../components/MessageView';
 
 class PickupSelect extends React.Component {
   state: {
@@ -77,14 +78,14 @@ class PickupSelect extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <MessageView style={styles.container}>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
           renderSeparator={this._renderSeparator.bind(this)}
           enableEmptySections={true}
         />
-      </View>
+      </MessageView>
     );
   }
 

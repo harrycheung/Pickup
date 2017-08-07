@@ -9,6 +9,7 @@ import StudentReducer from './Student';
 import UserReducer from './User';
 import SpinnerReducer from './Spinner';
 import PickupReducer from './Pickup';
+import MessageReducer from './Message';
 
 const AppReducer = combineReducers({
   nav: NavReducer,
@@ -17,6 +18,7 @@ const AppReducer = combineReducers({
   user: UserReducer,
   spinner: SpinnerReducer,
   pickup: PickupReducer,
+  message: MessageReducer,
 });
 
 export default AppReducer;
