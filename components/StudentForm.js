@@ -15,14 +15,6 @@ class StudentForm extends React.Component {
     grade: string,
     relationship: string,
   };
-  static defaultProps: {
-    firstName: string,
-    lastInitial: string,
-    grade: string,
-    relationship: string,
-    submitButtonText: string,
-    onSubmit: (firstName: string, lastInitial: string, grade: string, relationship: string) => void,
-  };
 
   constructor(props: Object) {
     super(props);
@@ -104,7 +96,7 @@ StudentForm.defaultProps = {
   relationship: '',
   submitButtonText: 'Done',
   onSubmit: () => {},
-}
+};
 
 const styles = StyleSheet.create({
   margin: {
