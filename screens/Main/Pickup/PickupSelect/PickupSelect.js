@@ -102,7 +102,7 @@ class PickupSelect extends React.Component {
             >
               <Image style={style} source={require('../../../../images/max.png')} />
               <Text style={styles.studentName}>
-                {student.firstName} {student.lastInitial}
+                {student.firstName} {student.lastInitial} ({student.grade})
               </Text>
             </TouchableOpacity>
           );

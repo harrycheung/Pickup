@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import firebase from 'firebase';
 
 import styles from './styles';
+import { gstyles } from '../../../../config/styles';
+import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import PickupMessages from '../../../../components/PickupMessages';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
@@ -18,20 +20,27 @@ class PickupRequest extends React.Component {
     title: 'Pickup Request',
   };
 
-  render() {
-    return (
-      <PickupMessages
-        user={this.props.user}
-        pickup={this.props.pickup}
-        postMessage={this.props.postMessage}
-        onClose={() => {}}
-        onComplete={() => this.props.navigateBack()}
-      />
-    );
+  componentWillMount() {
+    this.props.listenPickup(this.props.pickup);
   }
 
   componentWillUnmount() {
+    this.props.unlistenPickup();
     this.props.cancelPickup(this.props.pickup);
+  }
+
+  render() {
+    return (
+      <KeyboardAwareView style={gstyles.flex1}>
+        <PickupMessages
+          user={this.props.user}
+          pickup={this.props.pickup}
+          postMessage={this.props.postMessage}
+          onClose={() => {}}
+          onComplete={() => this.props.navigateBack()}
+        />
+      </KeyboardAwareView>
+    );
   }
 }
 

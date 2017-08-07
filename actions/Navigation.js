@@ -14,8 +14,11 @@ export const Actions = {
   navigate: (routeName: string, params?: Object) => {
     return NavigationActions.navigate({routeName, params});
   },
-  back: (key: string) => {
+  back: (key?: string) => {
     return NavigationActions.back(key);
+  },
+  setParams: (params: Object) => {
+    return NavigationActions.setParams(params);
   },
 }
 

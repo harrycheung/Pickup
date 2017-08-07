@@ -1,8 +1,5 @@
 
-/**
- * Created by andrewhurst on 10/5/15.
- * @flow
- */
+// @flow
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -23,7 +20,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// From: https://medium.com/man-moon/writing-modern-react-native-ui-e317ff956f02
 const defaultAnimation = {
   duration: 500,
   create: {
@@ -37,35 +33,32 @@ const defaultAnimation = {
   }
 };
 
-class KeyboardSpacer extends React.Component {
+class KeyboardAwareView extends React.Component {
   static propTypes = {
-    topSpacing: PropTypes.number,
     onToggle: PropTypes.func,
     style: View.propTypes.style,
   };
 
   static defaultProps = {
-    topSpacing: 0,
     onToggle: () => null,
   };
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
+
     this.state = {
-      keyboardSpace: 0,
+      offset: 0,
       isKeyboardOpened: false
     };
     this._listeners = null;
-    this.updateKeyboardSpace = this.updateKeyboardSpace.bind(this);
-    this.resetKeyboardSpace = this.resetKeyboardSpace.bind(this);
   }
 
   componentDidMount() {
     const updateListener = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
     const resetListener = Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
     this._listeners = [
-      Keyboard.addListener(updateListener, this.updateKeyboardSpace),
-      Keyboard.addListener(resetListener, this.resetKeyboardSpace)
+      Keyboard.addListener(updateListener, this.updateOffset.bind(this)),
+      Keyboard.addListener(resetListener, this.resetOffset.bind(this))
     ];
   }
 
@@ -73,7 +66,7 @@ class KeyboardSpacer extends React.Component {
     this._listeners.forEach(listener => listener.remove());
   }
 
-  updateKeyboardSpace(event) {
+  updateOffset(event) {
     if (!event.endCoordinates) {
       return;
     }
@@ -93,14 +86,14 @@ class KeyboardSpacer extends React.Component {
     // when external physical keyboard is connected
     // event.endCoordinates.height still equals virtual keyboard height
     // however only the keyboard toolbar is showing if there should be one
-    const keyboardSpace = (screenHeight - event.endCoordinates.screenY) + this.props.topSpacing;
+    const offset = -(screenHeight - event.endCoordinates.screenY);
     this.setState({
-      keyboardSpace,
+      offset,
       isKeyboardOpened: true
-    }, this.props.onToggle(true, keyboardSpace));
+    }, this.props.onToggle(true, offset));
   }
 
-  resetKeyboardSpace(event) {
+  resetOffset(event) {
     let animationConfig = defaultAnimation;
     if (Platform.OS === 'ios') {
       animationConfig = LayoutAnimation.create(
@@ -112,15 +105,18 @@ class KeyboardSpacer extends React.Component {
     LayoutAnimation.configureNext(animationConfig);
 
     this.setState({
-      keyboardSpace: 0,
+      offset: 0,
       isKeyboardOpened: false
     }, this.props.onToggle(false, 0));
   }
 
   render() {
     return (
-      <View style={[styles.container, { height: this.state.keyboardSpace }, this.props.style]} />);
+      <View style={[styles.container, { top: this.state.offset }, this.props.style]}>
+        {this.props.children}
+      </View>
+    );
   }
 }
 
-export default KeyboardSpacer;
+export default KeyboardAwareView;

@@ -55,7 +55,7 @@ class Home extends React.Component {
   }
 
   _selectLevel(grade) {
-    this.props.navigate('EscortSelect', {grade});
+    this.props.navigate('PickupSelect', {grade});
   }
 }
 

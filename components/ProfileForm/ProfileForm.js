@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Button, Image, Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
@@ -94,6 +94,7 @@ class ProfileForm extends React.Component {
             borderBottomColor={colors.darkGrey}
             onChangeText={(text) => this._updateState({firstName: text})}
             defaultValue={this.state.firstName}
+            onSubmitEditing={Keyboard.dismiss}
           />
           <LinedTextInput
             style={[styles.input, styles.margin]}
@@ -104,6 +105,7 @@ class ProfileForm extends React.Component {
             borderBottomColor={colors.darkGrey}
             onChangeText={(text) => this._updateState({lastInitial: text})}
             defaultValue={this.state.lastInitial}
+            onSubmitEditing={Keyboard.dismiss}
           />
           {this.props.children}
         </View>

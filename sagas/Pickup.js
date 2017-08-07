@@ -1,7 +1,8 @@
 
 // @flow
 
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
 
 import { FBref } from '../helpers/firebase';
 import { fullName } from '../helpers';
@@ -12,10 +13,20 @@ import { StudentCache } from '../helpers';
 
 const createPickupAsync = (requestor, students) => {
   const pickupStudents = students.reduce((students, student) => {
-    students[student.key] = {name: fullName(student), escort: {uid: '', name: ''}};
+    students[student.key] = {
+      key: student.key,
+      name: fullName(student),
+      escort: {uid: '', name: ''},
+      released: false,
+      grade: student.grade,
+    };
     return students;
   }, {});
-  const grades = Array.from(new Set(students.map((student) => student.grade)));
+  const grades = students.reduce((acc, student) => {
+    acc[student.grade] = true;
+    return acc;
+  }, {});
+  requestor = { uid: requestor.uid, name: requestor.name };
   let pickup = {
     requestor,
     students: pickupStudents,
@@ -94,16 +105,28 @@ export function* watchResumePickup() {
   yield takeEvery(Types.RESUME, resumePickup);
 }
 
+export function* handlePickup(action) {
+  try {
+    yield put(NavActions.navigate('HandlePickup'));
+  } catch (error) {
+    console.log('handlePickup error', error);
+  }
+}
+
+export function* watchHandlePickup() {
+  yield takeEvery(Types.HANDLE, handlePickup);
+}
+
 export function* postMessage(action) {
   try {
+    const { sender } = action;
     let messageData = {
-      type: 'message',
-      sender: action.sender,
+      sender: {uid: sender.uid, name: sender.name},
       createdAt: Date.now(),
-      message: action.message,
+      ...action.message,
     };
 
-    FBref('/pickups/' + action.pickup.key + '/messages').push(messageData);
+    FBref(`/pickups/${action.pickup.key}/messages`).push(messageData);
   } catch (error) {
     console.log('postMessage failed', error);
   }
@@ -111,4 +134,64 @@ export function* postMessage(action) {
 
 export function* watchPostMessage() {
   yield takeEvery(Types.POST_MESSAGE, postMessage);
+}
+
+const firebaseChannel = (path: string, eventType: string) => {
+  return eventChannel((emitter) => {
+    const ref = FBref(path);
+
+    ref.on(eventType, (snapshot) => emitter(snapshot));
+
+    return () => ref.off();
+  });
+};
+
+export function* listenPickup() {
+  while (true) {
+    try {
+      const { pickup } = yield take(Types.LISTEN);
+
+      const pickupCancelChannel = firebaseChannel(`/pickups/${pickup.key}`, 'value');
+      const pickupCancelListener = function* (channel) {
+        while (true) {
+          const snapshot = yield take(channel);
+          if (snapshot.val() === null) {
+            yield put(NavActions.back());
+            yield put(PickupActions.canceledPickup());
+          }
+        }
+      };
+
+      const pickupStudentsChannel = firebaseChannel(`/pickups/${pickup.key}/students`, 'value');
+      const pickupStudentsListener = function* (channel) {
+        while (true) {
+          const snapshot = yield take(channel);
+          yield put(PickupActions.updateStudents(snapshot.val()));
+        }
+      }
+
+      const pickupMessagesChannel = firebaseChannel(`/pickups/${pickup.key}/messages`, 'value');
+      const pickupMessagesListener = function* (channel) {
+        while (true) {
+          const snapshot = yield take(channel);
+          yield put(PickupActions.updateMessages(snapshot.val()));
+        }
+      }
+
+      yield fork(pickupCancelListener, pickupCancelChannel);
+      yield fork(pickupStudentsListener, pickupStudentsChannel);
+      yield fork(pickupMessagesListener, pickupMessagesChannel);
+
+      yield take(Types.UNLISTEN);
+      pickupCancelChannel.close();
+      pickupStudentsChannel.close();
+      pickupMessagesChannel.close();
+    } catch (error) {
+      console.log('listenPickup error', error);
+    }
+  }
+}
+
+export function* watchListenPickup() {
+  yield fork(listenPickup);
 }

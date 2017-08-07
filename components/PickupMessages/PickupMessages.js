@@ -3,14 +3,19 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Image, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Keyboard,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 
 import styles from './styles';
 import { gstyles } from '../../config/styles';
-import { FBref } from '../../helpers/firebase';
+import { time } from '../../helpers';
 import AutoScrollView from '../AutoScrollView';
-import KeyboardSpacer from '../KeyboardSpacer';
-import { StudentCache } from '../../helpers';
 
 class PickupMessages extends React.Component {
   state: {
@@ -29,46 +34,17 @@ class PickupMessages extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const { pickup } = this.props;
-    FBref(`/pickups/${pickup.key}`).on('value', (snapshot) => {
-      if (snapshot.val() === null) {
-        this.props.onClose();
-      }
-    });
-
-    const messagesRef = FBref(`/pickups/${pickup.key}/messages`);
-    messagesRef.once('value').then((snapshot) => {
-      let messages = [];
-      snapshot.forEach((messageSnapshot) => {
-        let message = messageSnapshot.val();
-        message.key = messageSnapshot.key;
-        messages.push(message);
-      });
-
-      this.setState({messages}, () => {
-        messagesRef.limitToLast(1).on('child_added', (snapshot) => {
-          const hasKey = (element) => {
-            return element.key === snapshot.key;
-          };
-
-          if (!this.state.messages.find(hasKey)) {
-            let message = snapshot.val();
-            message.key = snapshot.key;
-            this.setState({messages: this.state.messages.concat(message)});
-          }
-        });
-      });
-    });
-  }
-
-  componentWillUnmount() {
-    FBref(' /pickups/' + this.props.pickup.key).off();
-    FBref('/pickups/' + this.props.pickup.key + '/messages').off();
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.pickup !== null;
   }
 
   render() {
-    const messages = this.state.messages.map((message) => this.renderMessage(message));
+    let messages = [];
+    for (let messageKey in this.props.pickup.messages) {
+      let message = this.props.pickup.messages[messageKey];
+      message.key = messageKey;
+      messages.push(this._renderMessage(message));
+    }
 
     return (
       <View style={styles.container}>
@@ -86,13 +62,12 @@ class PickupMessages extends React.Component {
               value={this.state.message}
             />
           </View>
-          <KeyboardSpacer />
         </View>
       </View>
     );
   }
 
-  renderMessage(message: Object) {
+  _renderMessage(message: Object) {
     let containerStyle = [styles.messageContainer];
     let messageStyle = [styles.message];
     let sender = null;
@@ -109,6 +84,10 @@ class PickupMessages extends React.Component {
 
     switch (message.type) {
       case 'request':
+        if (this.props.hideRequest) {
+          return <View key='hiddenRequest' />;
+        }
+
         const { students } = this.props.pickup;
         let studentsJSX = [];
         for (let studentKey in students) {
@@ -140,11 +119,15 @@ class PickupMessages extends React.Component {
         break;
 
       case 'escort':
-        messageJSX = `${fullName(message.sender)} is escorting Max C and Josh B to the front gate`;
+        messageJSX = `${message.sender.name} is escorting ${message.student.name}`;
+        break;
+
+      case 'cancel':
+        messageJSX = `${message.sender.name} canceled escort of ${message.student.name}`;
         break;
 
       case 'release':
-        messageJSX = `${fullName(message.sender)} released Max C and Josh B to Harry C`;
+        messageJSX = `${message.sender.name} released ${message.student.name} to ${this.props.pickup.requestor.name}`;
         break;
     }
 
@@ -168,7 +151,7 @@ class PickupMessages extends React.Component {
         <View style={messageStyle}>
           {messageJSX}
           <Text style={styles.timestamp}>
-            {(new Date(message.createdAt)).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}
+            {time(message.createdAt)}
           </Text>
         </View>
       </View>
@@ -176,8 +159,11 @@ class PickupMessages extends React.Component {
   }
 
   _postMessage() {
-    this.props.postMessage(this.props.pickup, this.props.user, this.state.message);
+    this.props.postMessage(this.props.pickup, this.props.user,
+      {type: 'message', message: this.state.message}
+    );
     this.setState({message: ''});
+    Keyboard.dismiss();
   }
 }
 
@@ -187,6 +173,7 @@ PickupMessages.propTypes = {
   postMessage: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
+  hideRequest: PropTypes.bool,
 };
 
 export default PickupMessages;

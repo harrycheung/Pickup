@@ -119,6 +119,14 @@ export function* login() {
   }
 }
 
+export function* logout() {
+  yield take(AuthTypes.LOGOUT);
+  yield call(logoutAsync);
+  yield put(AuthActions.clear());
+  yield put(NavActions.resetNavigation('LoginRequest'));
+}
+
 export function* watchLogin() {
   yield fork(login);
+  yield fork(logout); // TODO: take out
 }

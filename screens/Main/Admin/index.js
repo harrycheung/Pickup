@@ -5,11 +5,13 @@ import React from 'react';
 import { StackNavigator } from 'react-navigation';
 
 import GradeSelectScreen from './GradeSelect';
-import EscortSelectScreen from './EscortSelect';
+import PickupSelectScreen from './PickupSelect';
+import HandlePickupScreen from './HandlePickup';
 
 export default StackNavigator({
   GradeSelect: {screen: GradeSelectScreen},
-  EscortSelect: {screen: EscortSelectScreen},
+  PickupSelect: {screen: PickupSelectScreen},
+  HandlePickup: {screen: HandlePickupScreen},
 }, {
   initialRouteName: 'GradeSelect',
 });

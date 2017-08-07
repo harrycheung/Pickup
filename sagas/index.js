@@ -25,7 +25,9 @@ import {
   watchCreatePickup,
   watchCancelPickup,
   watchResumePickup,
-  watchPostMessage
+  watchHandlePickup,
+  watchPostMessage,
+  watchListenPickup
 } from './Pickup';
 
 // single entry point to start all Sagas at once
@@ -43,6 +45,8 @@ export default function* rootSaga() {
     watchCreatePickup(),
     watchCancelPickup(),
     watchResumePickup(),
-    watchPostMessage()
+    watchPostMessage(),
+    watchHandlePickup(),
+    watchListenPickup()
   ]);
 }

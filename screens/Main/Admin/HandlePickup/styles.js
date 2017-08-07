@@ -8,54 +8,31 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
+  },
+  request: {
+    flexDirection: 'column',
+    marginTop: 15,
     marginHorizontal: 15,
-  },
-  student: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  requestorImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 5,
+    marginBottom: 5,
   },
   studentRequest: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    height: 100,
     marginBottom: 10,
   },
   student: {
     flex: 1,
-    height: 100,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  studentName: {
-    fontSize: 18,
-  },
-  studentImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginLeft: 5,
+    alignItems: 'center',
+    height: 100,
   },
   actionsContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  request: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-    padding: 5,
   },
   requestor: {
     alignSelf: 'flex-end',
@@ -73,9 +50,14 @@ export default StyleSheet.create({
     color: 'black',
   },
   separator: {
-    height: 1,
-    marginHorizontal: 60,
-    borderWidth: 0.5,
-    borderColor: 'lightgray',
-  }
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'darkgray',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  text: {
+    marginVertical: 5,
+    color: 'darkgray',
+  },
 });

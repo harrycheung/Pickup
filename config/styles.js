@@ -44,5 +44,15 @@ export const gstyles = StyleSheet.create({
   },
   grayButton: {
     backgroundColor: 'darkgray',
-  }
+  },
+  profilePic50: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  profilePic80: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
 });
