@@ -12,13 +12,13 @@ import {
   watchLoadStudents,
   watchAddStudent,
   watchEditStudent,
-  watchDeleteStudent
+  watchDeleteStudent,
 } from './Student';
 
 import {
   watchLoadUser,
   watchCreateUser,
-  watchUpdateUser
+  watchUpdateUser,
 } from './User';
 
 import {
@@ -27,7 +27,7 @@ import {
   watchResumePickup,
   watchHandlePickup,
   watchPostMessage,
-  watchListenPickup
+  watchListenPickup,
 } from './Pickup';
 
 // single entry point to start all Sagas at once
@@ -47,6 +47,6 @@ export default function* rootSaga() {
     watchResumePickup(),
     watchPostMessage(),
     watchHandlePickup(),
-    watchListenPickup()
+    watchListenPickup(),
   ]);
 }

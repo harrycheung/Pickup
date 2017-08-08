@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -17,76 +17,130 @@ import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 
+const maxPNG = require('../../../../images/max.png');
+
 class HandlePickup extends React.Component {
-  static navigationOptions = ({ navigation, screenProps }) => {
+  static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     return { title: params ? params.title : '' };
   };
+
+  constructor(props) {
+    super(props);
+
+    this._postMessage = this._postMessage.bind(this);
+    this._escort = this._escort.bind(this);
+    this._cancelEscort = this._cancelEscort.bind(this);
+    this._release = this._release.bind(this);
+  }
 
   componentWillMount() {
     this.props.listenPickup(this.props.pickup);
   }
 
   componentDidMount() {
-    let names = [];
-    for (let studentKey in this.props.pickup.students) {
-      const student = this.props.pickup.students[studentKey];
+    const names = [];
+    Object.keys(this.props.pickup.students).forEach((key) => {
+      const student = this.props.pickup.students[key];
       names.push(student.name);
-    }
+    });
     this.props.navigation.setParams({ title: truncate(names.join(', '), 20) });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return nextProps.pickup !== null;
   }
 
   componentWillUnmount() {
     this.props.unlistenPickup();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.pickup !== null;
+  _updatePickup(pickup, student, state) {
+    FBref(`/pickups/${pickup.key}/students/${student.key}`).update(state);
+  }
+
+  _postMessage(pickup, type, student) {
+    this.props.postMessage(
+      pickup,
+      { uid: this.props.user.uid, name: this.props.user.name },
+      { type, student: { key: student.key, name: student.name } },
+    );
+  }
+
+  _escort(pickup, student) {
+    this._updatePickup(pickup, student,
+      { escort: { uid: this.props.user.uid, name: this.props.user.name } },
+    );
+    this._postMessage(pickup, 'escort', student);
+  }
+
+  _cancelEscort(pickup, student) {
+    this._updatePickup(pickup, student,
+      { escort: { uid: '', name: '' }, released: false },
+    );
+    this._postMessage(pickup, 'cancel', student);
+  }
+
+  _release(pickup, student) {
+    Alert.alert(
+      'Confirm release',
+      null,
+      [
+        { text: 'Cancel', onPress: null, style: 'cancel' },
+        { text: 'OK',
+          onPress: () => {
+            this._updatePickup(pickup, student, { released: true });
+            this._postMessage(pickup, 'release', student);
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   }
 
   render() {
-    let students = [];
-    for (let studentKey in this.props.pickup.students) {
-      const student = this.props.pickup.students[studentKey];
+    const students = [];
+    Object.keys(this.props.pickup.students).forEach((key) => {
+      const student = this.props.pickup.students[key];
       const escort = student.escort.uid === this.props.user.uid;
       let actions = [];
       if (student.released) {
         actions = [(
-          <Text key='released' style={gstyles.font18}>
+          <Text key="released" style={gstyles.font18}>
             released by {escort ? 'You' : student.escort.name}
           </Text>
         )];
       } else if (escort) {
         actions = [(
           <Button
-            key='cancel'
+            key="cancel"
             style={gstyles.flex1}
-            onPress={this._cancelEscort.bind(this, this.props.pickup, student)}
-            content='Cancel'
-            backgroundColor='darkgray'
+            onPress={() => this._cancelEscort(this.props.pickup, student)}
+            content="Cancel"
+            backgroundColor="darkgray"
           />
-        ),(
-          <View key='spacer' style={gstyles.width10} />
-        ),(
+        ), (
+          <View key="spacer" style={gstyles.width10} />
+        ), (
           <Button
-            key='release'
+            key="release"
             style={gstyles.flex1}
-            onPress={this._release.bind(this, this.props.pickup, student)}
-            content='Release'
+            onPress={() => this._release(this.props.pickup, student)}
+            content="Release"
           />
         )];
       } else if (student.escort.uid === '') {
         actions = [(
           <Button
-            key='escort'
+            key="escort"
             style={gstyles.flex1}
-            onPress={this._escort.bind(this, this.props.pickup, student)}
-            content='Escort'
+            onPress={() => this._escort(this.props.pickup, student)}
+            content="Escort"
           />
         )];
       } else {
         actions = [(
-          <Text key='escort' style={gstyles.font14}>
+          <Text key="escort" style={gstyles.font14}>
             escorted by {student.escort.name}
           </Text>
         )];
@@ -100,7 +154,7 @@ class HandlePickup extends React.Component {
           <View style={styles.student}>
             <Image
               style={[gstyles.profilePic80, { marginLeft: 5 }]}
-              source={require('../../../../images/max.png')}
+              source={maxPNG}
             />
             <Text style={gstyles.font18}>
               {student.name} ({student.grade})
@@ -111,7 +165,7 @@ class HandlePickup extends React.Component {
           </View>
         </View>
       ));
-    }
+    });
 
     return (
       <KeyboardAwareView style={styles.container}>
@@ -120,7 +174,7 @@ class HandlePickup extends React.Component {
           <View style={styles.requestor}>
             <Image
               style={styles.requestorImage}
-              source={require('../../../../images/max.png')}
+              source={maxPNG}
             />
             <Text style={styles.requestorText}>
               {this.props.pickup.requestor.name} @ front gate
@@ -136,71 +190,33 @@ class HandlePickup extends React.Component {
           postMessage={this.props.postMessage}
           onClose={() => {}}
           onComplete={() => this.props.navigateBack()}
-          hideRequest={true}
+          hideRequest
         />
       </KeyboardAwareView>
     );
-  }
-
-  _updatePickup(pickup, student, state) {
-    FBref('/pickups/' + pickup.key + '/students/' + student.key).update(state);
-  }
-
-  _postMessage(pickup, type, student) {
-    this.props.postMessage(
-      pickup,
-      { uid: this.props.user.uid, name: this.props.user.name },
-      { type, student: { key: student.key, name: student.name } }
-    );
-  }
-
-  _escort(pickup, student) {
-    this._updatePickup(pickup, student,
-      { escort: { uid: this.props.user.uid, name: this.props.user.name } }
-    );
-    this._postMessage(pickup, 'escort', student);
-  }
-
-  _cancelEscort(pickup, student) {
-    this._updatePickup(pickup, student,
-      { escort: { uid: '', name: '' }, released: false }
-    );
-    this._postMessage(pickup, 'cancel', student);
-  }
-
-  _release(pickup, student) {
-    Alert.alert(
-      'Confirm release',
-      null,
-      [
-        { text: 'Cancel', onPress: null, style: 'cancel' },
-        { text: 'OK',
-          onPress: () => {
-            this._updatePickup(pickup, student, { released: true });
-            this._postMessage(pickup, 'release', student);
-          }
-        }
-      ],
-      { cancelable: false }
-    )
   }
 }
 
 
 HandlePickup.propTypes = {
+  navigation: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   pickup: PropTypes.object,
   postMessage: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
-}
+};
 
-const mapStateToProps = (state) => ({
+HandlePickup.defaultProps = {
+  pickup: null,
+};
+
+const mapStateToProps = state => ({
   user: state.user,
   pickup: state.pickup.pickup,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
 });

@@ -11,7 +11,6 @@ import drawerHeader from '../../../components/DrawerHeader';
 import { Actions as AuthActions } from '../../../actions/Auth';
 
 class Logout extends React.Component {
-
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Logout',
@@ -25,7 +24,7 @@ class Logout extends React.Component {
 
   render() {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Logout</Text>
       </View>
     );
@@ -36,7 +35,7 @@ Logout.propTypes = {
   logout: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(AuthActions, dispatch),
 });
 

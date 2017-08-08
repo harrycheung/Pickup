@@ -16,9 +16,9 @@ const dummyUser = {
   firstName: 'Dummy',
   lastInitial: 'U',
 };
-const newUserState = {user: {firstName: ''}};
+const newUserState = { user: { firstName: '' } };
 const dummyUID = '1111';
-const oldUserState = {user: dummyUser, auth: {user: {uid: dummyUID}}};
+const oldUserState = { user: dummyUser, auth: { user: { uid: dummyUID } } };
 const dummyPickup = null;
 
 describe('Auth login saga', () => {

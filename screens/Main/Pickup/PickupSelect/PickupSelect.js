@@ -13,23 +13,10 @@ import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
-import { StudentCache } from '../../../../helpers';
+
+const maxPNG = require('../../../../images/max.png');
 
 class PickupSelect extends React.Component {
-  props: {
-    user: Object,
-    pickup: Object,
-    students: Object[],
-    navigate: (string) => void,
-    createPickup: (Object, Array<Object>) => void,
-    cancelPickup: (Object) => void,
-    resumePickup: (Object) => void,
-  }
-  state: {
-    students: Object[],
-    showExistingPickup: boolean,
-  }
-
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Synapse Pickup',
@@ -38,6 +25,10 @@ class PickupSelect extends React.Component {
     })
   );
 
+  static defaultProps = {
+    pickup: null,
+  };
+
   constructor(props) {
     super(props);
 
@@ -45,14 +36,38 @@ class PickupSelect extends React.Component {
       students: [],
       showExistingPickup: props.pickup !== null,
     };
+
+    this._selectStudent = this._selectStudent.bind(this);
+    this._pickup = this._pickup.bind(this);
+  }
+
+  state: {
+    students: Object[],
+    showExistingPickup: boolean,
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({showExistingPickup: nextProps.pickup !== null});
+    this.setState({ showExistingPickup: nextProps.pickup !== null });
+  }
+
+  _selectStudent(selectedStudent) {
+    if (this.state.students.includes(selectedStudent)) {
+      this.setState({
+        students: this.state.students.filter(student => (student !== selectedStudent)),
+      });
+    } else {
+      this.setState({
+        students: this.state.students.concat([selectedStudent]),
+      });
+    }
+  }
+
+  _pickup() {
+    this.props.createPickup(this.props.user, this.state.students);
+    this.setState({ students: [] });
   }
 
   render() {
-    let existingPickup = null;
     if (this.state.showExistingPickup) {
       return (
         <View style={[gstyles.flex1, gstyles.flexStart]}>
@@ -62,79 +77,66 @@ class PickupSelect extends React.Component {
               <Button
                 style={gstyles.flex1}
                 onPress={() => this.props.cancelPickup(this.props.pickup)}
-                content='Cancel'
-                backgroundColor='darkgray'
+                content="Cancel"
+                backgroundColor="darkgray"
               />
-              <View style={{width: 10}} />
+              <View style={{ width: 10 }} />
               <Button
                 style={gstyles.flex1}
                 onPress={() => this.props.resumePickup(this.props.pickup)}
-                content='Continue'
+                content="Continue"
               />
             </View>
           </View>
         </View>
       );
-    } else {
-      let studentViews = null;
-      if (this.props.students.length == 0) {
-        studentViews = (
-          <View style={styles.message}>
-            <Text style={styles.messageText}>
-              {"Let's add your student"}
-            </Text>
-            <Button
-              style={styles.messageButton}
-              onPress={() => this.props.navigate('AddStudent')}
-              content='Add student'
-            />
-          </View>
-        );
-      } else {
-        studentViews = this.props.students.map((student) => {
-          const selected = this.state.students.includes(student);
-          const style = [styles.studentImage, selected ? styles.selected : {}];
-          return (
-            <TouchableOpacity
-              key={student.key}
-              style={styles.student}
-              onPress={this._selectStudent.bind(this, student)}
-            >
-              <Image style={style} source={require('../../../../images/max.png')} />
-              <Text style={styles.studentName}>
-                {student.firstName} {student.lastInitial} ({student.grade})
-              </Text>
-            </TouchableOpacity>
-          );
-        });
-      }
+    }
 
-      return (
-        <View style={[gstyles.flex1, gstyles.flexStart]}>
-          <ScrollView contentContainerStyle={styles.students}>
-            {studentViews}
-          </ScrollView>
+    let studentViews = null;
+    if (this.props.students.length === 0) {
+      studentViews = (
+        <View style={styles.message}>
+          <Text style={styles.messageText}>
+            {"Let's add your student"}
+          </Text>
           <Button
-            disabled={this.state.students.length < 1}
-            onPress={this._pickup.bind(this)}
-            content='Pickup'
+            style={styles.messageButton}
+            onPress={() => this.props.navigate('AddStudent')}
+            content="Add student"
           />
         </View>
       );
-    }
-  }
-
-  _selectStudent(selectedStudent) {
-    if (this.state.students.includes(selectedStudent)) {
-      this.setState({students: this.state.students.filter((student) => (student !== selectedStudent))});
     } else {
-      this.setState({students: this.state.students.concat([selectedStudent])});
+      studentViews = this.props.students.map((student) => {
+        const selected = this.state.students.includes(student);
+        const style = [styles.studentImage, selected ? styles.selected : {}];
+        return (
+          <TouchableOpacity
+            key={student.key}
+            style={styles.student}
+            onPress={() => this._selectStudent(student)}
+          >
+            <Image style={style} source={maxPNG} />
+            <Text style={styles.studentName}>
+              {student.firstName} {student.lastInitial} ({student.grade})
+            </Text>
+          </TouchableOpacity>
+        );
+      });
     }
-  }
 
-  _pickup() {
-    this.props.createPickup(this.props.user, this.state.students);
-    this.setState({students: []});
+    return (
+      <View style={[gstyles.flex1, gstyles.flexStart]}>
+        <ScrollView contentContainerStyle={styles.students}>
+          {studentViews}
+        </ScrollView>
+        <Button
+          disabled={this.state.students.length < 1}
+          onPress={this._pickup}
+          content="Pickup"
+        />
+      </View>
+    );
   }
 }
 
@@ -146,15 +148,15 @@ PickupSelect.propTypes = {
   navigate: PropTypes.func.isRequired,
   resumePickup: PropTypes.func.isRequired,
   cancelPickup: PropTypes.func.isRequired,
-}
+};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.user,
   students: state.student.students,
   pickup: state.pickup.pickup,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
 });

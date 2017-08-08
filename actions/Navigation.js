@@ -4,23 +4,19 @@
 import { NavigationActions } from 'react-navigation';
 
 export const Actions = {
-  resetNavigation: (routeName: string, params?: Object) => {
-    return NavigationActions.reset({
+  resetNavigation: (routeName: string, params?: Object) => (
+    NavigationActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({routeName, params})],
+      actions: [NavigationActions.navigate({ routeName, params })],
       key: null,
-    });
-  },
-  navigate: (routeName: string, params?: Object) => {
-    return NavigationActions.navigate({routeName, params});
-  },
-  back: (key?: string) => {
-    return NavigationActions.back(key);
-  },
-  setParams: (params: Object) => {
-    return NavigationActions.setParams(params);
-  },
-}
+    })
+  ),
+  navigate: (routeName: string, params?: Object) => (
+    NavigationActions.navigate({ routeName, params })
+  ),
+  back: (key?: string) => (NavigationActions.back(key)),
+  setParams: (params: Object) => (NavigationActions.setParams(params)),
+};
 
 // resetNestedNavigation: (routes: Array) => {
 //   const buildActions = (routes) => {

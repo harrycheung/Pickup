@@ -2,7 +2,6 @@
 // @flow
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../config/styles';
 
 export default StyleSheet.create({
   container: {
@@ -28,5 +27,5 @@ export default StyleSheet.create({
   input: {
     height: 44,
     paddingHorizontal: 5,
-  }
+  },
 });

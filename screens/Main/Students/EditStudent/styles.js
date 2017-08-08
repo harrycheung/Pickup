@@ -18,5 +18,5 @@ export default StyleSheet.create({
   deleteButtonText: {
     fontSize: 18,
     color: colors.buttonText,
-  }
+  },
 });

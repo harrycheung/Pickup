@@ -22,15 +22,14 @@ class Profile extends React.Component {
   );
 
   render() {
-    const { props } = this;
     return (
       <View style={styles.container}>
         <ProfileForm
-          firstName={props.firstName}
-          lastInitial={props.lastInitial}
-          submitButtonText={props.firstName === '' ? 'Save' : 'Update'}
-          onSubmit={props.updateUser}
-          spinning={props.spinning}
+          firstName={this.props.firstName}
+          lastInitial={this.props.lastInitial}
+          submitButtonText={this.props.firstName === '' ? 'Save' : 'Update'}
+          onSubmit={this.props.updateUser}
+          spinning={this.props.spinning}
         />
       </View>
     );
@@ -44,16 +43,16 @@ Profile.propTypes = {
   updateUser: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   firstName: state.user.firstName,
   lastInitial: state.user.lastInitial,
   spinning: state.spinner,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(UserActions, dispatch),
 });
 
 export default StackNavigator({
-  Profile: {screen: connect(mapStateToProps, mapDispatchToProps)(Profile)}
+  Profile: { screen: connect(mapStateToProps, mapDispatchToProps)(Profile) },
 });

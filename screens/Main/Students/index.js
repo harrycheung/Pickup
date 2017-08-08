@@ -9,9 +9,9 @@ import EditStudentScreen from './EditStudent';
 import AddStudentScreen from './AddStudent';
 
 export default StackNavigator({
-  ManageStudents: {screen: ManageStudentsScreen},
-  EditStudent: {screen: EditStudentScreen},
-  AddStudent: {screen: AddStudentScreen},
+  ManageStudents: { screen: ManageStudentsScreen },
+  EditStudent: { screen: EditStudentScreen },
+  AddStudent: { screen: AddStudentScreen },
 }, {
   initialRouteName: 'ManageStudents',
 });

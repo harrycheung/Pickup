@@ -27,4 +27,4 @@ export default (state: Object = initialState, action: Object) => {
     default:
       return state;
   }
-}
+};

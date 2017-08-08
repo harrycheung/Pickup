@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -11,11 +11,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { colors } from '../../../../config/styles';
 import StudentForm from '../../../../components/StudentForm';
-import Button from '../../../../components/Button';
 import { Actions as StudentActions } from '../../../../actions/Student';
 
 class EditStudent extends React.Component {
-  static navigationOptions = ({ navigation, screenProps }) => {
+  static navigationOptions = ({ navigation }) => {
     const { student, deleteStudent } = navigation.state.params;
     return {
       title: 'Edit',
@@ -29,27 +28,22 @@ class EditStudent extends React.Component {
             marginHorizontal: 15,
           }}
         >
-          <Icon name='md-trash' size={30} color={colors.black} />
+          <Icon name="md-trash" size={30} color={colors.black} />
         </TouchableOpacity>
       ),
     };
   };
 
+  constructor(props) {
+    super(props);
+
+    this._edit = this._edit.bind(this);
+  }
+
   componentDidMount() {
     this.props.navigation.setParams({
       deleteStudent: this.props.deleteStudent,
     });
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <StudentForm
-          {...this.props.navigation.state.params.student}
-          onSubmit={this._edit.bind(this)}
-        />
-      </View>
-    );
   }
 
   _edit(firstName, lastInitial, grade, relationship) {
@@ -58,17 +52,29 @@ class EditStudent extends React.Component {
       firstName,
       lastInitial,
       grade,
-      relationship
+      relationship,
     });
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <StudentForm
+          {...this.props.navigation.state.params.student}
+          onSubmit={this._edit}
+        />
+      </View>
+    );
   }
 }
 
 EditStudent.propTypes = {
+  navigation: PropTypes.object.isRequired,
   editStudent: PropTypes.func.isRequired,
   deleteStudent: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(StudentActions, dispatch),
 });
 

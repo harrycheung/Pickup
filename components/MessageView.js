@@ -9,13 +9,23 @@ import { connect } from 'react-redux';
 
 import { Actions as MessageActions } from '../actions/Message';
 
-class MessageView extends React.Component {
-  static propTypes = {
-    style: View.propTypes.style,
-    message: PropTypes.string,
-    duration: PropTypes.number,
-  };
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: 'darkgray',
+    alignItems: 'center',
+  },
+  message: {
+    color: 'white',
+  },
+});
 
+class MessageView extends React.Component {
   state = {
     fadeAnimationValue: new Animated.Value(0),
     message: '',
@@ -30,7 +40,7 @@ class MessageView extends React.Component {
           {
             toValue: 0,
             duration: this.props.duration,
-          }
+          },
         ).start();
       });
       this.props.clearMessage();
@@ -51,29 +61,27 @@ class MessageView extends React.Component {
   }
 }
 
+MessageView.propTypes = {
+  style: View.propTypes.style,
+  message: PropTypes.string,
+  duration: PropTypes.number,
+  clearMessage: PropTypes.func.isRequired,
+  children: PropTypes.node,
+};
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 20,
-    left: 0,
-    right: 0,
-    borderRadius: 5,
-    padding: 10,
-    backgroundColor: 'darkgray',
-    alignItems: 'center',
-  },
-  message: {
-    color: 'white',
-  }
-});
+MessageView.defaultProps = {
+  style: {},
+  message: '',
+  duration: 0,
+  children: null,
+};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   message: state.message.message,
   duration: state.message.duration,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(MessageActions, dispatch),
 });
 

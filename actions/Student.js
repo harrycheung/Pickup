@@ -14,23 +14,23 @@ export const Types = {
 };
 
 export const Actions = {
-  loadStudents: (uid: string) => ({type: Types.LOAD, uid}),
-  loadedStudents: () => ({type: Types.LOADED}),
-  setStudents: (students: Object[]) => ({type: Types.SET, students}),
-  addStudent: (firstName: string , lastInitial: string, grade: string, relationship: string) => ({
-    type: Types.ADD_STUDENT, firstName, lastInitial, grade, relationship
+  loadStudents: (uid: string) => ({ type: Types.LOAD, uid }),
+  loadedStudents: () => ({ type: Types.LOADED }),
+  setStudents: (students: Object[]) => ({ type: Types.SET, students }),
+  addStudent: (firstName: string, lastInitial: string, grade: string, relationship: string) => ({
+    type: Types.ADD_STUDENT, firstName, lastInitial, grade, relationship,
   }),
   addStudentSucceeded: (student: Object) => ({
-    type: Types.ADD_STUDENT_SUCCEEDED, student
+    type: Types.ADD_STUDENT_SUCCEEDED, student,
   }),
-  editStudent: (student: Object) => ({type: Types.EDIT_STUDENT, student}),
+  editStudent: (student: Object) => ({ type: Types.EDIT_STUDENT, student }),
   editStudentSucceeded: (student: Object) => ({
-    type: Types.EDIT_STUDENT_SUCCEEDED, student
+    type: Types.EDIT_STUDENT_SUCCEEDED, student,
   }),
   deleteStudent: (studentKey: string) => ({
-    type: Types.DELETE_STUDENT, studentKey
+    type: Types.DELETE_STUDENT, studentKey,
   }),
   deleteStudentSucceeded: (studentKey: string) => ({
-    type: Types.DELETE_STUDENT_SUCCEEDED, studentKey
-  })
-}
+    type: Types.DELETE_STUDENT_SUCCEEDED, studentKey,
+  }),
+};

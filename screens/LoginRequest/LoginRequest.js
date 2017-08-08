@@ -4,7 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ActivityIndicator, Text, View } from 'react-native';
-import { bindActionCreators } from 'redux'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import styles from './styles';
@@ -14,12 +14,6 @@ import { Actions as AuthActions } from '../../actions/Auth';
 import LinedTextInput from '../../components/LinedTextInput';
 
 class LoginRequest extends React.Component {
-  state: {
-    disabled: boolean,
-    phoneNumber: string,
-    requested: boolean,
-  };
-
   constructor(props) {
     super(props);
 
@@ -28,17 +22,36 @@ class LoginRequest extends React.Component {
       phoneNumber: '',
       requested: false,
     };
+
+    this._changeText = this._changeText.bind(this);
+    this._login = this._login.bind(this);
   }
 
+  state: {
+    disabled: boolean,
+    phoneNumber: string,
+    requested: boolean,
+  };
+
   componentWillReceiveProps(nextProps: Object) {
-    this.setState({disabled: nextProps.spinning});
+    this.setState({ disabled: nextProps.spinning });
+  }
+
+  _changeText(phoneNumber) {
+    const disabled = phoneNumber.length !== 10 || isNaN(phoneNumber);
+    this.setState({ disabled, phoneNumber });
+  }
+
+  _login() {
+    this.props.requestLogin(this.state.phoneNumber);
+    this.setState({ requested: true });
   }
 
   render() {
     let buttonContent = null;
     if (this.props.spinning) {
       buttonContent = (
-        <ActivityIndicator animating={true} color='white' size='small' />
+        <ActivityIndicator animating color="white" size="small" />
       );
     } else if (this.props.requested) {
       buttonContent = 'Get magic link again';
@@ -51,15 +64,15 @@ class LoginRequest extends React.Component {
         <Text>Enter your phone number to request a magic link</Text>
         <LinedTextInput
           style={styles.input}
-          placeholder='Phone number'
+          placeholder="Phone number"
           maxLength={10}
-          clearButtonMode='while-editing'
+          clearButtonMode="while-editing"
           borderBottomColor={colors.darkGrey}
-          keyboardType='phone-pad'
-          onChangeText={this._changeText.bind(this)}
+          keyboardType="phone-pad"
+          onChangeText={this._changeText}
         />
         <Button
-          onPress={this._login.bind(this)}
+          onPress={this._login}
           style={styles.loginButton}
           disabled={this.state.disabled}
           content={buttonContent}
@@ -67,28 +80,23 @@ class LoginRequest extends React.Component {
       </View>
     );
   }
-
-  _changeText(phoneNumber) {
-    const disabled = phoneNumber.length !== 10 || isNaN(phoneNumber);
-    this.setState({disabled, phoneNumber});
-  }
-
-  _login() {
-    this.props.requestLogin(this.state.phoneNumber);
-    this.setState({requested: true});
-  }
 }
 
 LoginRequest.propTypes = {
+  requested: PropTypes.bool,
   spinning: PropTypes.bool.isRequired,
   requestLogin: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+LoginRequest.defaultProps = {
+  requested: false,
+};
+
+const mapStateToProps = state => ({
   spinning: state.spinner,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(AuthActions, dispatch),
 });
 

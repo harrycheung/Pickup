@@ -1,7 +1,6 @@
 
- // @flow
+// @flow
 
- import CreateProfile from './CreateProfile';
+import CreateProfile from './CreateProfile';
 
- export default CreateProfile;
- 
+export default CreateProfile;

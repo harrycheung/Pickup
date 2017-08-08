@@ -1,21 +1,17 @@
 
 // @flow
 
-import { delay } from 'redux-saga'; // TODO: remove
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 import firebase from 'firebase';
 
-import { Types as UserTypes } from '../actions/User';
-import { Actions as UserActions } from '../actions/User';
+import { Types as UserTypes, Actions as UserActions } from '../actions/User';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
 
-const loadUserAsync = (uid) => {
-  return firebase.database().ref('/users/' + uid).once('value')
-  .then((snapshot) => {
-    return snapshot.val();
-  })
-};
+const loadUserAsync = uid => (
+  firebase.database().ref(`/users/${uid}`).once('value')
+    .then(snapshot => snapshot.val())
+);
 
 export function* loadUser(action) {
   try {
@@ -42,9 +38,9 @@ export function* watchLoadUser() {
   yield takeEvery(UserTypes.LOAD, loadUser);
 }
 
-const updateUserAsync = (uid, firstName, lastInitial) => {
-  return firebase.database().ref('/users/' + uid).update({firstName, lastInitial});
-};
+const updateUserAsync = (uid, firstName, lastInitial) => (
+  firebase.database().ref(`/users/${uid}`).update({ firstName, lastInitial })
+);
 
 function* updateUserWithNav(action, navAction) {
   try {
@@ -59,7 +55,6 @@ function* updateUserWithNav(action, navAction) {
   } finally {
     yield put(SpinnerActions.stop());
   }
-
 }
 
 export function* updateUser(action) {

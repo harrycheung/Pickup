@@ -25,5 +25,5 @@ export default StyleSheet.create({
     marginHorizontal: 60,
     borderWidth: 0.5,
     borderColor: colors.lightGrey,
-  }
+  },
 });

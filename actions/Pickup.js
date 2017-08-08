@@ -18,7 +18,7 @@ export const Types = {
 
 export const Actions = {
   createPickup: (requestor: Object, students: Object[]) => ({
-    type: Types.CREATE, requestor, students
+    type: Types.CREATE, requestor, students,
   }),
   createdPickup: (pickup: Object) => ({ type: Types.CREATED, pickup }),
   cancelPickup: (pickup: Object) => ({ type: Types.CANCEL, pickup }),
@@ -26,15 +26,15 @@ export const Actions = {
   resumePickup: (pickup: Object) => ({ type: Types.RESUME, pickup }),
   loadPickup: (pickup: Object) => ({ type: Types.LOAD, pickup }),
   postMessage: (pickup: Object, sender: Object, message: Object) => ({
-    type: Types.POST_MESSAGE, pickup, sender, message
+    type: Types.POST_MESSAGE, pickup, sender, message,
   }),
   handlePickup: (pickup: Object) => ({ type: Types.HANDLE, pickup }),
   listenPickup: (pickup: Object) => ({ type: Types.LISTEN, pickup }),
   unlistenPickup: () => ({ type: Types.UNLISTEN }),
   updateMessages: (messages: Array<Object>) => ({
-    type: Types.UPDATE_MESSAGES, messages
+    type: Types.UPDATE_MESSAGES, messages,
   }),
   updateStudents: (students: Array<Object>) => ({
-    type: Types.UPDATE_STUDENTS, students
-  })
-}
+    type: Types.UPDATE_STUDENTS, students,
+  }),
+};

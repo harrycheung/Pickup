@@ -8,7 +8,7 @@ export const Types = {
 
 export const Actions = {
   showMessage: (message: string, duration: number) => ({
-    type: Types.SHOW, message, duration
-  }),  
+    type: Types.SHOW, message, duration,
+  }),
   clearMessage: () => ({ type: Types.CLEAR }),
-}
+};

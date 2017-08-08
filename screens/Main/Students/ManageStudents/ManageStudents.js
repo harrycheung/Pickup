@@ -13,11 +13,9 @@ import { colors } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
-class ManageStudents extends React.Component {
-  state: {
-    dataSource: ListView.DataSource,
-  };
+const maxPNG = require('../../../../images/max.png');
 
+class ManageStudents extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Manage Students',
@@ -33,20 +31,30 @@ class ManageStudents extends React.Component {
             marginHorizontal: 15,
           }}
         >
-          <Icon name='md-add' size={30} color={colors.black} />
+          <Icon name="md-add" size={30} color={colors.black} />
         </TouchableOpacity>
-      )
+      ),
     })
+  );
+
+  static _renderSeparator = (sectionID, rowID) => (
+    <View key={`${sectionID}-${rowID}`} style={styles.separator} />
   );
 
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       dataSource: ds.cloneWithRows(this.props.students),
     };
+
+    this._renderRow = this._renderRow.bind(this);
   }
+
+  state: {
+    dataSource: ListView.DataSource,
+  };
 
   componentWillReceiveProps(props) {
     this.setState({
@@ -54,53 +62,49 @@ class ManageStudents extends React.Component {
     });
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow.bind(this)}
-          renderSeparator={this._renderSeparator.bind(this)}
-          enableEmptySections={true}
-        />
-      </View>
-    );
-  }
-
   _renderRow(student, sectionID, rowID) {
     return (
       <TouchableOpacity
         key={`${sectionID}-${rowID}`}
-        onPress={() => this.props.navigate('EditStudent', {student})}
+        onPress={() => this.props.navigate('EditStudent', { student })}
       >
         <View style={styles.student}>
           <Image
             style={styles.studentImage}
-            source={require('../../../../images/max.png')}
+            source={maxPNG}
           />
           <Text style={styles.studentName}>
-            {student.firstName} {student.lastInitial}
+            {student.firstName} {student.lastInitial} ({student.grade})
           </Text>
         </View>
       </TouchableOpacity>
     );
   }
 
-  _renderSeparator(sectionID, rowID) {
-    return <View key={`${sectionID}-${rowID}`} style={styles.separator} />
+  render() {
+    return (
+      <View>
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={this._renderRow}
+          renderSeparator={ManageStudents._renderSeparator}
+          enableEmptySections
+        />
+      </View>
+    );
   }
 }
 
 ManageStudents.propTypes = {
   students: PropTypes.array.isRequired,
   navigate: PropTypes.func.isRequired,
-}
+};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   students: state.student.students,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(NavActions, dispatch),
 });
 

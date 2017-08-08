@@ -3,8 +3,6 @@
 
 import { StyleSheet } from 'react-native';
 
-import { colors } from '../../config/styles';
-
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -19,5 +17,5 @@ export default StyleSheet.create({
   },
   loginButton: {
     marginTop: 10,
-  }
+  },
 });

@@ -17,5 +17,5 @@ export default StyleSheet.create({
   gradeButtonText: {
     fontSize: 18,
     color: colors.buttonText,
-  }
+  },
 });

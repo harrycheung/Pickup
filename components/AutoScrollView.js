@@ -4,21 +4,24 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Keyboard, Platform, ScrollView } from 'react-native';
 
 class AutoScrollView extends React.Component {
-  contentHeight: number = 0;
-  scrollHeight: number = 0;
-  scrollY: number = 0;
-  keyboardShow: Object;
-  keyboardHide: Object;
+  constructor(props) {
+    super(props);
+
+    this.handleScroll = this.handleScroll.bind(this);
+    this.handleLayout = this.handleLayout.bind(this);
+    this.handleContentChange = this.handleContentChange.bind(this);
+  }
 
   componentDidMount() {
     this.keyboardShow = Keyboard.addListener(
-      'keyboardDidShow', this.handleKeyboardShow.bind(this)
+      'keyboardDidShow', this.handleKeyboardShow.bind(this),
     );
     this.keyboardHide = Keyboard.addListener(
-      'keyboardDidHide', this.handleKeyboardHide.bind(this)
+      'keyboardDidHide', this.handleKeyboardHide.bind(this),
     );
   }
 
@@ -26,6 +29,12 @@ class AutoScrollView extends React.Component {
     this.keyboardShow.remove();
     this.keyboardHide.remove();
   }
+
+  contentHeight: number = 0;
+  scrollHeight: number = 0;
+  scrollY: number = 0;
+  keyboardShow: Object;
+  keyboardHide: Object;
 
   // todo: handle layout instead of keyboard
   handleKeyboardShow() {
@@ -40,14 +49,14 @@ class AutoScrollView extends React.Component {
       // fix top blank if exsits
       // detection also has trouble on Android
       if (scrollY > contentHeight - scrollHeight) {
-        this.refs.scroller.scrollTo({y: 0});
+        this.refs.scroller.scrollTo({ y: 0 });
       }
       // fix bottom blank if exsits
       // else {
       //   this.scrollToBottom()
       // }
       else {
-        this.refs.scroller.scrollTo({y: scrollY});
+        this.refs.scroller.scrollTo({ y: scrollY });
       }
     }
   }
@@ -63,15 +72,14 @@ class AutoScrollView extends React.Component {
   handleContentChange(w: number, h: number) {
     // repeated called on Android
     // should do diff
-    if (h === this.contentHeight) return
-    this.contentHeight = h
+    if (h === this.contentHeight) return;
+    this.contentHeight = h;
 
     if (this.scrollHeight == null) {
       setTimeout(() => {
         this.scrollToBottomIfNecessary();
-      }, 500)
-    }
-    else {
+      }, 500);
+    } else {
       this.scrollToBottomIfNecessary();
     }
   }
@@ -87,21 +95,31 @@ class AutoScrollView extends React.Component {
       return;
     }
     if (contentHeight > scrollHeight) {
-      this.refs.scroller.scrollTo({y: contentHeight - scrollHeight});
+      this.refs.scroller.scrollTo({ y: contentHeight - scrollHeight });
     }
   }
 
   render() {
     return (
-      <ScrollView ref="scroller"
+      <ScrollView
+        ref="scroller"
         scrollEventThrottle={16}
-        onScroll={this.handleScroll.bind(this)}
-        onLayout={this.handleLayout.bind(this)}
-        onContentSizeChange={this.handleContentChange.bind(this)}
-        {...this.props}>
+        onScroll={this.handleScroll}
+        onLayout={this.handleLayout}
+        onContentSizeChange={this.handleContentChange}
+      >
+        {this.props.children}
       </ScrollView>
     );
   }
 }
+
+AutoScrollView.propTypes = {
+  children: PropTypes.node,
+};
+
+AutoScrollView.defaultProps = {
+  children: null,
+};
 
 export default AutoScrollView;

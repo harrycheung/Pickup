@@ -11,9 +11,9 @@ import LoginScreen from './Login';
 import MainScreen from './Main';
 
 export const AppNavigator = StackNavigator({
-  Main: {screen: MainScreen},
-  LoginRequest: {screen: LoginRequestScreen},
-  Login: {screen: LoginScreen},
+  Main: { screen: MainScreen },
+  LoginRequest: { screen: LoginRequestScreen },
+  Login: { screen: LoginScreen },
 }, {
   headerMode: 'screen',
   navigationOptions: {
@@ -22,9 +22,9 @@ export const AppNavigator = StackNavigator({
   initialRouteName: 'LoginRequest',
 });
 
-const AppWithNavigationState = ({ dispatch, nav }) => (
-  <AppNavigator navigation={addNavigationHelpers({dispatch, state: nav})} />
-);
+const AppWithNavigationState = ({ dispatch, nav }) => {
+  return <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />;
+};
 
 AppWithNavigationState.propTypes = {
   dispatch: PropTypes.func.isRequired,

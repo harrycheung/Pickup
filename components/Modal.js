@@ -6,45 +6,6 @@ import PropTypes from 'prop-types';
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import Button from './Button';
 
-class CustomModal extends React.Component {
-  static defaultProps = {
-    color: 'black',
-    backgroundColor: 'white',
-  };
-
-  render() {
-    return (
-      <Modal
-        animationType={'slide'}
-        transparent={true}
-        {...this.props}
-      >
-        <View style={styles.background} />
-        <View style={styles.container}>
-          <View style={[styles.dialog, {backgroundColor: this.props.backgroundColor}]}>
-            <View style={styles.messageContainer}>
-              <Text style={[styles.message, {color: this.props.color}]}>
-                {this.props.message}
-              </Text>
-            </View>
-            <Button
-              style={styles.button}
-              onPress={this.props.onPressOK}
-              content='OK'
-            />
-          </View>
-        </View>
-      </Modal>
-    );
-  }
-}
-
-CustomModal.propTypes = {
-  onPressOK: PropTypes.func.isRequired,
-  color: PropTypes.string,
-  backgroundColor: PropTypes.string,
-};
-
 const styles = StyleSheet.create({
   background: {
     position: 'absolute',
@@ -80,7 +41,51 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: '#007aff',
-  }
+  },
 });
+
+class CustomModal extends React.Component {
+  static defaultProps = {
+    color: 'black',
+    backgroundColor: 'white',
+  };
+
+  render() {
+    return (
+      <Modal
+        animationType={'slide'}
+        transparent
+        {...this.props}
+      >
+        <View style={styles.background} />
+        <View style={styles.container}>
+          <View style={[styles.dialog, { backgroundColor: this.props.backgroundColor }]}>
+            <View style={styles.messageContainer}>
+              <Text style={[styles.message, { color: this.props.color }]}>
+                {this.props.message}
+              </Text>
+            </View>
+            <Button
+              style={styles.button}
+              onPress={this.props.onPressOK}
+              content="OK"
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+}
+
+CustomModal.propTypes = {
+  onPressOK: PropTypes.func.isRequired,
+  color: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  message: PropTypes.string,
+};
+
+CustomModal.defaultProps = {
+  message: '',
+};
 
 export default CustomModal;

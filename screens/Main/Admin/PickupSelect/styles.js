@@ -2,7 +2,6 @@
 // @flow
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../../config/styles';
 
 export default StyleSheet.create({
   container: {
@@ -33,5 +32,5 @@ export default StyleSheet.create({
     marginHorizontal: 60,
     borderWidth: 0.5,
     borderColor: 'lightgray',
-  }
+  },
 });

@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -14,10 +14,6 @@ import Button from '../../../../components/Button';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class Home extends React.Component {
-  state: {
-    grades: string[],
-  };
-
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Admin',
@@ -32,20 +28,28 @@ class Home extends React.Component {
     this.state = {
       grades: c.Levels,
     };
+
+    this._selectLevel = this._selectLevel.bind(this);
+  }
+
+  state: {
+    grades: string[],
+  };
+
+  _selectLevel(grade) {
+    this.props.navigate('PickupSelect', { grade });
   }
 
   render() {
     const { grades } = this.state;
-    const gradeButtons = grades.map((grade) => {
-      return (
-        <Button
-          key={grade}
-          style={styles.gradeButton}
-          onPress={this._selectLevel.bind(this, grade)}
-          content={grade}
-        />
-      );
-    });
+    const gradeButtons = grades.map(grade => (
+      <Button
+        key={grade}
+        style={styles.gradeButton}
+        onPress={() => this._selectLevel(grade)}
+        content={grade}
+      />
+    ));
 
     return (
       <View style={styles.container}>
@@ -53,17 +57,13 @@ class Home extends React.Component {
       </View>
     );
   }
-
-  _selectLevel(grade) {
-    this.props.navigate('PickupSelect', {grade});
-  }
 }
 
 Home.propTypes = {
   navigate: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(NavActions, dispatch),
 });
 

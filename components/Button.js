@@ -20,7 +20,7 @@ class Button extends React.Component {
         >
           {this.props.content}
         </Text>
-      )
+      );
     }
     return (
       <TouchableOpacity
@@ -31,8 +31,8 @@ class Button extends React.Component {
         <View
           style={[
             { flex: 1, justifyContent: 'center', alignItems: 'center' },
-            this.props.disabled ? {opacity: 0.3} : {},
-            { backgroundColor: this.props.backgroundColor || colors.buttonBackground },
+            this.props.disabled ? { opacity: 0.3 } : {},
+            { backgroundColor: this.props.backgroundColor },
           ]}
         >
           {content}
@@ -48,6 +48,16 @@ Button.propTypes = {
   content: PropTypes.any,
   textSize: PropTypes.number,
   backgroundColor: PropTypes.string,
+  style: View.propTypes.style,
+};
+
+Button.defaultProps = {
+  onPress: () => {},
+  disabled: false,
+  content: '',
+  textSize: 18,
+  backgroundColor: colors.buttonBackground,
+  style: {},
 };
 
 export default Button;

@@ -12,7 +12,7 @@ export default StyleSheet.create({
   },
   message: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   messageText: {
     fontSize: 18,
@@ -57,5 +57,5 @@ export default StyleSheet.create({
   },
   pickupButtons: {
     flexDirection: 'row',
-  }
+  },
 });

@@ -12,11 +12,11 @@ export const Types = {
 };
 
 export const Actions = {
-  requestLogin: (phoneNumber: string) => ({type: Types.REQUEST_LOGIN, phoneNumber}),
-  requestLoginSucceeded: () => ({type: Types.REQUEST_LOGIN_SUCCEEDED}),
-  login: (token: string) => ({type: Types.LOGIN, token}),
-  logout: () => ({type: Types.LOGOUT}),
-  authFailure: () => ({type: Types.FAILURE}),
-  setUser: (user) => ({type: Types.SET_USER, user}),
-  clear: () => ({type: Types.CLEAR}),
-}
+  requestLogin: (phoneNumber: string) => ({ type: Types.REQUEST_LOGIN, phoneNumber }),
+  requestLoginSucceeded: () => ({ type: Types.REQUEST_LOGIN_SUCCEEDED }),
+  login: (token: string) => ({ type: Types.LOGIN, token }),
+  logout: () => ({ type: Types.LOGOUT }),
+  authFailure: () => ({ type: Types.FAILURE }),
+  setUser: (user: Object) => ({ type: Types.SET_USER, user }),
+  clear: () => ({ type: Types.CLEAR }),
+};

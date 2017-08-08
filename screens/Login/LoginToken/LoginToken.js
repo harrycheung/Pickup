@@ -4,17 +4,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { bindActionCreators } from 'redux'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { Actions as AuthActions } from '../../../actions/Auth';
-import { Actions as SpinnerActions } from '../../../actions/Spinner';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 class LoginToken extends React.Component {
-  state: {
-    message: string,
-  };
-
   static navigationOptions = {
     header: null,
   };
@@ -27,6 +30,10 @@ class LoginToken extends React.Component {
     };
   }
 
+  state: {
+    message: string,
+  };
+
   componentDidMount() {
     const { props } = this;
     props.login(props.navigation.state.params.token);
@@ -37,22 +44,22 @@ class LoginToken extends React.Component {
       return (
         <View style={styles.container}>
           <ActivityIndicator
-            animating={true}
-            color='darkgrey'
-            size='large'
+            animating
+            color="darkgrey"
+            size="large"
           />
-          <Text style={{marginTop: 15}}>Logging in...</Text>
+          <Text style={{ marginTop: 15 }}>Logging in...</Text>
         </View>
-      )
-    } else {
-      return (
-        <View style={styles.container}>
-          <Text>
-            {this.state.message}
-          </Text>
-        </View>
-      )
+      );
     }
+
+    return (
+      <View style={styles.container}>
+        <Text>
+          {this.state.message}
+        </Text>
+      </View>
+    );
   }
 }
 
@@ -60,20 +67,12 @@ LoginToken.propTypes = {
   spinning: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   spinning: state.spinner,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(AuthActions, dispatch),
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginToken);

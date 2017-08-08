@@ -2,7 +2,8 @@
 // @flow
 
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import PropTypes from 'prop-types';
+import { View } from 'react-native';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
 import update from 'react-addons-update';
@@ -18,29 +19,33 @@ class Drawer extends React.Component {
   render() {
     let drawerProps = this.props;
     if (!this.props.admin) {
-      drawerProps = update(this.props, {items: {$set:
-        drawerProps.items.filter((route) => !route.key.includes('Admin'))
-      }});
+      drawerProps = update(this.props, { items: { $set:
+        drawerProps.items.filter(route => !route.key.includes('Admin')),
+      } });
     }
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <DrawerItems {...drawerProps} />
       </View>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
+Drawer.propTypes = {
+  admin: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = state => ({
   admin: state.user.admin,
 });
 
 export default DrawerNavigator({
-  Pickup: {screen: PickupScreen},
-  History: {screen: HistoryScreen},
-  Students: {screen: StudentsScreen},
-  Profile: {screen: ProfileScreen},
-  Logout: {screen: LogoutScreen},
-  Admin: {screen: AdminScreen},
+  Pickup: { screen: PickupScreen },
+  History: { screen: HistoryScreen },
+  Students: { screen: StudentsScreen },
+  Profile: { screen: ProfileScreen },
+  Logout: { screen: LogoutScreen },
+  Admin: { screen: AdminScreen },
 }, {
   drawerWidth: 200,
   order: ['Pickup', 'Students', 'History', 'Profile', 'Logout', 'Admin'],

@@ -7,6 +7,6 @@ export const Types = {
 };
 
 export const Actions = {
-  start: () => ({type: Types.START}),
-  stop: () => ({type: Types.STOP}),
-}
+  start: () => ({ type: Types.START }),
+  stop: () => ({ type: Types.STOP }),
+};

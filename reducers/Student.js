@@ -11,33 +11,31 @@ const initialState = {
 export default (state: Object = initialState, action: Object) => {
   switch (action.type) {
     case Types.SET:
-      return {students: action.students};
+      return { students: action.students };
 
     case Types.ADD_STUDENT_SUCCEEDED:
-      return {students: state.students.concat([action.student])}
+      return { students: state.students.concat([action.student]) };
 
     case Types.EDIT_STUDENT_SUCCEEDED:
       return {
         students: state.students.map((student) => {
           if (student.key === action.student.key) {
             return action.student;
-          } else {
-            return student;
           }
+
+          return student;
         }),
       };
 
     case Types.DELETE_STUDENT_SUCCEEDED:
       return {
-        students: state.students.filter((student) => {
-          return student.key != action.studentKey;
-        }),
+        students: state.students.filter(student => (student.key !== action.studentKey)),
       };
 
     case AuthTypes.LOGOUT:
-      return {students: []};
+      return { students: [] };
 
     default:
       return state;
   }
-}
+};

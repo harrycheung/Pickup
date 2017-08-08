@@ -29,7 +29,7 @@ AddStudent.propTypes = {
   addStudent: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(StudentActions, dispatch),
 });
 

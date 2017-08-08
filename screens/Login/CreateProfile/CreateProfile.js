@@ -10,21 +10,27 @@ import { connect } from 'react-redux';
 import ProfileForm from '../../../components/ProfileForm';
 import { Actions as UserActions } from '../../../actions/User';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+});
+
 class CreateProfile extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     title: 'Create Profile',
     headerLeft: null,
   });
 
   render() {
-    const { props } = this;
     return (
       <View style={styles.container}>
         <ProfileForm
-          firstName={props.firstName}
-          lastInitial={props.lastInitial}
+          firstName={this.props.firstName}
+          lastInitial={this.props.lastInitial}
           submitButtonText={'Save'}
-          onSubmit={props.createUser}
+          onSubmit={this.props.createUser}
         />
       </View>
     );
@@ -32,18 +38,13 @@ class CreateProfile extends React.Component {
 }
 
 CreateProfile.propTypes = {
+  firstName: PropTypes.string.isRequired,
+  lastInitial: PropTypes.string.isRequired,
   createUser: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(UserActions, dispatch),
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
 });
 
 export default connect(null, mapDispatchToProps)(CreateProfile);

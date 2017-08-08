@@ -9,7 +9,7 @@ import {
   View,
   Dimensions,
   Platform,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -25,22 +25,25 @@ const defaultAnimation = {
   create: {
     duration: 300,
     type: LayoutAnimation.Types.easeInEaseOut,
-    property: LayoutAnimation.Properties.opacity
+    property: LayoutAnimation.Properties.opacity,
   },
   update: {
     type: LayoutAnimation.Types.spring,
-    springDamping: 200
-  }
+    springDamping: 200,
+  },
 };
 
 class KeyboardAwareView extends React.Component {
   static propTypes = {
     onToggle: PropTypes.func,
     style: View.propTypes.style,
+    children: PropTypes.node,
   };
 
   static defaultProps = {
     onToggle: () => null,
+    style: {},
+    children: null,
   };
 
   constructor(props) {
@@ -48,17 +51,22 @@ class KeyboardAwareView extends React.Component {
 
     this.state = {
       offset: 0,
-      isKeyboardOpened: false
+      isKeyboardOpened: false,
     };
     this._listeners = null;
   }
+
+  state: {
+    offset: number,
+    isKeyboardOpened: bool,
+  };
 
   componentDidMount() {
     const updateListener = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
     const resetListener = Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
     this._listeners = [
       Keyboard.addListener(updateListener, this.updateOffset.bind(this)),
-      Keyboard.addListener(resetListener, this.resetOffset.bind(this))
+      Keyboard.addListener(resetListener, this.resetOffset.bind(this)),
     ];
   }
 
@@ -89,7 +97,7 @@ class KeyboardAwareView extends React.Component {
     const offset = -(screenHeight - event.endCoordinates.screenY);
     this.setState({
       offset,
-      isKeyboardOpened: true
+      isKeyboardOpened: true,
     }, this.props.onToggle(true, offset));
   }
 
@@ -106,7 +114,7 @@ class KeyboardAwareView extends React.Component {
 
     this.setState({
       offset: 0,
-      isKeyboardOpened: false
+      isKeyboardOpened: false,
     }, this.props.onToggle(false, 0));
   }
 

@@ -10,15 +10,15 @@ export const Types = {
 };
 
 export const Actions = {
-  loadUser: (uid?: string) => ({type: Types.LOAD, uid}),
-  loadedUser: () => ({type: Types.LOADED}),
+  loadUser: (uid?: string) => ({ type: Types.LOAD, uid }),
+  loadedUser: () => ({ type: Types.LOADED }),
   setUser: (uid: string, firstName: string, lastInitial: string, admin: boolean) => ({
-    type: Types.SET, uid, firstName, lastInitial, admin
+    type: Types.SET, uid, firstName, lastInitial, admin,
   }),
   createUser: (firstName: string, lastInitial: string) => ({
-    type: Types.CREATE, firstName, lastInitial
+    type: Types.CREATE, firstName, lastInitial,
   }),
   updateUser: (firstName: string, lastInitial: string) => ({
-    type: Types.UPDATE, firstName, lastInitial
+    type: Types.UPDATE, firstName, lastInitial,
   }),
-}
+};

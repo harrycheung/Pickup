@@ -1,32 +1,28 @@
 
 // @flow
 
-import { delay } from 'redux-saga'; // TODO: remove
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
-import { Types } from '../actions/Student';
-import { Actions as StudentActions } from '../actions/Student';
+import { Types, Actions as StudentActions } from '../actions/Student';
 import { Actions as NavActions } from '../actions/Navigation';
-import { Actions as SpinnerActions } from '../actions/Spinner';
 
-const loadStudentsAsync = (uid) => {
-  return FBref('/users/' + uid + '/students').once('value').then((snapshot) => {
+const loadStudentsAsync = uid => (
+  FBref(`/users/${uid}/students`).once('value').then((snapshot) => {
     const students = snapshot.val() === null ? {} : snapshot.val();
     const studentKeys = Object.keys(students);
     return Promise.all(
-      studentKeys.map((id) => {
-        return FBref('/students/' + id).once('value')
-          .then((snapshot) => {
-            return Object.assign({}, snapshot.val(), {
-              key: id,
-              relationship: students[id],
-            });
-          });
-      })
+      studentKeys.map(id => (
+        FBref(`/students/${id}`).once('value').then(studentSnapshot => (
+          Object.assign({}, studentSnapshot.val(), {
+            key: id,
+            relationship: students[id],
+          })
+        ))
+      )),
     );
-  });
-}
+  })
+);
 
 // Don't need spinner
 export function* loadStudents(action) {
@@ -44,23 +40,21 @@ export function* watchLoadStudents() {
   yield takeEvery(Types.LOAD, loadStudents);
 }
 
-const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => {
-  return FBref('/students').push().then((studentRef) => {
-    var relationships = {};
+const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => (
+  FBref('/students').push().then((studentRef) => {
+    const relationships = {};
     relationships[uid] = relationship;
-    var studentUpdate = {};
-    studentUpdate['students/' + studentRef.key] = {
+    const studentUpdate = {};
+    studentUpdate[`students/${studentRef.key}`] = {
       firstName,
       lastInitial,
       grade,
       relationships,
     };
-    studentUpdate['users/' + uid + '/students/' + studentRef.key] = relationship;
-    return FBref('/').update(studentUpdate).then(() => {
-      return studentRef.key;
-    });
-  });
-};
+    studentUpdate[`users/${uid}/students/${studentRef.key}`] = relationship;
+    return FBref('/').update(studentUpdate).then(() => studentRef.key);
+  })
+);
 
 export function* addStudent(action) {
   try {
@@ -72,10 +66,10 @@ export function* addStudent(action) {
       firstName,
       lastInitial,
       grade,
-      relationship
+      relationship,
     );
     yield put(StudentActions.addStudentSucceeded({
-      key: studentKey, firstName, lastInitial, grade, relationship
+      key: studentKey, firstName, lastInitial, grade, relationship,
     }));
     yield put(NavActions.back());
   } catch (error) {
@@ -90,16 +84,16 @@ export function* watchAddStudent() {
 
 const editStudentAsync = (uid, student) => {
   const { key, firstName, lastInitial, grade, relationship } = student;
-  var relationships = {};
+  const relationships = {};
   relationships[uid] = relationship;
-  var studentUpdate = {};
-  studentUpdate['students/' + key] = {
+  const studentUpdate = {};
+  studentUpdate[`students/${key}`] = {
     firstName,
     lastInitial,
     grade,
     relationships,
   };
-  studentUpdate['users/' + uid + '/students/' + key] = relationship;
+  studentUpdate[`users/${uid}/students/${key}`] = relationship;
   return FBref('/').update(studentUpdate);
 };
 
@@ -120,9 +114,9 @@ export function* watchEditStudent() {
 }
 
 const deleteStudentAsync = (uid, key) => {
-  var studentUpdate = {};
-  studentUpdate['students/' + key] = null;
-  studentUpdate['users/' + uid + '/students/' + key] = null;
+  const studentUpdate = {};
+  studentUpdate[`students/${key}`] = null;
+  studentUpdate[`users/${uid}/students/${key}`] = null;
   return FBref('/').update(studentUpdate);
 };
 

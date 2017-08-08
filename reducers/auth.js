@@ -10,13 +10,13 @@ const initialState = {
 export default (state: Object = initialState, action: { type: string, user: Object }) => {
   switch (action.type) {
     case Types.SET_USER:
-      return {user: action.user};
+      return { user: action.user };
 
     case Types.CLEAR:
     case Types.FAILURE:
-      return {user: null};
+      return { user: null };
 
     default:
       return state;
   }
-}
+};

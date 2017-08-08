@@ -4,12 +4,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert,
   Image,
   Keyboard,
   Text,
   TextInput,
-  View
+  View,
 } from 'react-native';
 
 import styles from './styles';
@@ -17,13 +16,9 @@ import { gstyles } from '../../config/styles';
 import { time } from '../../helpers';
 import AutoScrollView from '../AutoScrollView';
 
-class PickupMessages extends React.Component {
-  state: {
-    messages: Object[],
-    message: string,
-    state: string,
-  };
+const maxPNG = require('../../images/max.png');
 
+class PickupMessages extends React.Component {
   constructor(props: Object) {
     super(props);
 
@@ -32,44 +27,23 @@ class PickupMessages extends React.Component {
       message: '',
       state: '',
     };
+
+    this._postMessage = this._postMessage.bind(this);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  state: {
+    messages: Object[],
+    message: string,
+    state: string,
+  };
+
+  shouldComponentUpdate(nextProps) {
     return nextProps.pickup !== null;
   }
 
-  render() {
-    let messages = [];
-    for (let messageKey in this.props.pickup.messages) {
-      let message = this.props.pickup.messages[messageKey];
-      message.key = messageKey;
-      messages.push(this._renderMessage(message));
-    }
-
-    return (
-      <View style={styles.container}>
-        <View style={gstyles.flex1}>
-          <AutoScrollView contentContainerStyle={styles.messagesContainer}>
-            {messages}
-          </AutoScrollView>
-          <View style={styles.composeContainer}>
-            <TextInput
-              style={{height: 44, paddingHorizontal: 15}}
-              placeholder='Send a message'
-              returnKeyType='send'
-              onChangeText={(text) => this.setState({message: text})}
-              onSubmitEditing={this._postMessage.bind(this)}
-              value={this.state.message}
-            />
-          </View>
-        </View>
-      </View>
-    );
-  }
-
   _renderMessage(message: Object) {
-    let containerStyle = [styles.messageContainer];
-    let messageStyle = [styles.message];
+    const containerStyle = [styles.messageContainer];
+    const messageStyle = [styles.message];
     let sender = null;
     let messageJSX = 'Unknown message';
 
@@ -83,27 +57,24 @@ class PickupMessages extends React.Component {
     }
 
     switch (message.type) {
-      case 'request':
+      case 'request': {
         if (this.props.hideRequest) {
-          return <View key='hiddenRequest' />;
+          return <View key="hiddenRequest" />;
         }
 
         const { students } = this.props.pickup;
-        let studentsJSX = [];
-        for (let studentKey in students) {
-          const student = students[studentKey];
+        const studentsJSX = [];
+        Object.keys(students).forEach((key) => {
+          const student = students[key];
           studentsJSX.push((
-            <View key={studentKey} style={styles.student}>
-              <Image
-                style={styles.studentImage}
-                source={require('../../images/max.png')}
-              />
+            <View key={key} style={styles.student}>
+              <Image style={styles.studentImage} source={maxPNG} />
               <Text style={styles.studentName}>
                 {student.name}
               </Text>
             </View>
           ));
-        }
+        });
         messageJSX = (
           <View style={styles.request}>
             <Text style={styles.messageText}>
@@ -113,36 +84,33 @@ class PickupMessages extends React.Component {
           </View>
         );
         break;
-
-      case 'message':
+      }
+      case 'message': {
         messageJSX = message.message;
         break;
-
-      case 'escort':
+      }
+      case 'escort': {
         messageJSX = `${message.sender.name} is escorting ${message.student.name}`;
         break;
-
-      case 'cancel':
+      }
+      case 'cancel': {
         messageJSX = `${message.sender.name} canceled escort of ${message.student.name}`;
         break;
-
-      case 'release':
+      }
+      case 'release': {
         messageJSX = `${message.sender.name} released ${message.student.name} to ${this.props.pickup.requestor.name}`;
         break;
+      }
+      default:
     }
 
     let senderJSX = null;
     if (sender !== null) {
-      senderJSX = (
-        <Image
-          style={styles.senderImage}
-          source={require('../../images/max.png')}
-        />
-      );
+      senderJSX = <Image style={styles.senderImage} source={maxPNG} />;
     }
 
     if (typeof messageJSX === 'string') {
-      messageJSX = <Text style={styles.messageText}>{messageJSX}</Text>
+      messageJSX = <Text style={styles.messageText}>{messageJSX}</Text>;
     }
 
     return (
@@ -159,11 +127,42 @@ class PickupMessages extends React.Component {
   }
 
   _postMessage() {
-    this.props.postMessage(this.props.pickup, this.props.user,
-      {type: 'message', message: this.state.message}
+    this.props.postMessage(
+      this.props.pickup,
+      this.props.user,
+      { type: 'message', message: this.state.message },
     );
-    this.setState({message: ''});
+    this.setState({ message: '' });
     Keyboard.dismiss();
+  }
+
+  render() {
+    const messages = [];
+    Object.keys(this.props.pickup.messages || {}).forEach((key) => {
+      const message = this.props.pickup.messages[key];
+      message.key = key;
+      messages.push(this._renderMessage(message));
+    });
+
+    return (
+      <View style={styles.container}>
+        <View style={gstyles.flex1}>
+          <AutoScrollView contentContainerStyle={styles.messagesContainer}>
+            {messages}
+          </AutoScrollView>
+          <View style={styles.composeContainer}>
+            <TextInput
+              style={{ height: 44, paddingHorizontal: 15 }}
+              placeholder="Send a message"
+              returnKeyType="send"
+              onChangeText={text => this.setState({ message: text })}
+              onSubmitEditing={this._postMessage}
+              value={this.state.message}
+            />
+          </View>
+        </View>
+      </View>
+    );
   }
 }
 
@@ -174,6 +173,10 @@ PickupMessages.propTypes = {
   onClose: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
   hideRequest: PropTypes.bool,
+};
+
+PickupMessages.defaultProps = {
+  hideRequest: false,
 };
 
 export default PickupMessages;
