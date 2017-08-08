@@ -35,7 +35,7 @@ class LoginToken extends React.Component {
   render() {
     if (this.props.spinning) {
       return (
-        <View style={styles.container}>
+        <View style={[gstyles.flex1, gstyles.flexCenter]}>
           <ActivityIndicator
             animating
             color="darkgrey"
