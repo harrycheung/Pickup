@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   picker: {
     alignSelf: 'stretch',
     marginTop: 5,
-  }
+  },
 });
 
 class StudentForm extends React.Component {
@@ -81,14 +81,14 @@ class StudentForm extends React.Component {
         <Text style={[styles.pickerLabel, styles.margin]}>Level</Text>
         <Picker
           style={StyleSheet.flatten(styles.picker)}
-          values={c.Levels}
+          values={C.Levels}
           onChange={value => this._updateState({ grade: value })}
           value={this.state.grade}
         />
         <Text style={[styles.pickerLabel, styles.margin]}>Relationship to Student</Text>
         <Picker
           style={StyleSheet.flatten(styles.picker)}
-          values={c.Relationships}
+          values={C.Relationships}
           onChange={value => this._updateState({ relationship: value })}
           value={this.state.relationship}
         />
