@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { colors } from '../config/styles';
+import { colors, gstyles } from '../config/styles';
 
 class Button extends React.Component {
   render() {
@@ -30,7 +30,8 @@ class Button extends React.Component {
       >
         <View
           style={[
-            { flex: 1, justifyContent: 'center', alignItems: 'center' },
+            gstyles.flex1,
+            gstyles.flexCenter,
             this.props.disabled ? { opacity: 0.3 } : {},
             { backgroundColor: this.props.backgroundColor },
           ]}

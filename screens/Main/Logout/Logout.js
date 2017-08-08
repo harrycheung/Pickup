@@ -7,6 +7,7 @@ import { Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { gstyles } from '../../../config/styles';
 import drawerHeader from '../../../components/DrawerHeader';
 import { Actions as AuthActions } from '../../../actions/Auth';
 
@@ -24,7 +25,7 @@ class Logout extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={[gstyles.flex1, gstyles.flexCenter]}>
         <Text>Logout</Text>
       </View>
     );

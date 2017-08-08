@@ -1,8 +1,6 @@
 
 // @flow
 
-import Cache from './cache';
-
 export const merge = (a: Object, b: Object) => Object.assign({}, a, b);
 
 export const fullName = (user: {firstName: string, lastInitial: string}) => (
@@ -17,6 +15,3 @@ export const time = (timestamp: number) => (
 export const truncate = (str: string, n: number) => (
   ((str.length > n) ? `${str.substr(0, n - 1)}&hellip;` : str)
 );
-
-export const StudentCache = new Cache('students');
-export const PickupCache = new Cache('pickups');

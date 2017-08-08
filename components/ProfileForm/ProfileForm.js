@@ -10,7 +10,7 @@ import firebase from 'firebase';
 // import RNFS from 'react-native-fs';
 
 import styles from './styles';
-import { colors } from '../../config/styles';
+import { colors, gstyles } from '../../config/styles';
 import LinedTextInput from '../LinedTextInput';
 import CustomButton from '../Button';
 
@@ -106,7 +106,7 @@ class ProfileForm extends React.Component {
           style={styles.studentImage}
           onPress={this._takePhoto}
         >
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
             <Icon name="plus" size={90} color="#ffffff" />
           </View>
         </TouchableOpacity>
@@ -125,8 +125,8 @@ class ProfileForm extends React.Component {
     }
 
     return (
-      <View style={styles.container}>
-        <View style={styles.form}>
+      <View style={gstyles.flex1}>
+        <View style={[gstyles.flex1, styles.form]}>
           {imageJSX}
           <Button
             title="Change photo"

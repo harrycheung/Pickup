@@ -73,7 +73,7 @@ class PickupSelect extends React.Component {
         <View style={[gstyles.flex1, gstyles.flexStart]}>
           <View style={styles.pickup}>
             <Text style={gstyles.font18}>Continue your previous pickup?</Text>
-            <View style={[styles.pickupButtons, gstyles.marginTop10]}>
+            <View style={[gstyles.marginTop10, { flexDirection: 'row' }]}>
               <Button
                 style={gstyles.flex1}
                 onPress={() => this.props.cancelPickup(this.props.pickup)}
@@ -95,12 +95,12 @@ class PickupSelect extends React.Component {
     let studentViews = null;
     if (this.props.students.length === 0) {
       studentViews = (
-        <View style={styles.message}>
-          <Text style={styles.messageText}>
+        <View style={gstyles.flexCenter}>
+          <Text style={gstyles.font18}>
             {"Let's add your student"}
           </Text>
           <Button
-            style={styles.messageButton}
+            style={gstyles.marginTop10}
             onPress={() => this.props.navigate('AddStudent')}
             content="Add student"
           />
@@ -109,7 +109,7 @@ class PickupSelect extends React.Component {
     } else {
       studentViews = this.props.students.map((student) => {
         const selected = this.state.students.includes(student);
-        const style = [styles.studentImage, selected ? styles.selected : {}];
+        const style = [gstyles.profilePic100, selected ? styles.selected : {}];
         return (
           <TouchableOpacity
             key={student.key}
@@ -117,7 +117,7 @@ class PickupSelect extends React.Component {
             onPress={() => this._selectStudent(student)}
           >
             <Image style={style} source={maxPNG} />
-            <Text style={styles.studentName}>
+            <Text style={gstyles.font18}>
               {student.firstName} {student.lastInitial} ({student.grade})
             </Text>
           </TouchableOpacity>
@@ -127,7 +127,7 @@ class PickupSelect extends React.Component {
 
     return (
       <View style={[gstyles.flex1, gstyles.flexStart]}>
-        <ScrollView contentContainerStyle={styles.students}>
+        <ScrollView contentContainerStyle={[gstyles.flex1, gstyles.marginH15, styles.students]}>
           {studentViews}
         </ScrollView>
         <Button

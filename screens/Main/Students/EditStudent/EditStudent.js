@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import styles from './styles';
 import { colors } from '../../../../config/styles';
 import StudentForm from '../../../../components/StudentForm';
 import { Actions as StudentActions } from '../../../../actions/Student';
@@ -58,7 +57,7 @@ class EditStudent extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={gstyles.flex1}>
         <StudentForm
           {...this.props.navigation.state.params.student}
           onSubmit={this._edit}

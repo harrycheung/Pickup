@@ -42,8 +42,31 @@ export const gstyles = StyleSheet.create({
   marginTop10: {
     marginTop: 10,
   },
+  marginH15: {
+    marginHorizontal: 15,
+  },
+  textInput: {
+    height: 44,
+    marginTop: 10,
+    paddingHorizontal: 5,
+  },
+  button: {
+    height: 44,
+    marginTop: 15,
+    marginHorizontal: 15,
+    backgroundColor: colors.buttonBackground,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: colors.buttonText,
+  },
   grayButton: {
     backgroundColor: 'darkgray',
+  },
+  profilePic40: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   profilePic50: {
     width: 50,
@@ -54,5 +77,10 @@ export const gstyles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
+  },
+  profilePic100: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
 });

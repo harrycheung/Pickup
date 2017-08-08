@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import styles from './styles';
+import { gstyles } from '../../../config/styles';
 import drawerHeader from '../../../components/DrawerHeader';
 import ProfileForm from '../../../components/ProfileForm';
 import { Actions as UserActions } from '../../../actions/User';
@@ -23,7 +23,7 @@ class Profile extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={gstyles.flex1}>
         <ProfileForm
           firstName={this.props.firstName}
           lastInitial={this.props.lastInitial}

@@ -8,7 +8,7 @@ import { FBref } from '../helpers/firebase';
 import { Types, Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as MessageActions } from '../actions/Message';
-import { fullName, StudentCache } from '../helpers';
+import { fullName } from '../helpers';
 
 const createPickupAsync = (requestor, students) => {
   const pickupStudents = students.reduce((acc, student) => {

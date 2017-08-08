@@ -7,8 +7,7 @@ import { ActivityIndicator, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import styles from './styles';
-import { colors } from '../../config/styles';
+import { colors, gstyles } from '../../config/styles';
 import Button from '../../components/Button';
 import { Actions as AuthActions } from '../../actions/Auth';
 import LinedTextInput from '../../components/LinedTextInput';
@@ -60,10 +59,10 @@ class LoginRequest extends React.Component {
     }
 
     return (
-      <View style={styles.container}>
+      <View style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}>
         <Text>Enter your phone number to request a magic link</Text>
         <LinedTextInput
-          style={styles.input}
+          style={gstyles.textInput}
           placeholder="Phone number"
           maxLength={10}
           clearButtonMode="while-editing"
@@ -73,7 +72,7 @@ class LoginRequest extends React.Component {
         />
         <Button
           onPress={this._login}
-          style={styles.loginButton}
+          style={gstyles.marginTop10}
           disabled={this.state.disabled}
           content={buttonContent}
         />

@@ -96,7 +96,7 @@ class PickupSelect extends React.Component {
 
   render() {
     return (
-      <MessageView style={styles.container}>
+      <MessageView style={[gstyles.flex1, gstyles.marginH15]}>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow}

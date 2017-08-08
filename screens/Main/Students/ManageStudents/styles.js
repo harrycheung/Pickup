@@ -12,9 +12,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   studentImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
     marginHorizontal: 15,
   },
   studentName: {

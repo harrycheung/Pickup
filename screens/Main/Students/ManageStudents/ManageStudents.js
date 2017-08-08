@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
-import { colors } from '../../../../config/styles';
+import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
@@ -70,7 +70,7 @@ class ManageStudents extends React.Component {
       >
         <View style={styles.student}>
           <Image
-            style={styles.studentImage}
+            style={[gstyles.profilePic50, styles.studentImage]}
             source={maxPNG}
           />
           <Text style={styles.studentName}>

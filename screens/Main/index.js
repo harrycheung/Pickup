@@ -8,6 +8,7 @@ import { DrawerNavigator, DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
 import update from 'react-addons-update';
 
+import { gstyles } from '../../config/styles';
 import PickupScreen from './Pickup';
 import HistoryScreen from './History';
 import StudentsScreen from './Students';
@@ -24,7 +25,7 @@ class Drawer extends React.Component {
       } });
     }
     return (
-      <View style={{ flex: 1 }}>
+      <View style={gstyles.flex1}>
         <DrawerItems {...drawerProps} />
       </View>
     );

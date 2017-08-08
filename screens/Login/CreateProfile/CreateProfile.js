@@ -3,19 +3,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { gstyles } from '../../../config/styles';
 import ProfileForm from '../../../components/ProfileForm';
 import { Actions as UserActions } from '../../../actions/User';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-});
 
 class CreateProfile extends React.Component {
   static navigationOptions = () => ({
@@ -25,7 +19,7 @@ class CreateProfile extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={gstyles.flex1}>
         <ProfileForm
           firstName={this.props.firstName}
           lastInitial={this.props.lastInitial}

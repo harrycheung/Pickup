@@ -3,19 +3,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { gstyles } from '../../../config/styles';
 import { Actions as AuthActions } from '../../../actions/Auth';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 class LoginToken extends React.Component {
   static navigationOptions = {
@@ -54,7 +47,7 @@ class LoginToken extends React.Component {
     }
 
     return (
-      <View style={styles.container}>
+      <View style={[gstyles.flex1, gstyles.flexCenter]}>
         <Text>
           {this.state.message}
         </Text>

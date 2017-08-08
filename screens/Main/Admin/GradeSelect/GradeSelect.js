@@ -7,8 +7,8 @@ import { View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as c from '../../../../config/constants';
-import styles from './styles';
+import * as C from '../../../../config/constants';
+import { gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
 import { Actions as NavActions } from '../../../../actions/Navigation';
@@ -26,7 +26,7 @@ class Home extends React.Component {
     super(props);
 
     this.state = {
-      grades: c.Levels,
+      grades: C.Levels,
     };
 
     this._selectLevel = this._selectLevel.bind(this);
@@ -45,14 +45,14 @@ class Home extends React.Component {
     const gradeButtons = grades.map(grade => (
       <Button
         key={grade}
-        style={styles.gradeButton}
+        style={gstyles.button}
         onPress={() => this._selectLevel(grade)}
         content={grade}
       />
     ));
 
     return (
-      <View style={styles.container}>
+      <View style={gstyles.flex1}>
         {gradeButtons}
       </View>
     );

@@ -144,9 +144,9 @@ class HandlePickup extends React.Component {
       students.push((
         <View
           key={student.key}
-          style={styles.studentRequest}
+          style={[gstyles.flexCenter, styles.studentRequest]}
         >
-          <View style={styles.student}>
+          <View style={[gstyles.flex1, styles.student]}>
             <Image
               style={[gstyles.profilePic80, { marginLeft: 5 }]}
               source={maxPNG}
@@ -155,7 +155,7 @@ class HandlePickup extends React.Component {
               {student.name} ({student.grade})
             </Text>
           </View>
-          <View style={styles.actionsContainer}>
+          <View style={[gstyles.flex1, styles.actionsContainer]}>
             {actions}
           </View>
         </View>
@@ -163,15 +163,15 @@ class HandlePickup extends React.Component {
     });
 
     return (
-      <KeyboardAwareView style={styles.container}>
-        <View style={styles.request}>
+      <KeyboardAwareView style={gstyles.flex1}>
+        <View style={[gstyles.marginH15, gstyles.marginTop10, styles.request]}>
           {students}
           <View style={styles.requestor}>
             <Image
-              style={styles.requestorImage}
+              style={[gstyles.profilePic40, { marginRight: 5 }]}
               source={maxPNG}
             />
-            <Text style={styles.requestorText}>
+            <Text style={gstyles.font14}>
               {this.props.pickup.requestor.name} @ front gate
             </Text>
           </View>
