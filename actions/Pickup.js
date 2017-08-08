@@ -5,7 +5,7 @@ export const Types = {
   CREATE: 'Pickup/CREATE',
   CREATED: 'Pickup/CREATED',
   CANCEL: 'Pickup/CANCEL',
-  CANCELED: 'Pickup/CANCELED',
+  CLEAR: 'Pickup/CLEAR',
   RESUME: 'Pickup/RESUME',
   LOAD: 'Pickup/LOAD',
   POST_MESSAGE: 'Pickup/POST_MESSAGE',
@@ -22,7 +22,7 @@ export const Actions = {
   }),
   createdPickup: (pickup: Object) => ({ type: Types.CREATED, pickup }),
   cancelPickup: (pickup: Object) => ({ type: Types.CANCEL, pickup }),
-  canceledPickup: () => ({ type: Types.CANCELED }),
+  clearPickup: () => ({ type: Types.CLEAR }),
   resumePickup: (pickup: Object) => ({ type: Types.RESUME, pickup }),
   loadPickup: (pickup: Object) => ({ type: Types.LOAD, pickup }),
   postMessage: (pickup: Object, sender: Object, message: Object) => ({

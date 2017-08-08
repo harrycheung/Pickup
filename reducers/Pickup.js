@@ -15,7 +15,7 @@ export default (state: Object = initialState, action: Object) => {
       return { pickup: action.pickup };
 
     case Types.CANCEL:
-    case Types.CANCELED:
+    case Types.CLEAR:
       return initialState;
 
     case Types.UPDATE_MESSAGES:

@@ -144,7 +144,7 @@ export function* listenPickup() {
           if (snapshot.val() === null) {
             yield put(NavActions.back());
             yield put(MessageActions.showMessage('Pickup canceled', 3000));
-            yield put(PickupActions.canceledPickup());
+            yield put(PickupActions.clearPickup());
           }
         }
       };

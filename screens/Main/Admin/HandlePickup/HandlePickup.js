@@ -52,6 +52,7 @@ class HandlePickup extends React.Component {
 
   componentWillUnmount() {
     this.props.unlistenPickup();
+    this.props.clearPickup();
   }
 
   _postMessage(pickup, type, student) {
@@ -201,6 +202,7 @@ HandlePickup.propTypes = {
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
   updatePickup: PropTypes.func.isRequired,
+  clearPickup: PropTypes.func.isRequired,
 };
 
 HandlePickup.defaultProps = {
