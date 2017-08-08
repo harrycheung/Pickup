@@ -10,7 +10,6 @@ import update from 'react-addons-update';
 
 import { gstyles } from '../../config/styles';
 import PickupScreen from './Pickup';
-import HistoryScreen from './History';
 import StudentsScreen from './Students';
 import LogoutScreen from './Logout';
 import ProfileScreen from './Profile';
@@ -42,13 +41,12 @@ const mapStateToProps = state => ({
 
 export default DrawerNavigator({
   Pickup: { screen: PickupScreen },
-  History: { screen: HistoryScreen },
   Students: { screen: StudentsScreen },
   Profile: { screen: ProfileScreen },
   Logout: { screen: LogoutScreen },
   Admin: { screen: AdminScreen },
 }, {
   drawerWidth: 200,
-  order: ['Pickup', 'Students', 'History', 'Profile', 'Logout', 'Admin'],
+  order: ['Pickup', 'Students', 'Profile', 'Logout', 'Admin'],
   contentComponent: connect(mapStateToProps)(Drawer),
 });
