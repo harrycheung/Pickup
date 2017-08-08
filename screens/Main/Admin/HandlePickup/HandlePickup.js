@@ -10,12 +10,12 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import { gstyles } from '../../../../config/styles';
 import { truncate } from '../../../../helpers';
-import { FBref } from '../../../../helpers/firebase';
 import Button from '../../../../components/Button';
 import PickupMessages from '../../../../components/PickupMessages';
 import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
+import { Actions as AdminActions } from '../../../../actions/Admin';
 
 const maxPNG = require('../../../../images/max.png');
 
@@ -54,10 +54,6 @@ class HandlePickup extends React.Component {
     this.props.unlistenPickup();
   }
 
-  _updatePickup(pickup, student, state) {
-    FBref(`/pickups/${pickup.key}/students/${student.key}`).update(state);
-  }
-
   _postMessage(pickup, type, student) {
     this.props.postMessage(
       pickup,
@@ -67,14 +63,14 @@ class HandlePickup extends React.Component {
   }
 
   _escort(pickup, student) {
-    this._updatePickup(pickup, student,
+    this.props.updatePickup(pickup.key, student.key,
       { escort: { uid: this.props.user.uid, name: this.props.user.name } },
     );
     this._postMessage(pickup, 'escort', student);
   }
 
   _cancelEscort(pickup, student) {
-    this._updatePickup(pickup, student,
+    this.props.updatePickup(pickup.key, student.key,
       { escort: { uid: '', name: '' }, released: false },
     );
     this._postMessage(pickup, 'cancel', student);
@@ -88,7 +84,7 @@ class HandlePickup extends React.Component {
         { text: 'Cancel', onPress: null, style: 'cancel' },
         { text: 'OK',
           onPress: () => {
-            this._updatePickup(pickup, student, { released: true });
+            this.props.updatePickup(pickup.key, student.key, { released: true });
             this._postMessage(pickup, 'release', student);
           },
         },
@@ -204,6 +200,7 @@ HandlePickup.propTypes = {
   postMessage: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
+  updatePickup: PropTypes.func.isRequired,
 };
 
 HandlePickup.defaultProps = {
@@ -218,6 +215,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
+  ...bindActionCreators(AdminActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HandlePickup);

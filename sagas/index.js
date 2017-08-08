@@ -32,6 +32,7 @@ import {
 
 import {
   watchListenPickups,
+  watchUpdatePickup,
 } from './Admin';
 
 // single entry point to start all Sagas at once
@@ -53,5 +54,6 @@ export default function* rootSaga() {
     watchHandlePickup(),
     watchListenPickup(),
     watchListenPickups(),
+    watchUpdatePickup(),
   ]);
 }

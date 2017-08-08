@@ -34,3 +34,18 @@ function* listenPickups() {
 export function* watchListenPickups() {
   yield fork(listenPickups);
 }
+
+function* updatePickup() {
+  while (true) {
+    try {
+      const { pickupKey, studentKey, state } = yield take(Types.UPDATE_PICKUP);
+      FBref(`/pickups/${pickupKey}/students/${studentKey}`).update(state);
+    } catch (error) {
+      console.log('updatePickup error', error);
+    }
+  }
+}
+
+export function* watchUpdatePickup() {
+  yield fork(updatePickup);
+}
