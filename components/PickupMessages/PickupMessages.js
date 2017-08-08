@@ -62,10 +62,9 @@ class PickupMessages extends React.Component {
           return <View key="hiddenRequest" />;
         }
 
-        const { students } = this.props.pickup;
         const studentsJSX = [];
-        Object.keys(students).forEach((key) => {
-          const student = students[key];
+        Object.keys(this.props.pickup.students).forEach((key) => {
+          const student = this.props.pickup.students[key];
           studentsJSX.push((
             <View key={key} style={styles.student}>
               <Image style={styles.studentImage} source={maxPNG} />
@@ -145,21 +144,19 @@ class PickupMessages extends React.Component {
     });
 
     return (
-      <View style={styles.container}>
-        <View style={gstyles.flex1}>
-          <AutoScrollView contentContainerStyle={styles.messagesContainer}>
-            {messages}
-          </AutoScrollView>
-          <View style={styles.composeContainer}>
-            <TextInput
-              style={{ height: 44, paddingHorizontal: 15 }}
-              placeholder="Send a message"
-              returnKeyType="send"
-              onChangeText={text => this.setState({ message: text })}
-              onSubmitEditing={this._postMessage}
-              value={this.state.message}
-            />
-          </View>
+      <View style={gstyles.flex1}>
+        <AutoScrollView contentContainerStyle={styles.messagesContainer}>
+          {messages}
+        </AutoScrollView>
+        <View style={styles.composeContainer}>
+          <TextInput
+            style={{ height: 44, paddingHorizontal: 15 }}
+            placeholder="Send a message"
+            returnKeyType="send"
+            onChangeText={text => this.setState({ message: text })}
+            onSubmitEditing={this._postMessage}
+            value={this.state.message}
+          />
         </View>
       </View>
     );

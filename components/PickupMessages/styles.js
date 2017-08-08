@@ -5,10 +5,6 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../config/styles';
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
   messagesContainer: {
     marginHorizontal: 15,
     paddingBottom: 15,
@@ -75,12 +71,4 @@ export default StyleSheet.create({
     fontSize: 10,
     color: 'white',
   },
-  escortButton: {
-    height: 44,
-    backgroundColor: colors.buttonBackground,
-  },
-  escortButtonText: {
-    fontSize: 18,
-    color: 'white',
-  }
 });
