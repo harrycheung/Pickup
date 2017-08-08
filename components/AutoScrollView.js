@@ -107,9 +107,8 @@ class AutoScrollView extends React.Component {
         onScroll={this.handleScroll}
         onLayout={this.handleLayout}
         onContentSizeChange={this.handleContentChange}
-      >
-        {this.props.children}
-      </ScrollView>
+        {...this.props}
+      />
     );
   }
 }
