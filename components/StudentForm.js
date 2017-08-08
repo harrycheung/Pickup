@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text } from 'react-native';
 
-import * as c from '../config/constants';
+import * as C from '../config/constants';
 import ProfileForm from './ProfileForm';
 import Picker from './Picker';
 
