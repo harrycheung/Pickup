@@ -153,7 +153,10 @@ export function* listenPickup() {
       const pickupStudentsListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);
-          yield put(PickupActions.updateStudents(snapshot.val()));
+          const students = snapshot.val();
+          if (students) {
+            yield put(PickupActions.updateStudents(students));
+          }
         }
       };
 
@@ -161,7 +164,10 @@ export function* listenPickup() {
       const pickupMessagesListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);
-          yield put(PickupActions.updateMessages(snapshot.val()));
+          const messages = snapshot.val();
+          if (messages) {
+            yield put(PickupActions.updateMessages(messages));
+          }
         }
       };
 

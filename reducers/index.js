@@ -10,6 +10,7 @@ import UserReducer from './User';
 import SpinnerReducer from './Spinner';
 import PickupReducer from './Pickup';
 import MessageReducer from './Message';
+import AdminReducer from './Admin';
 
 const AppReducer = combineReducers({
   nav: NavReducer,
@@ -19,6 +20,7 @@ const AppReducer = combineReducers({
   spinner: SpinnerReducer,
   pickup: PickupReducer,
   message: MessageReducer,
+  admin: AdminReducer,
 });
 
 export default AppReducer;

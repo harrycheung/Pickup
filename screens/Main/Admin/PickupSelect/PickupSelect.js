@@ -10,8 +10,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
-import { FBref } from '../../../../helpers/firebase';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
+import { Actions as AdminActions } from '../../../../actions/Admin';
 import MessageView from '../../../../components/MessageView';
 
 const maxPNG = require('../../../../images/max.png');
@@ -37,45 +37,27 @@ class PickupSelect extends React.Component {
   }
 
   state: {
-    pickups: Object[],
+    pickups: Array<Object>,
     dataSource: ListView.DataSource,
-  };
+  }
 
   componentDidMount() {
-    const { grade } = this.props.navigation.state.params;
-    const query = FBref('/pickups').orderByChild(`grades/${grade}`).equalTo(true);
+    this.props.listenPickups(this.props.navigation.state.params.grade);
+  }
 
-    query.on('child_added', (snapshot) => {
-      const pickup = snapshot.val();
-      pickup.key = snapshot.key;
-      const pickups = this.state.pickups.concat(pickup);
-      this.setState({
-        pickups,
-        dataSource: this.state.dataSource.cloneWithRows(pickups),
-      });
+  componentWillReceiveProps(nextProps) {
+    const pickups = [];
+    Object.keys(nextProps.pickups).forEach((key) => {
+      pickups.push(Object.assign({}, nextProps.pickups[key], { key }));
     });
-
-    query.on('child_removed', (snapshot) => {
-      const pickups = this.state.pickups.filter(request => request.key !== snapshot.key);
-      this.setState({
-        pickups,
-        dataSource: this.state.dataSource.cloneWithRows(pickups),
-      });
-    });
-
-    query.on('child_changed', (snapshot) => {
-      const pickup = snapshot.val();
-      pickup.key = snapshot.key;
-      const pickups = this.state.pickups.map(item => (item.key === pickup.key ? item : pickup));
-      this.setState({
-        pickups,
-        dataSource: this.state.dataSource.cloneWithRows(pickups),
-      });
+    this.setState({
+      pickups,
+      dataSource: this.state.dataSource.cloneWithRows(pickups),
     });
   }
 
   componentWillUnmount() {
-    FBref('/pickups').off();
+    this.props.unlistenPickups();
   }
 
   _renderRow(pickup, sectionID, rowID) {
@@ -128,11 +110,19 @@ class PickupSelect extends React.Component {
 
 PickupSelect.propTypes = {
   navigation: PropTypes.object.isRequired,
+  pickups: PropTypes.object.isRequired,
   handlePickup: PropTypes.func.isRequired,
+  listenPickups: PropTypes.func.isRequired,
+  unlistenPickups: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  pickups: state.admin.pickups,
+});
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(PickupActions, dispatch),
+  ...bindActionCreators(AdminActions, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(PickupSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(PickupSelect);

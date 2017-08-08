@@ -41,8 +41,7 @@ class HandlePickup extends React.Component {
   componentDidMount() {
     const names = [];
     Object.keys(this.props.pickup.students).forEach((key) => {
-      const student = this.props.pickup.students[key];
-      names.push(student.name);
+      names.push(this.props.pickup.students[key].name);
     });
     this.props.navigation.setParams({ title: truncate(names.join(', '), 20) });
   }
