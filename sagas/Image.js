@@ -1,7 +1,7 @@
 
 // @flow
 
-import { call, fork, put, take } from 'redux-saga/effects';
+import { all, call, fork, put, take } from 'redux-saga/effects';
 
 import { guid, convertToByteArray } from '../helpers';
 import { FBstorageRef } from '../helpers/firebase';
@@ -57,6 +57,12 @@ function* uploadImage() {
   }
 }
 
-export function* watchUploadImage() {
+function* watchUploadImage() {
   yield fork(uploadImage);
+}
+
+export default function* imageSaga() {
+  yield all([
+    watchUploadImage(),
+  ]);
 }

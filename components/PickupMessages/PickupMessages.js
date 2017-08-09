@@ -165,8 +165,6 @@ PickupMessages.propTypes = {
   user: PropTypes.object.isRequired,
   pickup: PropTypes.object.isRequired,
   postMessage: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onComplete: PropTypes.func.isRequired,
   hideRequest: PropTypes.bool,
 };
 

@@ -1,7 +1,7 @@
 
 // @flow
 
-import { call, fork, put, select, take, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, select, take, takeLatest } from 'redux-saga/effects';
 import CryptoJS from 'crypto-js';
 
 import { FBauth, FBref, FBfunctions } from '../helpers/firebase';
@@ -33,7 +33,7 @@ const requestLoginAsync = (phoneNumber) => {
     });
 };
 
-export function* requestLogin(action) {
+function* requestLogin(action) {
   try {
     yield put(SpinnerActions.start());
     const { phoneNumber } = action;
@@ -49,13 +49,13 @@ export function* requestLogin(action) {
   }
 }
 
-export function* watchRequestLogin() {
+function* watchRequestLogin() {
   yield takeLatest(AuthTypes.REQUEST_LOGIN, requestLogin);
 }
 
-export const loginAsync = token => FBauth.signInWithCustomToken(token);
+const loginAsync = token => FBauth.signInWithCustomToken(token);
 
-export const getActivePickup = uid => FBref('/pickups')
+const getActivePickup = uid => FBref('/pickups')
   .orderByChild('requestor/uid').equalTo(uid).limitToFirst(1)
   .once('value')
   .then((snapshot) => {
@@ -74,9 +74,9 @@ export const getActivePickup = uid => FBref('/pickups')
 
 const logoutAsync = () => FBauth.signOut();
 
-export const getState = state => state;
+const getState = state => state;
 
-export function* login() {
+function* login() {
   while (true) {
     const { token } = yield take(AuthTypes.LOGIN);
     try {
@@ -112,14 +112,21 @@ export function* login() {
   }
 }
 
-export function* logout() {
+function* logout() {
   yield take(AuthTypes.LOGOUT);
   yield call(logoutAsync);
   yield put(AuthActions.clear());
   yield put(NavActions.resetNavigation('LoginRequest'));
 }
 
-export function* watchLogin() {
+function* watchLogin() {
   yield fork(login);
   yield fork(logout); // TODO: take out
+}
+
+export default function* authSaga() {
+  yield all([
+    watchRequestLogin(),
+    watchLogin(),
+  ]);
 }

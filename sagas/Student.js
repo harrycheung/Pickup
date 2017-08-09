@@ -1,7 +1,7 @@
 
 // @flow
 
-import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
 import { Types, Actions as StudentActions } from '../actions/Student';
@@ -25,7 +25,7 @@ const loadStudentsAsync = uid => (
 );
 
 // Don't need spinner
-export function* loadStudents(action) {
+function* loadStudents(action) {
   try {
     const students = yield call(loadStudentsAsync, action.uid);
     yield put(StudentActions.setStudents(students));
@@ -36,7 +36,7 @@ export function* loadStudents(action) {
   }
 }
 
-export function* watchLoadStudents() {
+function* watchLoadStudents() {
   yield takeEvery(Types.LOAD, loadStudents);
 }
 
@@ -57,7 +57,7 @@ const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship
   })
 );
 
-export function* addStudent(action) {
+function* addStudent(action) {
   try {
     const { firstName, lastInitial, image, grade, relationship } = action;
     const state = yield select();
@@ -80,7 +80,7 @@ export function* addStudent(action) {
   }
 }
 
-export function* watchAddStudent() {
+function* watchAddStudent() {
   yield takeEvery(Types.ADD_STUDENT, addStudent);
 }
 
@@ -100,7 +100,7 @@ const editStudentAsync = (uid, student) => {
   return FBref('/').update(studentUpdate);
 };
 
-export function* editStudent(action) {
+function* editStudent(action) {
   try {
     const state = yield select();
     yield call(editStudentAsync, state.auth.user.uid, action.student);
@@ -112,7 +112,7 @@ export function* editStudent(action) {
   }
 }
 
-export function* watchEditStudent() {
+function* watchEditStudent() {
   yield takeEvery(Types.EDIT_STUDENT, editStudent);
 }
 
@@ -123,7 +123,7 @@ const deleteStudentAsync = (uid, key) => {
   return FBref('/').update(studentUpdate);
 };
 
-export function* deleteStudent(action) {
+function* deleteStudent(action) {
   try {
     const state = yield select();
     yield call(deleteStudentAsync, state.auth.user.uid, action.studentKey);
@@ -135,6 +135,15 @@ export function* deleteStudent(action) {
   }
 }
 
-export function* watchDeleteStudent() {
+function* watchDeleteStudent() {
   yield takeEvery(Types.DELETE_STUDENT, deleteStudent);
+}
+
+export default function* studentSaga() {
+  yield all([
+    watchLoadStudents(),
+    watchAddStudent(),
+    watchEditStudent(),
+    watchDeleteStudent(),
+  ]);
 }

@@ -33,8 +33,6 @@ class PickupRequest extends React.Component {
           user={this.props.user}
           pickup={this.props.pickup}
           postMessage={this.props.postMessage}
-          onClose={() => {}}
-          onComplete={() => this.props.navigateBack()}
         />
       </KeyboardAwareView>
     );
@@ -46,7 +44,6 @@ PickupRequest.propTypes = {
   pickup: PropTypes.object.isRequired,
   cancelPickup: PropTypes.func.isRequired,
   postMessage: PropTypes.func.isRequired,
-  navigateBack: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
 };

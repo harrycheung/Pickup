@@ -26,9 +26,6 @@ class HandlePickup extends React.Component {
   constructor(props) {
     super(props);
 
-    this._postMessage = this._postMessage.bind(this);
-    this._escort = this._escort.bind(this);
-    this._cancelEscort = this._cancelEscort.bind(this);
     this._release = this._release.bind(this);
   }
 
@@ -53,45 +50,6 @@ class HandlePickup extends React.Component {
     this.props.clearPickup();
   }
 
-  _postMessage(pickup, type, student) {
-    this.props.postMessage(
-      pickup,
-      {
-        uid: this.props.user.uid,
-        name: this.props.user.name,
-        image: this.props.user.image,
-      },
-      {
-        type,
-        student: {
-          key: student.key,
-          name: student.name,
-          image: student.image,
-        },
-      },
-    );
-  }
-
-  _escort(pickup, student) {
-    this.props.updatePickup(pickup.key, student.key,
-      {
-        escort: {
-          uid: this.props.user.uid,
-          name: this.props.user.name,
-          image: this.props.user.image,
-        },
-      },
-    );
-    this._postMessage(pickup, 'escort', student);
-  }
-
-  _cancelEscort(pickup, student) {
-    this.props.updatePickup(pickup.key, student.key,
-      { escort: { uid: '', name: '', image: '' }, released: false },
-    );
-    this._postMessage(pickup, 'cancel', student);
-  }
-
   _release(pickup, student) {
     Alert.alert(
       'Confirm release',
@@ -99,10 +57,7 @@ class HandlePickup extends React.Component {
       [
         { text: 'Cancel', onPress: null, style: 'cancel' },
         { text: 'OK',
-          onPress: () => {
-            this.props.updatePickup(pickup.key, student.key, { released: true });
-            this._postMessage(pickup, 'release', student);
-          },
+          onPress: () => this.props.releaseStudent(pickup, this.props.user, student),
         },
       ],
       { cancelable: false },
@@ -110,10 +65,11 @@ class HandlePickup extends React.Component {
   }
 
   render() {
+    const { pickup, user } = this.props;
     const students = [];
-    Object.keys(this.props.pickup.students).forEach((key) => {
-      const student = this.props.pickup.students[key];
-      const escort = student.escort.uid === this.props.user.uid;
+    Object.keys(pickup.students).forEach((key) => {
+      const student = pickup.students[key];
+      const escort = student.escort.uid === user.uid;
       let actions = [];
       if (student.released) {
         actions = [(
@@ -126,7 +82,7 @@ class HandlePickup extends React.Component {
           <Button
             key="cancel"
             style={gstyles.flex1}
-            onPress={() => this._cancelEscort(this.props.pickup, student)}
+            onPress={() => this.props.cancelEscort(pickup, user, student)}
             content="Cancel"
             backgroundColor="darkgray"
           />
@@ -136,7 +92,7 @@ class HandlePickup extends React.Component {
           <Button
             key="release"
             style={gstyles.flex1}
-            onPress={() => this._release(this.props.pickup, student)}
+            onPress={() => this._release(pickup, student)}
             content="Release"
           />
         )];
@@ -145,7 +101,7 @@ class HandlePickup extends React.Component {
           <Button
             key="escort"
             style={gstyles.flex1}
-            onPress={() => this._escort(this.props.pickup, student)}
+            onPress={() => this.props.escortStudent(pickup, user, student)}
             content="Escort"
           />
         )];
@@ -199,8 +155,6 @@ class HandlePickup extends React.Component {
           user={this.props.user}
           pickup={this.props.pickup}
           postMessage={this.props.postMessage}
-          onClose={() => {}}
-          onComplete={() => this.props.navigateBack()}
           hideRequest
         />
       </KeyboardAwareView>
@@ -216,8 +170,10 @@ HandlePickup.propTypes = {
   postMessage: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
-  updatePickup: PropTypes.func.isRequired,
   clearPickup: PropTypes.func.isRequired,
+  escortStudent: PropTypes.func.isRequired,
+  cancelEscort: PropTypes.func.isRequired,
+  releaseStudent: PropTypes.func.isRequired,
 };
 
 HandlePickup.defaultProps = {

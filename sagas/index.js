@@ -3,62 +3,21 @@
 
 import { all } from 'redux-saga/effects';
 
-import {
-  watchRequestLogin,
-  watchLogin,
-} from './Auth';
-
-import {
-  watchLoadStudents,
-  watchAddStudent,
-  watchEditStudent,
-  watchDeleteStudent,
-} from './Student';
-
-import {
-  watchLoadUser,
-  watchCreateUser,
-  watchUpdateUser,
-} from './User';
-
-import {
-  watchCreatePickup,
-  watchCancelPickup,
-  watchResumePickup,
-  watchHandlePickup,
-  watchPostMessage,
-  watchListenPickup,
-} from './Pickup';
-
-import {
-  watchListenPickups,
-  watchUpdatePickup,
-} from './Admin';
-
-import {
-  watchUploadImage,
-} from './Image';
+import authSaga from './Auth';
+import studentSaga from './Student';
+import userSaga from './User';
+import pickupSaga from './Pickup';
+import adminSaga from './Admin';
+import imageSaga from './Image';
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
   yield all([
-    watchRequestLogin(),
-    watchLogin(),
-    watchLoadStudents(),
-    watchAddStudent(),
-    watchEditStudent(),
-    watchDeleteStudent(),
-    watchLoadUser(),
-    watchCreateUser(),
-    watchUpdateUser(),
-    watchCreatePickup(),
-    watchCancelPickup(),
-    watchResumePickup(),
-    watchPostMessage(),
-    watchHandlePickup(),
-    watchListenPickup(),
-    watchListenPickups(),
-    watchUpdatePickup(),
-    watchUploadImage(),
+    authSaga(),
+    studentSaga(),
+    userSaga(),
+    pickupSaga(),
+    adminSaga(),
+    imageSaga(),
   ]);
 }

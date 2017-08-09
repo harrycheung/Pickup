@@ -1,7 +1,7 @@
 
 // @flow
 
-import { fork, put, take } from 'redux-saga/effects';
+import { all, fork, put, take } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
 import { firebaseChannel } from './helpers';
@@ -31,21 +31,12 @@ function* listenPickups() {
   }
 }
 
-export function* watchListenPickups() {
+function* watchListenPickups() {
   yield fork(listenPickups);
 }
 
-function* updatePickup() {
-  while (true) {
-    try {
-      const { pickupKey, studentKey, state } = yield take(Types.UPDATE_PICKUP);
-      FBref(`/pickups/${pickupKey}/students/${studentKey}`).update(state);
-    } catch (error) {
-      console.log('updatePickup error', error);
-    }
-  }
-}
-
-export function* watchUpdatePickup() {
-  yield fork(updatePickup);
+export default function* adminSaga() {
+  yield all([
+    watchListenPickups(),
+  ]);
 }

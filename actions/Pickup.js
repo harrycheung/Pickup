@@ -14,6 +14,9 @@ export const Types = {
   UNLISTEN: 'Pickup/UNLISTEN',
   UPDATE_MESSAGES: 'Pickup/UPDATE_MESSAGES',
   UPDATE_STUDENTS: 'Pickup/UPDATE_STUDENTS',
+  ESCORT_STUDENT: 'Pickup/ESCORT_STUDENT',
+  CANCEL_ESCORT: 'Pickup/CANCEL_ESCORT',
+  RELEASE_STUDENT: 'Pickup/RELEASE_STUDENT',
 };
 
 export const Actions = {
@@ -25,7 +28,16 @@ export const Actions = {
   clearPickup: () => ({ type: Types.CLEAR }),
   resumePickup: (pickup: Object) => ({ type: Types.RESUME, pickup }),
   loadPickup: (pickup: Object) => ({ type: Types.LOAD, pickup }),
-  postMessage: (pickup: Object, sender: Object, message: Object) => ({
+  escortStudent: (pickup: Object, user: Object, student: Object) => ({
+    type: Types.ESCORT_STUDENT, pickup, user, student,
+  }),
+  cancelEscort: (pickup: Object, user: Object, student: Object) => ({
+    type: Types.CANCEL_ESCORT, pickup, user, student,
+  }),
+  releaseStudent: (pickup: Object, user: Object, student: Object) => ({
+    type: Types.RELEASE_STUDENT, pickup, user, student,
+  }),
+  postMessage: (pickup: Object, sender: Object, message: string) => ({
     type: Types.POST_MESSAGE, pickup, sender, message,
   }),
   handlePickup: (pickup: Object) => ({ type: Types.HANDLE, pickup }),

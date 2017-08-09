@@ -1,7 +1,7 @@
 
 // @flow
 
-import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
 import { Types as UserTypes, Actions as UserActions } from '../actions/User';
@@ -12,7 +12,7 @@ const loadUserAsync = uid => (
   FBref(`/users/${uid}`).once('value').then(snapshot => snapshot.val())
 );
 
-export function* loadUser(action) {
+function* loadUser(action) {
   try {
     let { uid } = action;
     if (uid === undefined) {
@@ -33,7 +33,7 @@ export function* loadUser(action) {
   }
 }
 
-export function* watchLoadUser() {
+function* watchLoadUser() {
   yield takeEvery(UserTypes.LOAD, loadUser);
 }
 
@@ -56,18 +56,26 @@ function* updateUserWithNav(action, navAction) {
   }
 }
 
-export function* updateUser(action) {
+function* updateUser(action) {
   yield call(updateUserWithNav, action, NavActions.back());
 }
 
-export function* watchUpdateUser() {
+function* watchUpdateUser() {
   yield takeEvery(UserTypes.UPDATE, updateUser);
 }
 
-export function* createUser(action) {
+function* createUser(action) {
   yield call(updateUserWithNav, action, NavActions.resetNavigation('Main'));
 }
 
-export function* watchCreateUser() {
+function* watchCreateUser() {
   yield takeEvery(UserTypes.CREATE, createUser);
+}
+
+export default function* userSaga() {
+  yield all([
+    watchLoadUser(),
+    watchCreateUser(),
+    watchUpdateUser(),
+  ]);
 }
