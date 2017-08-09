@@ -11,6 +11,7 @@ import SpinnerReducer from './Spinner';
 import PickupReducer from './Pickup';
 import MessageReducer from './Message';
 import AdminReducer from './Admin';
+import ImageReducer from './Image';
 
 const AppReducer = combineReducers({
   nav: NavReducer,
@@ -21,6 +22,7 @@ const AppReducer = combineReducers({
   pickup: PickupReducer,
   message: MessageReducer,
   admin: AdminReducer,
+  image: ImageReducer,
 });
 
 export default AppReducer;

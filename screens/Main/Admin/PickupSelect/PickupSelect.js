@@ -14,8 +14,6 @@ import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as AdminActions } from '../../../../actions/Admin';
 import MessageView from '../../../../components/MessageView';
 
-const maxPNG = require('../../../../images/max.png');
-
 class PickupSelect extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.grade,
@@ -76,7 +74,7 @@ class PickupSelect extends React.Component {
         <Image
           key={student.key}
           style={[gstyles.profilePic50, styles.studentImage, studentStyle]}
-          source={maxPNG}
+          source={{ uri: student.image }}
         />
       ));
     });

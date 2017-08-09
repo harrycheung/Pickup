@@ -16,8 +16,6 @@ import { gstyles } from '../../config/styles';
 import { time } from '../../helpers';
 import AutoScrollView from '../AutoScrollView';
 
-const maxPNG = require('../../images/max.png');
-
 class PickupMessages extends React.Component {
   constructor(props: Object) {
     super(props);
@@ -67,7 +65,7 @@ class PickupMessages extends React.Component {
           const student = this.props.pickup.students[key];
           studentsJSX.push((
             <View key={key} style={styles.student}>
-              <Image style={styles.studentImage} source={maxPNG} />
+              <Image style={styles.studentImage} source={{ uri: student.image }} />
               <Text style={styles.studentName}>
                 {student.name}
               </Text>
@@ -105,7 +103,7 @@ class PickupMessages extends React.Component {
 
     let senderJSX = null;
     if (sender !== null) {
-      senderJSX = <Image style={styles.senderImage} source={maxPNG} />;
+      senderJSX = <Image style={styles.senderImage} source={{ uri: sender.image }} />;
     }
 
     if (typeof messageJSX === 'string') {

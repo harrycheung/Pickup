@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 
 import { colors, gstyles } from '../config/styles';
 
@@ -49,7 +49,7 @@ Button.propTypes = {
   content: PropTypes.any,
   textSize: PropTypes.number,
   backgroundColor: PropTypes.string,
-  style: View.propTypes.style,
+  style: ViewPropTypes.style,
 };
 
 Button.defaultProps = {

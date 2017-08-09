@@ -45,10 +45,11 @@ class StudentForm extends React.Component {
     this._updateState({});
   }
 
+  profileForm: Object;
+
   _updateState(newState) {
     this.setState(newState, () => {
-      // TODO: this.refs is deprecated?
-      this.refs.profileForm.updateDisabled();
+      this.profileForm.getWrappedInstance().updateDisabled();
     });
   }
 
@@ -63,15 +64,15 @@ class StudentForm extends React.Component {
     };
   }
 
-  _submit(firstName, lastInitial) {
+  _submit(firstName, lastInitial, imageURL) {
     const { grade, relationship } = this.state;
-    this.props.onSubmit(firstName, lastInitial, grade, relationship);
+    this.props.onSubmit(firstName, lastInitial, imageURL, grade, relationship);
   }
 
   render() {
     return (
       <ProfileForm
-        ref="profileForm"
+        ref={(form) => { this.profileForm = form; }}
         firstName={this.props.firstName}
         lastInitial={this.props.lastInitial}
         isDisabled={this._disabled}

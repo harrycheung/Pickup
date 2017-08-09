@@ -40,7 +40,7 @@ export function* watchLoadStudents() {
   yield takeEvery(Types.LOAD, loadStudents);
 }
 
-const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => (
+const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship) => (
   FBref('/students').push().then((studentRef) => {
     const relationships = {};
     relationships[uid] = relationship;
@@ -48,6 +48,7 @@ const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => (
     studentUpdate[`students/${studentRef.key}`] = {
       firstName,
       lastInitial,
+      image,
       grade,
       relationships,
     };
@@ -58,18 +59,19 @@ const addStudentAsync = (uid, firstName, lastInitial, grade, relationship) => (
 
 export function* addStudent(action) {
   try {
-    const { firstName, lastInitial, grade, relationship } = action;
+    const { firstName, lastInitial, image, grade, relationship } = action;
     const state = yield select();
     const studentKey = yield call(
       addStudentAsync,
       state.auth.user.uid,
       firstName,
       lastInitial,
+      image,
       grade,
       relationship,
     );
     yield put(StudentActions.addStudentSucceeded({
-      key: studentKey, firstName, lastInitial, grade, relationship,
+      key: studentKey, firstName, lastInitial, image, grade, relationship,
     }));
     yield put(NavActions.back());
   } catch (error) {
@@ -83,13 +85,14 @@ export function* watchAddStudent() {
 }
 
 const editStudentAsync = (uid, student) => {
-  const { key, firstName, lastInitial, grade, relationship } = student;
+  const { key, firstName, lastInitial, image, grade, relationship } = student;
   const relationships = {};
   relationships[uid] = relationship;
   const studentUpdate = {};
   studentUpdate[`students/${key}`] = {
     firstName,
     lastInitial,
+    image,
     grade,
     relationships,
   };

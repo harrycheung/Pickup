@@ -17,3 +17,4 @@ firebase.initializeApp(FirebaseConfig);
 
 export const FBauth = firebase.auth();
 export const FBref = (ref: string) => firebase.database().ref(ref);
+export const FBstorageRef = (ref?: string) => firebase.storage().ref(ref);

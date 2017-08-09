@@ -13,8 +13,6 @@ import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
-const maxPNG = require('../../../../images/max.png');
-
 class ManageStudents extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
@@ -71,7 +69,7 @@ class ManageStudents extends React.Component {
         <View style={styles.student}>
           <Image
             style={[gstyles.profilePic50, styles.studentImage]}
-            source={maxPNG}
+            source={{ uri: student.image }}
           />
           <Text style={styles.studentName}>
             {student.firstName} {student.lastInitial} ({student.grade})

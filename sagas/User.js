@@ -2,15 +2,14 @@
 // @flow
 
 import { call, put, select, takeEvery } from 'redux-saga/effects';
-import firebase from 'firebase';
 
+import { FBref } from '../helpers/firebase';
 import { Types as UserTypes, Actions as UserActions } from '../actions/User';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
 
 const loadUserAsync = uid => (
-  firebase.database().ref(`/users/${uid}`).once('value')
-    .then(snapshot => snapshot.val())
+  FBref(`/users/${uid}`).once('value').then(snapshot => snapshot.val())
 );
 
 export function* loadUser(action) {
@@ -22,10 +21,10 @@ export function* loadUser(action) {
     }
     const response = yield call(loadUserAsync, uid);
     if (response === null) {
-      yield put(UserActions.setUser('', '', '', false));
+      yield put(UserActions.setUser('', '', '', '', false));
     } else {
-      const { firstName, lastInitial, admin = false } = response;
-      yield put(UserActions.setUser(uid, firstName, lastInitial, admin));
+      const { firstName, lastInitial, image, admin = false } = response;
+      yield put(UserActions.setUser(uid, firstName, lastInitial, image, admin));
     }
     yield put(UserActions.loadedUser());
   } catch (error) {
@@ -38,16 +37,16 @@ export function* watchLoadUser() {
   yield takeEvery(UserTypes.LOAD, loadUser);
 }
 
-const updateUserAsync = (uid, firstName, lastInitial) => (
-  firebase.database().ref(`/users/${uid}`).update({ firstName, lastInitial })
+const updateUserAsync = (uid, firstName, lastInitial, image) => (
+  FBref(`/users/${uid}`).update({ firstName, lastInitial, image })
 );
 
 function* updateUserWithNav(action, navAction) {
   try {
     yield put(SpinnerActions.start());
-    const { firstName, lastInitial } = action;
+    const { firstName, lastInitial, image } = action;
     const state = yield select();
-    yield call(updateUserAsync, state.auth.user.uid, firstName, lastInitial);
+    yield call(updateUserAsync, state.auth.user.uid, firstName, lastInitial, image);
     yield put(navAction);
   } catch (error) {
     console.log('updateUser failed', error);

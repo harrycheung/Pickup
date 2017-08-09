@@ -15,6 +15,7 @@ const createPickupAsync = (requestor, students) => {
     acc[student.key] = {
       key: student.key,
       name: fullName(student),
+      image: student.image,
       escort: { uid: '', name: '' },
       released: false,
       grade: student.grade,
@@ -25,7 +26,7 @@ const createPickupAsync = (requestor, students) => {
     acc[student.grade] = true;
     return acc;
   }, {});
-  const cleanRequestor = { uid: requestor.uid, name: requestor.name };
+  const cleanRequestor = { uid: requestor.uid, name: requestor.name, image: requestor.image };
   const pickup = {
     requestor: cleanRequestor,
     students: pickupStudents,
@@ -107,7 +108,7 @@ export function* postMessage(action) {
   try {
     const { sender } = action;
     const messageData = {
-      sender: { uid: sender.uid, name: sender.name },
+      sender: { uid: sender.uid, name: sender.name, image: sender.image },
       createdAt: Date.now(),
       ...action.message,
     };

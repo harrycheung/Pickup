@@ -35,6 +35,7 @@ class AutoScrollView extends React.Component {
   scrollY: number = 0;
   keyboardShow: Object;
   keyboardHide: Object;
+  scroller: Object;
 
   // todo: handle layout instead of keyboard
   handleKeyboardShow() {
@@ -49,14 +50,14 @@ class AutoScrollView extends React.Component {
       // fix top blank if exsits
       // detection also has trouble on Android
       if (scrollY > contentHeight - scrollHeight) {
-        this.refs.scroller.scrollTo({ y: 0 });
+        this.scroller.scrollTo({ y: 0 });
       }
       // fix bottom blank if exsits
       // else {
       //   this.scrollToBottom()
       // }
       else {
-        this.refs.scroller.scrollTo({ y: scrollY });
+        this.scroller.scrollTo({ y: scrollY });
       }
     }
   }
@@ -95,14 +96,14 @@ class AutoScrollView extends React.Component {
       return;
     }
     if (contentHeight > scrollHeight) {
-      this.refs.scroller.scrollTo({ y: contentHeight - scrollHeight });
+      this.scroller.scrollTo({ y: contentHeight - scrollHeight });
     }
   }
 
   render() {
     return (
       <ScrollView
-        ref="scroller"
+        ref={(scrollView) => { this.scroller = scrollView; }}
         scrollEventThrottle={16}
         onScroll={this.handleScroll}
         onLayout={this.handleLayout}

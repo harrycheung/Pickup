@@ -10,6 +10,7 @@ import {
   Dimensions,
   Platform,
   StyleSheet,
+  ViewPropTypes,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -36,7 +37,7 @@ const defaultAnimation = {
 class KeyboardAwareView extends React.Component {
   static propTypes = {
     onToggle: PropTypes.func,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
     children: PropTypes.node,
   };
 

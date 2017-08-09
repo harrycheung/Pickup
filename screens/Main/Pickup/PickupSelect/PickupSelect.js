@@ -14,8 +14,6 @@ import Button from '../../../../components/Button';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
-const maxPNG = require('../../../../images/max.png');
-
 class PickupSelect extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
@@ -116,7 +114,7 @@ class PickupSelect extends React.Component {
             style={styles.student}
             onPress={() => this._selectStudent(student)}
           >
-            <Image style={style} source={maxPNG} />
+            <Image style={style} source={{ uri: student.image }} />
             <Text style={gstyles.font18}>
               {student.firstName} {student.lastInitial} ({student.grade})
             </Text>

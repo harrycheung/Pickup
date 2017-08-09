@@ -17,8 +17,6 @@ import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as AdminActions } from '../../../../actions/Admin';
 
-const maxPNG = require('../../../../images/max.png');
-
 class HandlePickup extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
@@ -58,21 +56,38 @@ class HandlePickup extends React.Component {
   _postMessage(pickup, type, student) {
     this.props.postMessage(
       pickup,
-      { uid: this.props.user.uid, name: this.props.user.name },
-      { type, student: { key: student.key, name: student.name } },
+      {
+        uid: this.props.user.uid,
+        name: this.props.user.name,
+        image: this.props.user.image,
+      },
+      {
+        type,
+        student: {
+          key: student.key,
+          name: student.name,
+          image: student.image,
+        },
+      },
     );
   }
 
   _escort(pickup, student) {
     this.props.updatePickup(pickup.key, student.key,
-      { escort: { uid: this.props.user.uid, name: this.props.user.name } },
+      {
+        escort: {
+          uid: this.props.user.uid,
+          name: this.props.user.name,
+          image: this.props.user.image,
+        },
+      },
     );
     this._postMessage(pickup, 'escort', student);
   }
 
   _cancelEscort(pickup, student) {
     this.props.updatePickup(pickup.key, student.key,
-      { escort: { uid: '', name: '' }, released: false },
+      { escort: { uid: '', name: '', image: '' }, released: false },
     );
     this._postMessage(pickup, 'cancel', student);
   }
@@ -150,7 +165,7 @@ class HandlePickup extends React.Component {
           <View style={[gstyles.flex1, styles.student]}>
             <Image
               style={[gstyles.profilePic80, { marginLeft: 5 }]}
-              source={maxPNG}
+              source={{ uri: student.image }}
             />
             <Text style={gstyles.font18}>
               {student.name} ({student.grade})
@@ -170,7 +185,7 @@ class HandlePickup extends React.Component {
           <View style={styles.requestor}>
             <Image
               style={[gstyles.profilePic40, { marginRight: 5 }]}
-              source={maxPNG}
+              source={{ uri: this.props.pickup.requestor.image }}
             />
             <Text style={gstyles.font14}>
               {this.props.pickup.requestor.name} @ front gate

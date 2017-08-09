@@ -4,26 +4,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ActivityIndicator, Button, Image, Keyboard, TouchableOpacity, View } from 'react-native';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImagePicker } from 'expo';
-import firebase from 'firebase';
 // import RNFS from 'react-native-fs';
 
 import styles from './styles';
 import { colors, gstyles } from '../../config/styles';
 import LinedTextInput from '../LinedTextInput';
 import CustomButton from '../Button';
+import { Actions as ImageActions } from '../../actions/Image';
 
 class ProfileForm extends React.Component {
-  static defaultProps: {
-    firstName: string,
-    lastInitial: string,
-    submitButtonText: string,
-    isDisabled: () => Object,
-    onSubmit: (firstName: string, lastInitial: string) => void,
-    spinning: boolean,
-  };
-
   constructor(props: Object) {
     super(props);
 
@@ -31,7 +24,7 @@ class ProfileForm extends React.Component {
       disabled: true,
       firstName: this.props.firstName,
       lastInitial: this.props.lastInitial,
-      image: null,
+      imageURL: this.props.imageURL,
     };
 
     this._takePhoto = this._takePhoto.bind(this);
@@ -46,27 +39,10 @@ class ProfileForm extends React.Component {
     image: string,
   };
 
-  componentWillReceiveProps(nextProps: Object) {
-    this.setState({ disabled: nextProps.spinning });
-  }
-
-  async _takePhoto() {
-    const pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
-    });
-
-    function guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+  componentDidUpdate() {
+    if (!this.props.spinning) {
+      this.updateDisabled();
     }
-
-    const photoRef = firebase.storage().ref().child(`images/${guid()}`);
-    this.setState({ image: pickerResult.uri });
   }
 
   updateDisabled() {
@@ -75,15 +51,28 @@ class ProfileForm extends React.Component {
     const disabled = (
       state.firstName.length < 1 ||
       state.lastInitial.length < 1 ||
+      props.imageURL.length < 1 ||
       invalid || (
         state.firstName === props.firstName &&
         state.lastInitial === props.lastInitial &&
+        state.imageURL === props.imageURL &&
         same
       )
     );
     if (this.state.disabled !== disabled) {
       this.setState({ disabled });
     }
+  }
+
+  async _takePhoto() {
+    const pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      base64: true,
+      exif: true,
+    });
+
+    this.props.uploadImage(pickerResult.base64);
   }
 
   _updateState(newState) {
@@ -93,14 +82,15 @@ class ProfileForm extends React.Component {
   }
 
   _submit() {
-    const { firstName, lastInitial } = this.state;
-    this.props.onSubmit(firstName, lastInitial);
+    this.setState({ disabled: true }, () => {
+      const { firstName, lastInitial } = this.state;
+      this.props.onSubmit(firstName, lastInitial, this.props.imageURL);
+    });
   }
 
   render() {
-    const { image } = this.state;
     let imageJSX = null;
-    if (image === null) {
+    if (this.props.imageURL === '') {
       imageJSX = (
         <TouchableOpacity
           style={styles.studentImage}
@@ -112,7 +102,7 @@ class ProfileForm extends React.Component {
         </TouchableOpacity>
       );
     } else {
-      imageJSX = <Image style={styles.studentImage} source={{ uri: image }} />;
+      imageJSX = <Image style={styles.studentImage} source={{ uri: this.props.imageURL }} />;
     }
 
     let buttonContents = null;
@@ -168,9 +158,11 @@ class ProfileForm extends React.Component {
 ProfileForm.propTypes = {
   firstName: PropTypes.string,
   lastInitial: PropTypes.string,
+  imageURL: PropTypes.string,
   isDisabled: PropTypes.func,
   submitButtonText: PropTypes.string,
   onSubmit: PropTypes.func,
+  uploadImage: PropTypes.func,
   spinning: PropTypes.bool,
   children: PropTypes.node,
 };
@@ -178,11 +170,21 @@ ProfileForm.propTypes = {
 ProfileForm.defaultProps = {
   firstName: '',
   lastInitial: '',
+  imageURL: '',
   isDisabled: () => ({ invalid: false, same: true }),
   submitButtonText: 'Done',
   onSubmit: () => {},
+  uploadImage: () => {},
   spinning: false,
   children: null,
 };
 
-export default ProfileForm;
+const mapStateToProps = state => ({
+  imageURL: state.image.url,
+});
+
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators(ImageActions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(ProfileForm);

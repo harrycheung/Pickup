@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, View, ViewPropTypes } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -62,7 +62,7 @@ class MessageView extends React.Component {
 }
 
 MessageView.propTypes = {
-  style: View.propTypes.style,
+  style: ViewPropTypes.style,
   message: PropTypes.string,
   duration: PropTypes.number,
   clearMessage: PropTypes.func.isRequired,

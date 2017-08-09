@@ -8,6 +8,7 @@ const initialState = {
   uid: '',
   firstName: '',
   lastInitial: '',
+  image: '',
   name: '',
   admin: false,
 };
@@ -19,6 +20,7 @@ export default (state: Object = initialState, action: Object) => {
         uid: action.uid,
         firstName: action.firstName,
         lastInitial: action.lastInitial,
+        image: action.image || '',
         name: `${action.firstName} ${action.lastInitial}`,
         admin: action.admin,
       };
@@ -29,6 +31,7 @@ export default (state: Object = initialState, action: Object) => {
         ...state,
         firstName: action.firstName,
         lastInitial: action.lastInitial,
+        image: action.image,
       };
 
     case AuthTypes.LOGOUT:
