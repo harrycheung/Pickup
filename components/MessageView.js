@@ -7,21 +7,24 @@ import { Animated, StyleSheet, Text, View, ViewPropTypes } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { gstyles } from '../config/styles';
 import { Actions as MessageActions } from '../actions/Message';
 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 20,
+    top: 0,
     left: 0,
     right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dialog: {
     borderRadius: 5,
     padding: 10,
     backgroundColor: 'darkgray',
     alignItems: 'center',
-  },
-  message: {
-    color: 'white',
   },
 });
 
@@ -31,31 +34,48 @@ class MessageView extends React.Component {
     message: '',
   }
 
+  _showMessage(message) {
+    this.setState({ message }, () => {
+      this.state.fadeAnimationValue.setValue(1);
+      Animated.timing(
+        this.state.fadeAnimationValue,
+        {
+          toValue: 0,
+          duration: this.props.duration,
+        },
+      ).start();
+    });
+
+    this.props.clearMessage();
+  }
+
+  componentWillMount() {
+    // Because this component could get unmounted
+    if (this.props.message !== '') {
+      this._showMessage(this.props.message);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.message !== '') {
-      this.setState({ message: nextProps.message }, () => {
-        this.state.fadeAnimationValue.setValue(1);
-        Animated.timing(
-          this.state.fadeAnimationValue,
-          {
-            toValue: 0,
-            duration: this.props.duration,
-          },
-        ).start();
-      });
-      this.props.clearMessage();
+      this._showMessage(nextProps.message);
     }
   }
 
   render() {
     return (
       <View style={this.props.style}>
-        <Animated.View style={[styles.container, { opacity: this.state.fadeAnimationValue }]}>
-          <Text style={styles.message}>
-            {this.state.message}
-          </Text>
-        </Animated.View>
         {this.props.children}
+        <Animated.View
+          style={[styles.container, { opacity: this.state.fadeAnimationValue }]}
+          pointerEvents="none"
+        >
+          <View style={styles.dialog}>
+            <Text style={[{ color: 'white' }, gstyles.font18]}>
+              {this.state.message}
+            </Text>
+          </View>
+        </Animated.View>
       </View>
     );
   }

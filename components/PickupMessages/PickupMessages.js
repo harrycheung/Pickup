@@ -21,18 +21,14 @@ class PickupMessages extends React.Component {
     super(props);
 
     this.state = {
-      messages: [],
       message: '',
-      state: '',
     };
 
     this._postMessage = this._postMessage.bind(this);
   }
 
   state: {
-    messages: Object[],
     message: string,
-    state: string,
   };
 
   shouldComponentUpdate(nextProps) {

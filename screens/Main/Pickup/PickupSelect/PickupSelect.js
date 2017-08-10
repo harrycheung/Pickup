@@ -13,6 +13,7 @@ import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
+import MessageView from '../../../../components/MessageView';
 
 class PickupSelect extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -124,7 +125,7 @@ class PickupSelect extends React.Component {
     }
 
     return (
-      <View style={[gstyles.flex1, gstyles.flexStart]}>
+      <MessageView style={[gstyles.flex1, gstyles.flexStart]}>
         <ScrollView contentContainerStyle={[gstyles.flex1, gstyles.marginH15, styles.students]}>
           {studentViews}
         </ScrollView>
@@ -133,7 +134,7 @@ class PickupSelect extends React.Component {
           onPress={this._pickup}
           content="Pickup"
         />
-      </View>
+      </MessageView>
     );
   }
 }

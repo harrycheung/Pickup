@@ -138,14 +138,28 @@ function* listenPickup() {
     try {
       const { pickup } = yield take(Types.LISTEN);
 
+      const back = function* (message) {
+        yield put(NavActions.back());
+        yield put(MessageActions.showMessage(message, 3000));
+        yield put(PickupActions.clearPickup());
+      };
+
       const pickupCancelChannel = firebaseChannel(`/pickups/${pickup.key}`, 'value');
       const pickupCancelListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);
           if (snapshot.val() === null) {
-            yield put(NavActions.back());
-            yield put(MessageActions.showMessage('Pickup canceled', 3000));
-            yield put(PickupActions.clearPickup());
+            yield call(back, 'Pickup canceled');
+          }
+        }
+      };
+
+      const pickupCompleteChannel = firebaseChannel(`/pickups/${pickup.key}/completedAt`, 'value');
+      const pickupCompleteListener = function* (channel) {
+        while (true) {
+          const snapshot = yield take(channel);
+          if (snapshot.val()) {
+            yield call(back, 'Pickup completed');
           }
         }
       };
@@ -173,6 +187,7 @@ function* listenPickup() {
       };
 
       yield fork(pickupCancelListener, pickupCancelChannel);
+      yield fork(pickupCompleteListener, pickupCompleteChannel);
       yield fork(pickupStudentsListener, pickupStudentsChannel);
       yield fork(pickupMessagesListener, pickupMessagesChannel);
 

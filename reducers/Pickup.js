@@ -19,10 +19,16 @@ export default (state: Object = initialState, action: Object) => {
       return initialState;
 
     case Types.UPDATE_MESSAGES:
-      return { pickup: { ...state.pickup, messages: action.messages } };
+      if (state.pickup) {
+        return { pickup: { ...state.pickup, messages: action.messages } };
+      }
+      return initialState;
 
     case Types.UPDATE_STUDENTS:
-      return { pickup: { ...state.pickup, students: action.students } };
+      if (state.pickup) {
+        return { pickup: { ...state.pickup, students: action.students } };
+      }
+      return initialState;
 
     default:
       return state;

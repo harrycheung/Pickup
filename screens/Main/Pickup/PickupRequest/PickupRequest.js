@@ -21,9 +21,18 @@ class PickupRequest extends React.Component {
     this.props.listenPickup(this.props.pickup);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.pickup !== null;
+  }
+
   componentWillUnmount() {
     this.props.unlistenPickup();
-    this.props.cancelPickup(this.props.pickup);
+
+    // In the event the requestor presses 'Cancel', then the pickup should exist.
+    // In the event the escort completes the pickup, the pickup will be cleared.
+    if (this.props.pickup) {
+      this.props.cancelPickup(this.props.pickup);
+    }
   }
 
   render() {
@@ -41,11 +50,15 @@ class PickupRequest extends React.Component {
 
 PickupRequest.propTypes = {
   user: PropTypes.object.isRequired,
-  pickup: PropTypes.object.isRequired,
+  pickup: PropTypes.object,
   cancelPickup: PropTypes.func.isRequired,
   postMessage: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
+};
+
+PickupRequest.defaultProps = {
+  pickup: null,
 };
 
 const mapStateToProps = state => ({

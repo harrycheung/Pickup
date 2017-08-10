@@ -11,6 +11,7 @@ import { Actions as StudentActions, Types as StudentTypes } from '../actions/Stu
 import { Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
+import { Actions as MessageActions } from '../actions/Message';
 
 const requestLoginAsync = (phoneNumber) => {
   const body = JSON.stringify({ phoneNumber });
@@ -94,6 +95,7 @@ function* login() {
           yield take(StudentTypes.LOADED);
           const pickup = yield call(getActivePickup, state.auth.user.uid);
           yield put(PickupActions.loadPickup(pickup));
+          yield put(MessageActions.clearMessage());
           yield put(NavActions.resetNavigation('Main'));
         }
       } finally {

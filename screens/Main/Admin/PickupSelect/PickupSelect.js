@@ -31,6 +31,7 @@ class PickupSelect extends React.Component {
       pickups: [],
       dataSource: ds.cloneWithRows([]),
     };
+
     this._renderRow = this._renderRow.bind(this);
   }
 
