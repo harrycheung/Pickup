@@ -218,22 +218,32 @@ function* updateStudent(type, action) {
     const { pickup, user, student } = action;
 
     switch (type) {
-      case 'escort':
+      case 'escort': {
         yield call(updatePickupStudent, pickup.key, student.key, {
           escort: { uid: user.uid, name: user.name, image: user.image },
         });
         break;
-
-      case 'cancel':
+      }
+      case 'cancel': {
         yield call(updatePickupStudent, pickup.key, student.key, {
           escort: { uid: '', name: '', image: '' },
         });
         break;
-
-      case 'release':
+      }
+      case 'release': {
         yield call(updatePickupStudent, pickup.key, student.key, { released: true });
-        yield call(completePickup, pickup.key);
+        let completed = true;
+        Object.keys(pickup.students).forEach((key) => {
+          const otherStudent = pickup.students[key];
+          if (student.key !== otherStudent.key && !otherStudent.released) {
+            completed = false;
+          }
+        });
+        if (completed) {
+          yield call(completePickup, pickup.key);
+        }
         break;
+      }
 
       default:
     }
