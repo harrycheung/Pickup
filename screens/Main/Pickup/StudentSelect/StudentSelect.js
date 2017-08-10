@@ -15,7 +15,7 @@ import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import MessageView from '../../../../components/MessageView';
 
-class PickupSelect extends React.Component {
+class StudentSelect extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Synapse Pickup',
@@ -139,7 +139,7 @@ class PickupSelect extends React.Component {
   }
 }
 
-PickupSelect.propTypes = {
+StudentSelect.propTypes = {
   user: PropTypes.object.isRequired,
   students: PropTypes.array.isRequired,
   createPickup: PropTypes.func.isRequired,
@@ -160,4 +160,4 @@ const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(NavActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PickupSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(StudentSelect);

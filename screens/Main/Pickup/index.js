@@ -3,12 +3,12 @@
 
 import { StackNavigator } from 'react-navigation';
 
-import SelectScreen from './PickupSelect';
+import SelectScreen from './StudentSelect';
 import RequestScreen from './PickupRequest';
 
 export default StackNavigator({
-  PickupSelect: { screen: SelectScreen },
+  StudentSelect: { screen: SelectScreen },
   PickupRequest: { screen: RequestScreen },
 }, {
-  initialRouteName: 'PickupSelect',
+  initialRouteName: 'StudentSelect',
 });
