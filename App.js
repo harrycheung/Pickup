@@ -14,7 +14,7 @@ import rootSaga from './sagas';
 const logger = ({ getState }) => {
   return (next) => (action) => {
     // Call the next dispatch method in the middleware chain.
-    console.log('DISPATCH:', action);
+    console.log('DISPATCH:', action.type);
     let returnValue = next(action);
     //console.log('STATE:', getState());
 

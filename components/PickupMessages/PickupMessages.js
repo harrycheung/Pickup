@@ -59,9 +59,18 @@ class PickupMessages extends React.Component {
         const studentsJSX = [];
         Object.keys(this.props.pickup.students).forEach((key) => {
           const student = this.props.pickup.students[key];
+          let studentStyle = {};
+          if (student.released) {
+            studentStyle = styles.released;
+          } else if (student.escort.uid !== '') {
+            studentStyle = styles.escort;
+          }
           studentsJSX.push((
             <View key={key} style={styles.student}>
-              <Image style={styles.studentImage} source={{ uri: student.image }} />
+              <Image
+                style={[gstyles.profilePic50, studentStyle]}
+                source={{ uri: student.image }}
+              />
               <Text style={styles.studentName}>
                 {student.name}
               </Text>

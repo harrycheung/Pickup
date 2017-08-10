@@ -14,13 +14,14 @@ export default StyleSheet.create({
     borderWidth: 2,
   },
   unescort: {
-    borderColor: 'red',
-  },
-  escort: {
     borderColor: 'yellow',
   },
-  released: {
+  escort: {
     borderColor: 'green',
+  },
+  released: {
+    opacity: 0.3,
+    borderWidth: 0,
   },
   separator: {
     height: 1,

@@ -15,13 +15,15 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  studentImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 15,
+  released: {
+    opacity: 0.3,
+  },
+  escort: {
+    borderWidth: 3,
+    borderColor: 'green',
   },
   studentName: {
+    marginLeft: 15,
     fontSize: 22,
     color: 'white',
   },
