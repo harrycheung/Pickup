@@ -39,6 +39,9 @@ export const gstyles = StyleSheet.create({
   font18: {
     fontSize: 18,
   },
+  font22: {
+    fontSize: 22,
+  },
   marginTop10: {
     marginTop: 10,
   },
@@ -82,5 +85,11 @@ export const gstyles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
+  },
+  profilePic200: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: '#bdc3c7',
   },
 });

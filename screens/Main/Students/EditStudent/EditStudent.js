@@ -8,8 +8,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { colors } from '../../../../config/styles';
+import { colors, gstyles } from '../../../../config/styles';
 import StudentForm from '../../../../components/StudentForm';
+import MessageView from '../../../../components/MessageView';
 import { Actions as StudentActions } from '../../../../actions/Student';
 import { Actions as ImageActions } from '../../../../actions/Image';
 
@@ -34,14 +35,31 @@ class EditStudent extends React.Component {
     };
   };
 
+  static loadStudent = (students, key) => (
+    students.find(element => (
+      element.key === key
+    ))
+  );
+
   constructor(props) {
     super(props);
+
+    const { key } = props.navigation.state.params.student;
+    this.state = {
+      key,
+      student: EditStudent.loadStudent(props.students, key),
+    };
 
     this._edit = this._edit.bind(this);
   }
 
+  state: {
+    key: string,
+    student: Object,
+  };
+
   componentWillMount() {
-    this.props.setImage(this.props.navigation.state.params.student.image);
+    this.props.setImage(this.state.student.image);
   }
 
   componentDidMount() {
@@ -50,9 +68,16 @@ class EditStudent extends React.Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log('EditStudent.componentWillReceiveProps', nextProps.students);
+    this.setState({
+      student: EditStudent.loadStudent(nextProps.students, this.state.key),
+    });
+  }
+
   _edit(firstName, lastInitial, imageURL, grade, relationship) {
     this.props.editStudent({
-      key: this.props.navigation.state.params.student.key,
+      ...this.state.student,
       firstName,
       lastInitial,
       image: imageURL,
@@ -63,24 +88,43 @@ class EditStudent extends React.Component {
 
   render() {
     return (
-      <StudentForm
-        {...this.props.navigation.state.params.student}
-        onSubmit={this._edit}
-      />
+      <MessageView style={gstyles.flex1}>
+        <StudentForm
+          uid={this.props.uid}
+          mode="edit"
+          {...this.state.student}
+          onSubmit={this._edit}
+          addRelationship={(uid, relationship) =>
+            this.props.addRelationship(this.state.key, uid, relationship)
+          }
+          removeRelationship={uid =>
+            this.props.removeRelationship(this.state.key, uid)
+          }
+        />
+      </MessageView>
     );
   }
 }
 
 EditStudent.propTypes = {
+  uid: PropTypes.string.isRequired,
+  students: PropTypes.array.isRequired,
   navigation: PropTypes.object.isRequired,
   editStudent: PropTypes.func.isRequired,
   deleteStudent: PropTypes.func.isRequired,
   setImage: PropTypes.func.isRequired,
+  addRelationship: PropTypes.func.isRequired,
+  removeRelationship: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  uid: state.user.uid,
+  students: state.student.students,
+});
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(StudentActions, dispatch),
   ...bindActionCreators(ImageActions, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(EditStudent);
+export default connect(mapStateToProps, mapDispatchToProps)(EditStudent);

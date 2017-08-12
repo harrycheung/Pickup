@@ -1,11 +1,11 @@
 
 // @flow
 
-export const merge = (a: Object, b: Object) => Object.assign({}, a, b);
-
-export const fullName = (user: {firstName: string, lastInitial: string}) => (
-  `${user.firstName} ${user.lastInitial}`
+export const validPhoneNumber = (phoneNumber: string) => (
+  phoneNumber.length === 10 && !isNaN(phoneNumber) && Number(phoneNumber) < 10000000000
 );
+
+export const merge = (a: Object, b: Object) => Object.assign({}, a, b);
 
 export const time = (timestamp: number) => (
   (new Date(timestamp))

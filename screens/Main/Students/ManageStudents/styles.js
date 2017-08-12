@@ -8,14 +8,10 @@ export default StyleSheet.create({
   student: {
     height: 64,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
   },
-  studentImage: {
-    marginHorizontal: 15,
-  },
-  studentName: {
-    fontSize: 22,
+  studentInfo: {
+    marginLeft: 10,
+    flexDirection: 'column',
   },
   separator: {
     height: 1,

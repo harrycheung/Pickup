@@ -3,14 +3,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Button, Image, Keyboard, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Button, Image, Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImagePicker } from 'expo';
 // import RNFS from 'react-native-fs';
 
-import styles from './styles';
 import { colors, gstyles } from '../../config/styles';
 import LinedTextInput from '../LinedTextInput';
 import CustomButton from '../Button';
@@ -93,7 +92,7 @@ class ProfileForm extends React.Component {
     if (this.props.imageURL === '') {
       imageJSX = (
         <TouchableOpacity
-          style={styles.studentImage}
+          style={gstyles.profilePic200}
           onPress={this._takePhoto}
         >
           <View style={[gstyles.flex1, gstyles.flexCenter]}>
@@ -102,7 +101,7 @@ class ProfileForm extends React.Component {
         </TouchableOpacity>
       );
     } else {
-      imageJSX = <Image style={styles.studentImage} source={{ uri: this.props.imageURL }} />;
+      imageJSX = <Image style={gstyles.profilePic200} source={{ uri: this.props.imageURL }} />;
     }
 
     let buttonContents = null;
@@ -116,14 +115,15 @@ class ProfileForm extends React.Component {
 
     return (
       <View style={gstyles.flex1}>
-        <View style={[gstyles.flex1, styles.form]}>
-          {imageJSX}
-          <Button
-            title="Change photo"
-            onPress={this._takePhoto}
-          />
+        <View style={[gstyles.flex1, gstyles.marginH15, gstyles.marginTop10]}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={[gstyles.flex1, gstyles.flexCenter]}>
+              {imageJSX}
+              <Button title="Change photo" onPress={this._takePhoto} />
+            </View>
+          </TouchableWithoutFeedback>
           <LinedTextInput
-            style={[styles.input, styles.margin]}
+            style={gstyles.textInput}
             placeholder="First Name"
             autoCapitalize="words"
             clearButtonMode="while-editing"
@@ -133,7 +133,7 @@ class ProfileForm extends React.Component {
             onSubmitEditing={Keyboard.dismiss}
           />
           <LinedTextInput
-            style={[styles.input, styles.margin]}
+            style={gstyles.textInput}
             placeholder="Last Initial"
             maxLength={1}
             autoCapitalize="words"

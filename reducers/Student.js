@@ -32,6 +32,24 @@ export default (state: Object = initialState, action: Object) => {
         students: state.students.filter(student => (student.key !== action.studentKey)),
       };
 
+    case Types.UPDATE_RELATIONSHIP: {
+      return {
+        students: state.students.map((student) => {
+          if (action.studentKey === student.key) {
+            const updatedStudent = Object.assign({}, student);
+            if (action.relationship) {
+              updatedStudent.relationships[action.uid] = action.relationship;
+            } else {
+              delete updatedStudent.relationships[action.uid];
+            }
+            updatedStudent.relationships = Object.assign({}, updatedStudent.relationships);
+            return updatedStudent;
+          }
+          return student;
+        })
+      };
+    }
+
     case AuthTypes.LOGOUT:
       return { students: [] };
 

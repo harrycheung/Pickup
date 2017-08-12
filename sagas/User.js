@@ -38,7 +38,7 @@ function* watchLoadUser() {
 }
 
 const updateUserAsync = (uid, firstName, lastInitial, image) => (
-  FBref(`/users/${uid}`).update({ firstName, lastInitial, image })
+  FBref(`/users/${uid}`).update({ firstName, lastInitial, name: `${firstName} ${lastInitial}`, image })
 );
 
 function* updateUserWithNav(action, navAction) {

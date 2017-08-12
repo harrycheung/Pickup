@@ -2,8 +2,6 @@
 // @flow
 
 export const Types = {
-  LOAD: 'Student/LOAD',
-  LOADED: 'Student/LOADED',
   SET: 'Student/SET',
   ADD_STUDENT: 'Student/ADD_STUDENT',
   ADD_STUDENT_SUCCEEDED: 'Student/ADD_STUDENT_SUCCEEDED',
@@ -11,11 +9,14 @@ export const Types = {
   EDIT_STUDENT_SUCCEEDED: 'Student/EDIT_STUDENT_SUCCEEDED',
   DELETE_STUDENT: 'Student/DELETE_STUDENT',
   DELETE_STUDENT_SUCCEEDED: 'Student/DELETE_STUDENT_SUCCEEDED',
+  ADD_RELATIONSHIP: 'Student/ADD_RELATIONSHIP',
+  REMOVE_RELATIONSHIP: 'Student/REMOVE_RELATIONSHIP',
+  UPDATE_RELATIONSHIP: 'Student/UPDATE_RELATIONSHIP',
+  LISTEN_STUDENTS: 'Student/LISTEN_STUDENTS',
+  UNLISTEN_STUDENTS: 'Student/UNLISTEN_STUDENTS',
 };
 
 export const Actions = {
-  loadStudents: (uid: string) => ({ type: Types.LOAD, uid }),
-  loadedStudents: () => ({ type: Types.LOADED }),
   setStudents: (students: Object[]) => ({ type: Types.SET, students }),
   addStudent: (firstName: string, lastInitial: string, imageURL: string, grade: string, relationship: string) => ({
     type: Types.ADD_STUDENT, firstName, lastInitial, image: imageURL, grade, relationship,
@@ -35,4 +36,15 @@ export const Actions = {
   deleteStudentSucceeded: (studentKey: string) => ({
     type: Types.DELETE_STUDENT_SUCCEEDED, studentKey,
   }),
+  addRelationship: (studentKey: string, uid: string, relationship: string) => ({
+    type: Types.ADD_RELATIONSHIP, studentKey, uid, relationship,
+  }),
+  removeRelationship: (studentKey: string, uid: string) => ({
+    type: Types.REMOVE_RELATIONSHIP, studentKey, uid,
+  }),
+  updateRelationship: (studentKey: string, uid: string, relationship: Object) => ({
+    type: Types.UPDATE_RELATIONSHIP, studentKey, uid, relationship,
+  }),
+  listenStudents: (uid: string) => ({ type: Types.LISTEN_STUDENTS, uid }),
+  unlistenStudents: () => ({ type: Types.UNLISTEN_STUDENTS }),
 };

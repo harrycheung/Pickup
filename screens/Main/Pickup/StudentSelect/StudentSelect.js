@@ -13,6 +13,7 @@ import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
+import { Actions as StudentActions } from '../../../../actions/Student';
 import MessageView from '../../../../components/MessageView';
 
 class StudentSelect extends React.Component {
@@ -45,8 +46,16 @@ class StudentSelect extends React.Component {
     showExistingPickup: boolean,
   }
 
+  componentWillMount() {
+    this.props.listenStudents(this.props.user.uid);
+  }
+
   componentWillReceiveProps(nextProps) {
     this.setState({ showExistingPickup: nextProps.pickup !== null });
+  }
+
+  componentWillUnmount() {
+    this.props.unlistenStudents();
   }
 
   _selectStudent(selectedStudent) {
@@ -147,6 +156,8 @@ StudentSelect.propTypes = {
   navigate: PropTypes.func.isRequired,
   resumePickup: PropTypes.func.isRequired,
   cancelPickup: PropTypes.func.isRequired,
+  listenStudents: PropTypes.func.isRequired,
+  unlistenStudents: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -158,6 +169,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
+  ...bindActionCreators(StudentActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentSelect);

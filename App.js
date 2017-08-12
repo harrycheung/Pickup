@@ -16,7 +16,7 @@ const logger = ({ getState }) => {
     // Call the next dispatch method in the middleware chain.
     console.log('DISPATCH:', action.type);
     let returnValue = next(action);
-    //console.log('STATE:', getState());
+    // console.log('STATE:', getState());
 
     // This will likely be the action itself, unless
     // a middleware further in chain changed it.

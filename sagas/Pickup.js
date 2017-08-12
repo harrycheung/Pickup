@@ -2,19 +2,18 @@
 // @flow
 
 import { all, call, fork, put, take, takeEvery } from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
 
 import { FBref } from '../helpers/firebase';
+import { firebaseChannel } from './helpers';
 import { Types, Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as MessageActions } from '../actions/Message';
-import { fullName } from '../helpers';
 
 const createPickupAsync = (requestor, students) => {
   const pickupStudents = students.reduce((acc, student) => {
     acc[student.key] = {
       key: student.key,
-      name: fullName(student),
+      name: student.name,
       image: student.image,
       escort: { uid: '', name: '' },
       released: false,
@@ -80,7 +79,7 @@ function* watchCancelPickup() {
   yield takeEvery(Types.CANCEL, cancelPickup);
 }
 
-function* resumePickup(action) {
+function* resumePickup() {
   try {
     yield put(NavActions.navigate('PickupRequest'));
   } catch (error) {
@@ -122,16 +121,6 @@ function* postMessage(action) {
 function* watchPostMessage() {
   yield takeEvery(Types.POST_MESSAGE, postMessage);
 }
-
-const firebaseChannel = (path: string, eventType: string) => (
-  eventChannel((emitter) => {
-    const ref = FBref(path);
-
-    ref.on(eventType, snapshot => emitter(snapshot));
-
-    return () => ref.off();
-  })
-);
 
 function* listenPickup() {
   while (true) {

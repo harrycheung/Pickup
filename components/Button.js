@@ -23,22 +23,34 @@ class Button extends React.Component {
       );
     }
     return (
-      <TouchableOpacity
-        style={[{ height: 44, alignSelf: 'stretch' }, this.props.style]}
-        onPress={this.props.onPress}
-        disabled={this.props.disabled}
-      >
+      <View style={[{ height: 44, alignSelf: 'stretch' }, this.props.style]}>
         <View
-          style={[
-            gstyles.flex1,
-            gstyles.flexCenter,
-            this.props.disabled ? { opacity: 0.3 } : {},
-            { backgroundColor: this.props.backgroundColor },
-          ]}
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: 'white',
+          }}
+        />
+        <TouchableOpacity
+          style={gstyles.flex1}
+          onPress={this.props.onPress}
+          disabled={this.props.disabled}
         >
-          {content}
-        </View>
-      </TouchableOpacity>
+          <View
+            style={[
+              gstyles.flex1,
+              gstyles.flexCenter,
+              this.props.disabled ? { opacity: 0.3 } : {},
+              { backgroundColor: this.props.backgroundColor },
+            ]}
+          >
+            {content}
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   }
 }

@@ -12,6 +12,7 @@ import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import { Actions as NavActions } from '../../../../actions/Navigation';
+import { Actions as StudentActions } from '../../../../actions/Student';
 
 class ManageStudents extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -54,34 +55,57 @@ class ManageStudents extends React.Component {
     dataSource: ListView.DataSource,
   };
 
-  componentWillReceiveProps(props) {
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(props.students),
-    });
+  componentWillMount() {
+    this.props.listenStudents(this.props.uid);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.students !== nextProps.students) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.students),
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.unlistenStudents();
   }
 
   _renderRow(student, sectionID, rowID) {
+    const relationship = student.relationships[this.props.uid];
+    const parent = relationship === 'Parent';
+    let RowElement = View;
+    if (parent) {
+      RowElement = TouchableOpacity;
+    }
+
     return (
-      <TouchableOpacity
+      <RowElement
+        style={[styles.student, gstyles.flexCenter]}
         key={`${sectionID}-${rowID}`}
         onPress={() => this.props.navigate('EditStudent', { student })}
       >
-        <View style={styles.student}>
-          <Image
-            style={[gstyles.profilePic50, styles.studentImage]}
-            source={{ uri: student.image }}
-          />
-          <Text style={styles.studentName}>
+        <Image
+          style={[gstyles.profilePic50]}
+          source={{ uri: student.image }}
+        />
+        <View style={styles.studentInfo}>
+          <Text style={gstyles.font18}>
             {student.firstName} {student.lastInitial} ({student.grade})
           </Text>
+          <Text style={gstyles.font14}>{relationship}</Text>
         </View>
-      </TouchableOpacity>
+        <View style={gstyles.flex1} />
+        {parent &&
+          <Icon name="ios-arrow-forward" size={30} color={colors.buttonBackground} />
+        }
+      </RowElement>
     );
   }
 
   render() {
     return (
-      <View>
+      <View style={[gstyles.marginH15, gstyles.flex1]}>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow}
@@ -94,16 +118,21 @@ class ManageStudents extends React.Component {
 }
 
 ManageStudents.propTypes = {
+  uid: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
   navigate: PropTypes.func.isRequired,
+  listenStudents: PropTypes.func.isRequired,
+  unlistenStudents: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
+  uid: state.user.uid,
   students: state.student.students,
 });
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(NavActions, dispatch),
+  ...bindActionCreators(StudentActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageStudents);

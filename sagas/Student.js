@@ -1,43 +1,50 @@
 
 // @flow
 
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, put, select, take, takeEvery } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
+import { firebaseChannel } from './helpers';
 import { Types, Actions as StudentActions } from '../actions/Student';
 import { Actions as NavActions } from '../actions/Navigation';
+import { Actions as MessageActions } from '../actions/Message';
 
-const loadStudentsAsync = uid => (
-  FBref(`/users/${uid}/students`).once('value').then((snapshot) => {
-    const students = snapshot.val() === null ? {} : snapshot.val();
-    const studentKeys = Object.keys(students);
-    return Promise.all(
-      studentKeys.map(id => (
-        FBref(`/students/${id}`).once('value').then(studentSnapshot => (
-          Object.assign({}, studentSnapshot.val(), {
-            key: id,
-            relationship: students[id],
-          })
-        ))
-      )),
-    );
-  })
+const loadStudentsAsync = relationships => Promise.all(
+  Object.keys(relationships).map(key => (
+    FBref(`/students/${key}`).once('value').then(studentSnapshot => (
+      Object.assign({}, studentSnapshot.val(), {
+        key,
+        relationship: relationships[key],
+      })
+    ))
+  )),
 );
 
-// Don't need spinner
-function* loadStudents(action) {
-  try {
-    const students = yield call(loadStudentsAsync, action.uid);
-    yield put(StudentActions.setStudents(students));
-    yield put(StudentActions.loadedStudents());
-  } catch (error) {
-    console.log('loadStudents failed', error);
-    // Do nothing?
+function* listenStudents() {
+  while (true) {
+    try {
+      const { uid } = yield take(Types.LISTEN_STUDENTS);
+      const studentsChannel = firebaseChannel(FBref(`/users/${uid}/students`), 'value');
+      const studentsListener = function* (channel) {
+        while (true) {
+          const snapshot = yield take(channel);
+          const relationships = snapshot.val() === null ? {} : snapshot.val();
+          const students = yield call(loadStudentsAsync, relationships);
+          yield put(StudentActions.setStudents(students));
+        }
+      };
+
+      yield fork(studentsListener, studentsChannel);
+      yield take(Types.UNLISTEN_STUDENTS);
+      studentsChannel.close();
+    } catch (error) {
+      console.log('listenStudents failed', error);
+    }
   }
 }
 
-function* watchLoadStudents() {
-  yield takeEvery(Types.LOAD, loadStudents);
+function* watchlistenStudents() {
+  yield fork(listenStudents);
 }
 
 const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship) => (
@@ -48,6 +55,7 @@ const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship
     studentUpdate[`students/${studentRef.key}`] = {
       firstName,
       lastInitial,
+      name: `${firstName} ${lastInitial}`,
       image,
       grade,
       relationships,
@@ -92,6 +100,7 @@ const editStudentAsync = (uid, student) => {
   studentUpdate[`students/${key}`] = {
     firstName,
     lastInitial,
+    name: `${firstName} ${lastInitial}`,
     image,
     grade,
     relationships,
@@ -139,11 +148,74 @@ function* watchDeleteStudent() {
   yield takeEvery(Types.DELETE_STUDENT, deleteStudent);
 }
 
+const addRelationshipAsync = (studentKey, uid, relationship) => (
+  FBref(`/users/${uid}`).once('value').then((snapshot) => {
+    const user = snapshot.val();
+
+    if (user === null) {
+      return null;
+    }
+
+    const update = {};
+    update[`/users/${uid}/students/${studentKey}`] = relationship;
+    update[`/students/${studentKey}/relationships/${uid}`] = {
+      name: user.name,
+      role: relationship,
+      image: user.image,
+    };
+    return FBref().update(update).then(() => ({ name: user.name, image: user.image }));
+  })
+);
+
+function* addRelationship(action) {
+  try {
+    const { studentKey, uid, relationship } = action;
+    const result = yield call(addRelationshipAsync, studentKey, uid, relationship);
+    if (result) {
+      yield put(StudentActions.updateRelationship(studentKey, uid, {
+        ...result,
+        role: relationship,
+      }));
+    } else {
+      yield put(MessageActions.showMessage('Phone number has\'t signed up', 3000));
+    }
+  } catch (error) {
+    console.log('addRelationship failed', error);
+  }
+}
+
+function* watchAddRelationship() {
+  yield takeEvery(Types.ADD_RELATIONSHIP, addRelationship);
+}
+
+const removeRelationshipAsync = (studentKey, uid) => {
+  const updates = {};
+  updates[`/students/${studentKey}/relationships/${uid}`] = null;
+  updates[`/users/${uid}/students/${studentKey}`] = null;
+  return FBref().update(updates);
+};
+
+function* removeRelationship(action) {
+  try {
+    const { studentKey, uid } = action;
+    yield call(removeRelationshipAsync, studentKey, uid);
+    yield put(StudentActions.updateRelationship(studentKey, uid, null));
+  } catch (error) {
+    console.log('removeRelationship failed', error);
+  }
+}
+
+function* watchRemoveRelationship() {
+  yield takeEvery(Types.REMOVE_RELATIONSHIP, removeRelationship);
+}
+
 export default function* studentSaga() {
   yield all([
-    watchLoadStudents(),
     watchAddStudent(),
     watchEditStudent(),
     watchDeleteStudent(),
+    watchAddRelationship(),
+    watchlistenStudents(),
+    watchRemoveRelationship(),
   ]);
 }

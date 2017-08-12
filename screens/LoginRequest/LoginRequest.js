@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { colors, gstyles } from '../../config/styles';
+import { validPhoneNumber } from '../../helpers';
 import Button from '../../components/Button';
 import { Actions as AuthActions } from '../../actions/Auth';
 import LinedTextInput from '../../components/LinedTextInput';
@@ -37,7 +38,7 @@ class LoginRequest extends React.Component {
   }
 
   _changeText(phoneNumber) {
-    const disabled = phoneNumber.length !== 10 || isNaN(phoneNumber);
+    const disabled = !validPhoneNumber(phoneNumber);
     this.setState({ disabled, phoneNumber });
   }
 

@@ -91,8 +91,6 @@ function* login() {
         if (state.user.firstName === '') {
           yield put(NavActions.navigate('CreateProfile'));
         } else {
-          yield put(StudentActions.loadStudents(state.auth.user.uid));
-          yield take(StudentTypes.LOADED);
           const pickup = yield call(getActivePickup, state.auth.user.uid);
           yield put(PickupActions.loadPickup(pickup));
           yield put(MessageActions.clearMessage());

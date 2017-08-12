@@ -106,20 +106,17 @@ class PickupMessages extends React.Component {
       default:
     }
 
-    let senderJSX = null;
-    if (sender !== null) {
-      senderJSX = <Image style={styles.senderImage} source={{ uri: sender.image }} />;
-    }
-
-    if (typeof messageJSX === 'string') {
-      messageJSX = <Text style={styles.messageText}>{messageJSX}</Text>;
-    }
-
     return (
       <View key={message.key} style={containerStyle}>
-        {senderJSX}
+        {sender !== null &&
+          <Image style={styles.senderImage} source={{ uri: sender.image }} />
+        }
         <View style={messageStyle}>
-          {messageJSX}
+          {typeof messageJSX === 'string' ?
+            <Text style={styles.messageText}>{messageJSX}</Text>
+            :
+            messageJSX
+          }
           <Text style={styles.timestamp}>
             {time(message.createdAt)}
           </Text>
