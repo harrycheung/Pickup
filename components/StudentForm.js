@@ -100,9 +100,7 @@ class StudentForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('Studentform.componentWillReceiveProps', nextProps.relationships);
     if (this.props.relationships !== nextProps.relationships) {
-      console.log('NEW RELATIONSHIPS');
       this.setState({
         relationshipsDS:
           this.state.relationshipsDS.cloneWithRows(
@@ -297,7 +295,7 @@ class StudentForm extends React.Component {
 }
 
 StudentForm.propTypes = {
-  uid: PropTypes.string.isRequired,
+  uid: PropTypes.string,
   mode: PropTypes.string,
   firstName: PropTypes.string,
   lastInitial: PropTypes.string,
@@ -306,11 +304,12 @@ StudentForm.propTypes = {
   relationships: PropTypes.object,
   submitButtonText: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  addRelationship: PropTypes.func.isRequired,
-  removeRelationship: PropTypes.func.isRequired,
+  addRelationship: PropTypes.func,
+  removeRelationship: PropTypes.func,
 };
 
 StudentForm.defaultProps = {
+  uid: '',
   mode: 'add',
   firstName: '',
   lastInitial: '',
@@ -318,6 +317,8 @@ StudentForm.defaultProps = {
   relationship: 'Parent',
   relationships: {},
   submitButtonText: 'Done',
+  addRelationship: () => {},
+  removeRelationship: () => {},
 };
 
 export default StudentForm;

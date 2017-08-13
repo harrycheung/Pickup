@@ -69,7 +69,6 @@ class EditStudent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('EditStudent.componentWillReceiveProps', nextProps.students);
     this.setState({
       student: EditStudent.loadStudent(nextProps.students, this.state.key),
     });
