@@ -24,7 +24,7 @@ function* listenStudents() {
   while (true) {
     try {
       const { uid } = yield take(Types.LISTEN_STUDENTS);
-      const studentsChannel = firebaseChannel(FBref(`/users/${uid}/students`), 'value');
+      const studentsChannel = firebaseChannel(`/users/${uid}/students`, 'value');
       const studentsListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);

@@ -3,10 +3,17 @@
 
 import { eventChannel } from 'redux-saga';
 
-export const firebaseChannel = (ref: Object, eventType: string) => (
-  eventChannel((emitter) => {
-    ref.on(eventType, snapshot => emitter(snapshot));
+import { FBref } from '../helpers/firebase';
 
-    return () => ref.off();
-  })
-);
+export const firebaseChannel = (ref: Object, eventType: string) => {
+  let channelRef = ref;
+  if (typeof ref === 'string') {
+    channelRef = FBref(ref);
+  }
+
+  return eventChannel((emitter) => {
+    channelRef.on(eventType, snapshot => emitter(snapshot));
+
+    return () => channelRef.off();
+  });
+};
