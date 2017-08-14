@@ -7,11 +7,11 @@ import {
   Keyboard,
   LayoutAnimation,
   View,
-  Dimensions,
   Platform,
   StyleSheet,
   ViewPropTypes,
 } from 'react-native';
+import ReactNativeComponentTree from 'ReactNativeComponentTree';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,26 +35,44 @@ const defaultAnimation = {
 };
 
 class KeyboardAwareView extends React.Component {
+  static findInputs = (props) => {
+    React.Children.map(props.children, (node) => {
+      // const component = node.getWrappedInstance ? node.getWrappedInstance() : node;
+      if (node) {
+        if (node.props) {
+          if (node.props.children) {
+            console.log('go deeper');
+            KeyboardAwareView.findInputs(node.props);
+          }
+          if (node.props.keyboardAwareInput) {
+            console.log('DISPLAY', Object.keys(node.ref));
+          }
+        }
+      }
+    });
+  };
+
   static propTypes = {
-    onToggle: PropTypes.func,
     style: ViewPropTypes.style,
     children: PropTypes.node,
   };
 
   static defaultProps = {
-    onToggle: () => null,
     style: {},
     children: null,
   };
 
-  constructor(props) {
+  constructor(props: Object) {
     super(props);
 
     this.state = {
       offset: 0,
       isKeyboardOpened: false,
     };
-    this._listeners = null;
+
+    this._listeners = [];
+    this._focusedInput = null;
+    this._onFocus = this._onFocus.bind(this);
   }
 
   state: {
@@ -75,7 +93,11 @@ class KeyboardAwareView extends React.Component {
     this._listeners.forEach(listener => listener.remove());
   }
 
-  updateOffset(event) {
+  _listeners = [];
+  _focusedInput = null;
+
+  updateOffset(event: Object) {
+    console.log('updateOffset');
     if (!event.endCoordinates) {
       return;
     }
@@ -91,18 +113,28 @@ class KeyboardAwareView extends React.Component {
     LayoutAnimation.configureNext(animationConfig);
 
     // get updated on rotation
-    const screenHeight = Dimensions.get('window').height;
+    // const screenHeight = Dimensions.get('window').height;
     // when external physical keyboard is connected
     // event.endCoordinates.height still equals virtual keyboard height
     // however only the keyboard toolbar is showing if there should be one
-    const offset = -(screenHeight - event.endCoordinates.screenY);
-    this.setState({
-      offset,
-      isKeyboardOpened: true,
-    }, this.props.onToggle(true, offset));
+    // const offset = -(screenHeight - event.endCoordinates.screenY);
+    // this.setState({
+    //   offset,
+    //   isKeyboardOpened: true,
+    // }, this.props.onToggle(true, offset));
+
+    if (this._focusedInput) {
+      this._focusedInput.measure((x, y, w, h, px, py) => {
+        const offset = this.state.offset - (py - ((event.endCoordinates.screenY - h) / 2));
+        this.setState({
+          offset,
+          isKeyboardOpened: true,
+        });
+      });
+    }
   }
 
-  resetOffset(event) {
+  resetOffset(event: Object) {
     let animationConfig = defaultAnimation;
     if (Platform.OS === 'ios') {
       animationConfig = LayoutAnimation.create(
@@ -116,13 +148,29 @@ class KeyboardAwareView extends React.Component {
     this.setState({
       offset: 0,
       isKeyboardOpened: false,
-    }, this.props.onToggle(false, 0));
+    });
+  }
+
+  _onFocus(event) {
+    console.log('onFocus');
+    this._focusedInput = ReactNativeComponentTree.getInstanceFromNode(event.currentTarget);
+  }
+
+  renderChildren() {
+    return React.Children.map(this.props.children, (child) => {
+      if (child.props.keyboardAwareInput) {
+        return React.cloneElement(child, {
+          onFocus: this._onFocus,
+        });
+      }
+      return child;
+    });
   }
 
   render() {
     return (
       <View style={[styles.container, { top: this.state.offset }, this.props.style]}>
-        {this.props.children}
+        {this.renderChildren()}
       </View>
     );
   }
