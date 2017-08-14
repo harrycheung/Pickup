@@ -12,6 +12,7 @@ import { ImagePicker } from 'expo';
 
 import { colors, gstyles } from '../../config/styles';
 import LinedTextInput from '../LinedTextInput';
+import KeyboardAwareView from '../KeyboardAwareView';
 import CustomButton from '../Button';
 import { Actions as ImageActions } from '../../actions/Image';
 
@@ -35,7 +36,7 @@ class ProfileForm extends React.Component {
     disabled: boolean,
     firstName: string,
     lastInitial: string,
-    image: string,
+    imageURL: string,
   };
 
   componentDidUpdate() {
@@ -101,7 +102,12 @@ class ProfileForm extends React.Component {
         </TouchableOpacity>
       );
     } else {
-      imageJSX = <Image style={gstyles.profilePic200} source={{ uri: this.props.imageURL }} />;
+      imageJSX = (
+        <Image
+          style={[gstyles.profilePic200, { backgroundColor: 'transparent' }]}
+          source={{ uri: this.props.imageURL }}
+        />
+      );
     }
 
     let buttonContents = null;
@@ -115,15 +121,17 @@ class ProfileForm extends React.Component {
 
     return (
       <View style={gstyles.flex1}>
-        <View style={[gstyles.flex1, gstyles.marginH15, gstyles.marginTop10]}>
+        <KeyboardAwareView style={[gstyles.flex1, gstyles.marginH15, gstyles.marginTop10]}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <View style={gstyles.flexCenter}>
               {imageJSX}
-              <Button title="Change photo" onPress={this._takePhoto} />
+              <View style={gstyles.marginTop10}>
+                <Button title="Change photo" onPress={this._takePhoto} />
+              </View>
             </View>
           </TouchableWithoutFeedback>
           <LinedTextInput
-            style={gstyles.textInput}
+            style={[gstyles.textInput, gstyles.font18]}
             placeholder="First Name"
             autoCapitalize="words"
             clearButtonMode="while-editing"
@@ -131,9 +139,10 @@ class ProfileForm extends React.Component {
             onChangeText={text => this._updateState({ firstName: text })}
             defaultValue={this.state.firstName}
             onSubmitEditing={Keyboard.dismiss}
+            keyboardAwareInput
           />
           <LinedTextInput
-            style={gstyles.textInput}
+            style={[gstyles.textInput, gstyles.font18]}
             placeholder="Last Initial"
             maxLength={1}
             autoCapitalize="words"
@@ -142,9 +151,10 @@ class ProfileForm extends React.Component {
             onChangeText={text => this._updateState({ lastInitial: text })}
             defaultValue={this.state.lastInitial}
             onSubmitEditing={Keyboard.dismiss}
+            keyboardAwareInput
           />
           {this.props.children}
-        </View>
+        </KeyboardAwareView>
         <CustomButton
           onPress={this._submit}
           disabled={this.state.disabled}

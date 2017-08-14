@@ -97,7 +97,6 @@ class KeyboardAwareView extends React.Component {
   _focusedInput = null;
 
   updateOffset(event: Object) {
-    console.log('updateOffset');
     if (!event.endCoordinates) {
       return;
     }
@@ -152,19 +151,20 @@ class KeyboardAwareView extends React.Component {
   }
 
   _onFocus(event) {
-    console.log('onFocus');
     this._focusedInput = ReactNativeComponentTree.getInstanceFromNode(event.currentTarget);
   }
 
   renderChildren() {
-    return React.Children.map(this.props.children, (child) => {
-      if (child.props.keyboardAwareInput) {
-        return React.cloneElement(child, {
-          onFocus: this._onFocus,
-        });
-      }
-      return child;
-    });
+    if (this.props.children) {
+      return React.Children.map(this.props.children, (child) => {
+        if (child && child.props && child.props.keyboardAwareInput) {
+          return React.cloneElement(child, {
+            onFocus: this._onFocus,
+          });
+        }
+        return child;
+      });
+    }
   }
 
   render() {

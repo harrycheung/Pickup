@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -12,6 +12,7 @@ import { validPhoneNumber } from '../../helpers';
 import Button from '../../components/Button';
 import { Actions as AuthActions } from '../../actions/Auth';
 import LinedTextInput from '../../components/LinedTextInput';
+import KeyboardAwareView from '../../components/KeyboardAwareView';
 
 class LoginRequest extends React.Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class LoginRequest extends React.Component {
   }
 
   _login() {
+    Keyboard.dismiss();
     this.props.requestLogin(this.state.phoneNumber);
     this.setState({ requested: true });
   }
@@ -60,16 +62,20 @@ class LoginRequest extends React.Component {
     }
 
     return (
-      <View style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}>
-        <Text>Enter your phone number to request a magic link</Text>
+      <KeyboardAwareView style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}>
+        <Text style={gstyles.font18}>Enter your phone number</Text>
+        <Text style={gstyles.font18}>to get a magic link</Text>
         <LinedTextInput
-          style={gstyles.textInput}
+          style={[gstyles.textInput, gstyles.font18, { alignSelf: 'stretch' }]}
           placeholder="Phone number"
           maxLength={10}
           clearButtonMode="while-editing"
           borderBottomColor={colors.darkGrey}
           keyboardType="phone-pad"
+          selectionColor="black"
           onChangeText={this._changeText}
+          onBlur={Keyboard.dismiss}
+          keyboardAwareInput
         />
         <Button
           onPress={this._login}
@@ -77,7 +83,7 @@ class LoginRequest extends React.Component {
           disabled={this.state.disabled}
           content={buttonContent}
         />
-      </View>
+      </KeyboardAwareView>
     );
   }
 }
