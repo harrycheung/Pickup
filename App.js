@@ -11,6 +11,8 @@ import AppReducers from './reducers';
 import AppWithNavigationState from './screens';
 import rootSaga from './sagas';
 
+console.ignoredYellowBox = ['Setting a timer'];
+
 const logger = ({ getState }) => {
   return (next) => (action) => {
     // Call the next dispatch method in the middleware chain.

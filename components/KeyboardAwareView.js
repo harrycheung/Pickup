@@ -35,23 +35,6 @@ const defaultAnimation = {
 };
 
 class KeyboardAwareView extends React.Component {
-  static findInputs = (props) => {
-    React.Children.map(props.children, (node) => {
-      // const component = node.getWrappedInstance ? node.getWrappedInstance() : node;
-      if (node) {
-        if (node.props) {
-          if (node.props.children) {
-            console.log('go deeper');
-            KeyboardAwareView.findInputs(node.props);
-          }
-          if (node.props.keyboardAwareInput) {
-            console.log('DISPLAY', Object.keys(node.ref));
-          }
-        }
-      }
-    });
-  };
-
   static propTypes = {
     style: ViewPropTypes.style,
     children: PropTypes.node,
@@ -108,19 +91,8 @@ class KeyboardAwareView extends React.Component {
         LayoutAnimation.Types[event.easing],
         LayoutAnimation.Properties.opacity,
       );
+      LayoutAnimation.configureNext(animationConfig);
     }
-    LayoutAnimation.configureNext(animationConfig);
-
-    // get updated on rotation
-    // const screenHeight = Dimensions.get('window').height;
-    // when external physical keyboard is connected
-    // event.endCoordinates.height still equals virtual keyboard height
-    // however only the keyboard toolbar is showing if there should be one
-    // const offset = -(screenHeight - event.endCoordinates.screenY);
-    // this.setState({
-    //   offset,
-    //   isKeyboardOpened: true,
-    // }, this.props.onToggle(true, offset));
 
     if (this._focusedInput) {
       this._focusedInput.measure((x, y, w, h, px, py) => {
@@ -141,8 +113,8 @@ class KeyboardAwareView extends React.Component {
         LayoutAnimation.Types[event.easing],
         LayoutAnimation.Properties.opacity,
       );
+      LayoutAnimation.configureNext(animationConfig);
     }
-    LayoutAnimation.configureNext(animationConfig);
 
     this.setState({
       offset: 0,

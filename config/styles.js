@@ -2,6 +2,7 @@
 // @flow
 
 import { StyleSheet } from 'react-native';
+import Expo from 'expo';
 
 export const colors = {
   background: '#f2f2f2',
@@ -20,6 +21,9 @@ export const colors = {
 };
 
 export const gstyles = StyleSheet.create({
+  statusBarMargin: {
+    marginTop: Expo.Constants.statusBarHeight,
+  },
   flex1: {
     flex: 1,
   },
@@ -91,5 +95,13 @@ export const gstyles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     backgroundColor: '#bdc3c7',
+  },
+  redBorder: {
+    borderWidth: 2,
+    borderColor: 'red',
+  },
+  yellowBorder: {
+    borderWidth: 2,
+    borderColor: 'yellow',
   },
 });

@@ -8,20 +8,16 @@ import { StyleSheet, TextInput, View } from 'react-native';
 const styles = StyleSheet.create({
   view: {
     alignSelf: 'stretch',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ff0000',
+    borderBottomWidth: 1,
+    borderBottomColor: 'darkgray',
   },
 });
 
-class LinedTextInput extends React.Component {
-  render() {
-    return (
-      <View style={[styles.view, { borderBottomColor: this.props.borderBottomColor }]}>
-        <TextInput {...this.props} />
-      </View>
-    );
-  }
-}
+const LinedTextInput = (props: Object) => (
+  <View style={[styles.view, { borderBottomColor: props.borderBottomColor }]}>
+    <TextInput {...props} />
+  </View>
+);
 
 LinedTextInput.propTypes = {
   borderBottomColor: PropTypes.string,
