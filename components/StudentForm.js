@@ -8,6 +8,7 @@ import {
   Image,
   Keyboard,
   ListView,
+  Platform,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -24,12 +25,47 @@ import LinedTextInput from './LinedTextInput';
 import Button from './Button';
 
 const styles = StyleSheet.create({
-  pickerLabel: {
-    alignSelf: 'flex-start',
-  },
   picker: {
     alignSelf: 'stretch',
-    marginTop: 5,
+    ...Platform.select({
+      ios: {
+        marginTop: 5,
+      },
+      android: {
+        flex: 1,
+      },
+    }),
+  },
+  pickerLabel: {
+    ...Platform.select({
+      ios: {
+        alignSelf: 'flex-start',
+      },
+      android: {
+        fontSize: 18,
+        marginTop: 12,
+        marginRight: 20,
+      },
+    })
+  },
+  pickerContainer: {
+    alignSelf: 'stretch',
+    ...Platform.select({
+      ios: {
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+      },
+      android: {
+        flexDirection: 'row',
+        alignItems: 'stretch',
+      },
+    }),
+  },
+  relationshipsHeader: {
+    marginTop: 15,
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   modalContainer: {
     position: 'absolute',
@@ -152,10 +188,10 @@ class StudentForm extends React.Component {
     let content = null;
     if (this.props.mode === 'add') {
       content = (
-        <View style={[gstyles.flex1, { alignSelf: 'stretch' }]}>
-          <Text style={[styles.pickerLabel, gstyles.marginTop10]}>Level</Text>
+        <View style={[styles.pickerContainer, gstyles.marginTop10]}>
+          <Text style={styles.pickerLabel}>Level</Text>
           <Picker
-            style={StyleSheet.flatten(styles.picker)}
+            style={styles.picker}
             values={C.Levels}
             onChange={value => this._updateState({ grade: value })}
             value={this.state.grade}
@@ -170,14 +206,7 @@ class StudentForm extends React.Component {
           </Text>
           {this.props.relationship === 'Parent' &&
             <View style={gstyles.flex1}>
-              <View
-                style={{
-                  marginTop: 15,
-                  alignSelf: 'stretch',
-                  flexDirection: 'row',
-                  alignItems: 'flex-start',
-                }}
-              >
+              <View style={styles.relationshipsHeader}>
                 <Text style={[gstyles.font18, { marginRight: 15 }]}>
                   Other relationships:
                 </Text>
@@ -264,15 +293,17 @@ class StudentForm extends React.Component {
                   keyboardType="phone-pad"
                   onChangeText={this._addRelationshipPhone}
                 />
-                <Text style={[styles.pickerLabel, gstyles.marginTop10]}>
-                  Relationship to Student
-                </Text>
-                <Picker
-                  style={StyleSheet.flatten(styles.picker)}
-                  values={C.Relationships}
-                  onChange={value => this._updateState({ addRelRelationship: value })}
-                  value={this.state.addRelRelationship}
-                />
+                <View style={[styles.pickerContainer, gstyles.marginTop10]}>
+                  <Text style={styles.pickerLabel}>
+                    Relationship to Student
+                  </Text>
+                  <Picker
+                    style={styles.picker}
+                    values={C.Relationships}
+                    onChange={value => this._updateState({ addRelRelationship: value })}
+                    value={this.state.addRelRelationship}
+                  />
+                </View>
                 <Button
                   onPress={() => {
                     this.props.addRelationship(

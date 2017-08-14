@@ -3,28 +3,24 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SegmentedControlIOS } from 'react-native';
+import { SegmentedControlIOS, ViewPropTypes } from 'react-native';
 
-class Picker extends React.Component {
-  render() {
-    return (
-      <SegmentedControlIOS
-        values={this.props.values}
-        style={this.props.style}
-        onChange={(event) => {
-          const index = event.nativeEvent.selectedSegmentIndex;
-          this.props.onChange(this.props.values[index]);
-        }}
-        selectedIndex={this.props.values.indexOf(this.props.value)}
-      />
-    );
-  }
-}
+const Picker = (props: Object) => (
+  <SegmentedControlIOS
+    values={props.values}
+    style={props.style}
+    onChange={(event) => {
+      const index = event.nativeEvent.selectedSegmentIndex;
+      props.onChange(props.values[index]);
+    }}
+    selectedIndex={props.values.indexOf(props.value)}
+  />
+);
 
 Picker.propTypes = {
   values: PropTypes.array.isRequired,
   onChange: PropTypes.func,
-  style: PropTypes.object,
+  style: ViewPropTypes.style,
   value: PropTypes.string,
 };
 
