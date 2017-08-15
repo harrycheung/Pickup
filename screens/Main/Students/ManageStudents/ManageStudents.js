@@ -93,7 +93,9 @@ class ManageStudents extends React.Component {
           <Text style={gstyles.font18}>
             {student.firstName} {student.lastInitial} ({student.grade})
           </Text>
-          <Text style={gstyles.font14}>{relationship}</Text>
+          <Text style={gstyles.font14}>
+            {typeof relationship === 'object' ? relationship.role : relationship }
+          </Text>
         </View>
         <View style={gstyles.flex1} />
         {parent &&
