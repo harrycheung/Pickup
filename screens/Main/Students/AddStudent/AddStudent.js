@@ -3,12 +3,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { gstyles } from '../../../../config/styles';
 import StudentForm from '../../../../components/StudentForm';
+import MessageView from '../../../../components/MessageView';
 import { Actions as StudentActions } from '../../../../actions/Student';
 import { Actions as ImageActions } from '../../../../actions/Image';
 
@@ -23,9 +23,9 @@ class AddStudent extends React.Component {
 
   render() {
     return (
-      <View style={gstyles.flex1}>
+      <MessageView style={[gstyles.flex1, gstyles.statusBarMargin]}>
         <StudentForm onSubmit={this.props.addStudent} />
-      </View>
+      </MessageView>
     );
   }
 }

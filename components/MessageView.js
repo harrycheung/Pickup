@@ -34,21 +34,6 @@ class MessageView extends React.Component {
     message: '',
   }
 
-  _showMessage(message) {
-    this.setState({ message }, () => {
-      this.state.fadeAnimationValue.setValue(1);
-      Animated.timing(
-        this.state.fadeAnimationValue,
-        {
-          toValue: 0,
-          duration: this.props.duration,
-        },
-      ).start();
-    });
-
-    this.props.clearMessage();
-  }
-
   componentWillMount() {
     // Because this component could get unmounted
     if (this.props.message !== '') {
@@ -60,6 +45,22 @@ class MessageView extends React.Component {
     if (nextProps.message !== '') {
       this._showMessage(nextProps.message);
     }
+  }
+
+  _showMessage(message) {
+    this.setState({ message }, () => {
+      this.state.fadeAnimationValue.setValue(1);
+      if (this.props.duration > 0) {
+        Animated.timing(
+          this.state.fadeAnimationValue,
+          {
+            toValue: 0,
+            duration: this.props.duration,
+          },
+        ).start();
+      }
+      this.props.clearMessage();
+    });
   }
 
   render() {

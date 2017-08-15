@@ -3,7 +3,15 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Button, Image, Keyboard, Platform, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Image,
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,6 +23,7 @@ import LinedTextInput from '../LinedTextInput';
 import KeyboardAwareView from '../KeyboardAwareView';
 import CustomButton from '../Button';
 import { Actions as ImageActions } from '../../actions/Image';
+import { Actions as MessageActions } from '../../actions/Message';
 
 class ProfileForm extends React.Component {
   constructor(props: Object) {
@@ -204,6 +213,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(ImageActions, dispatch),
+  ...bindActionCreators(MessageActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(ProfileForm);

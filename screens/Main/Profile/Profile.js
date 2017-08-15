@@ -7,8 +7,10 @@ import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { gstyles } from '../../../config/styles';
 import drawerHeader from '../../../components/DrawerHeader';
 import ProfileForm from '../../../components/ProfileForm';
+import MessageView from '../../../components/MessageView';
 import { Actions as UserActions } from '../../../actions/User';
 import { Actions as ImageActions } from '../../../actions/Image';
 
@@ -26,14 +28,16 @@ class Profile extends React.Component {
 
   render() {
     return (
-      <ProfileForm
-        firstName={this.props.firstName}
-        lastInitial={this.props.lastInitial}
-        submitButtonText={this.props.firstName === '' ? 'Save' : 'Update'}
-        onSubmit={this.props.updateUser}
-        spinning={this.props.spinning}
-        usePadding
-      />
+      <MessageView style={gstyles.flex1}>
+        <ProfileForm
+          firstName={this.props.firstName}
+          lastInitial={this.props.lastInitial}
+          submitButtonText={this.props.firstName === '' ? 'Save' : 'Update'}
+          onSubmit={this.props.updateUser}
+          spinning={this.props.spinning}
+          usePadding
+        />
+      </MessageView>
     );
   }
 }

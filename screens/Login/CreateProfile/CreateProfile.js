@@ -7,7 +7,9 @@ import { Button } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { gstyles } from '../../../config/styles';
 import ProfileForm from '../../../components/ProfileForm';
+import MessageView from '../../../components/MessageView';
 import { Actions as UserActions } from '../../../actions/User';
 import { Actions as AuthActions } from '../../../actions/Auth';
 import { Actions as ImageActions } from '../../../actions/Image';
@@ -33,11 +35,13 @@ class CreateProfile extends React.Component {
 
   render() {
     return (
-      <ProfileForm
-        submitButtonText="Create"
-        onSubmit={this.props.createUser}
-        usePadding
-      />
+      <MessageView style={gstyles.flex1}>
+        <ProfileForm
+          submitButtonText="Create"
+          onSubmit={this.props.createUser}
+          usePadding
+        />
+      </MessageView>
     );
   }
 }
