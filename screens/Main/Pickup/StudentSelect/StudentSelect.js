@@ -34,24 +34,21 @@ class StudentSelect extends React.Component {
 
     this.state = {
       students: [],
-      showExistingPickup: props.pickup !== null,
+      existingPickup: props.pickup,
     };
 
     this._selectStudent = this._selectStudent.bind(this);
     this._pickup = this._pickup.bind(this);
+    this._cancelPickup = this._cancelPickup.bind(this);
   }
 
   state: {
     students: Object[],
-    showExistingPickup: boolean,
+    existingPickup: Object,
   }
 
   componentWillMount() {
     this.props.listenStudents(this.props.user.uid);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ showExistingPickup: nextProps.pickup !== null });
   }
 
   componentWillUnmount() {
@@ -75,8 +72,13 @@ class StudentSelect extends React.Component {
     this.setState({ students: [] });
   }
 
+  _cancelPickup() {
+    this.setState({ existingPickup: null });
+    this.props.cancelPickup(this.props.pickup);
+  }
+
   render() {
-    if (this.state.showExistingPickup) {
+    if (this.state.existingPickup) {
       return (
         <View style={[gstyles.flex1, gstyles.flexStart]}>
           <View style={styles.pickup}>
@@ -84,7 +86,7 @@ class StudentSelect extends React.Component {
             <View style={[gstyles.marginTop10, { flexDirection: 'row' }]}>
               <Button
                 style={gstyles.flex1}
-                onPress={() => this.props.cancelPickup(this.props.pickup)}
+                onPress={this._cancelPickup}
                 content="Cancel"
                 backgroundColor="darkgray"
               />
