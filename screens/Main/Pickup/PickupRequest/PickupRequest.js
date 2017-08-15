@@ -28,8 +28,10 @@ class PickupRequest extends React.Component {
   componentWillUnmount() {
     this.props.unlistenPickup();
 
-    // In the event the requestor presses 'Cancel', then the pickup should exist.
-    // In the event the escort completes the pickup, the pickup will be cleared.
+    // Cleaning up the pickup. If the requestor initiates the 'Cancel', we need
+    // to cancel the pickup ourselves. If the escorter releases the last student,
+    // then the saga listener will cancel the pickup and it won't be in redux
+    // anymore.
     if (this.props.pickup) {
       this.props.cancelPickup(this.props.pickup);
     }
