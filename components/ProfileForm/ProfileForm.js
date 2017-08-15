@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Button, Image, Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { ActivityIndicator, Button, Image, Keyboard, Platform, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -66,13 +66,15 @@ class ProfileForm extends React.Component {
 
   async _takePhoto() {
     const pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
       aspect: [1, 1],
       base64: true,
       exif: true,
+      quality: 0.4,
     });
 
-    this.props.uploadImage(pickerResult.base64);
+    if (!pickerResult.cancelled) {
+      this.props.uploadImage(pickerResult.base64);
+    }
   }
 
   _updateState(newState) {
@@ -154,6 +156,11 @@ class ProfileForm extends React.Component {
             keyboardAwareInput
           />
           {this.props.children}
+          {this.props.usePadding &&
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={[gstyles.flex1, { alignSelf: 'stretch' }]} />
+            </TouchableWithoutFeedback>
+          }
         </KeyboardAwareView>
         <CustomButton
           onPress={this._submit}
@@ -175,6 +182,7 @@ ProfileForm.propTypes = {
   uploadImage: PropTypes.func,
   spinning: PropTypes.bool,
   children: PropTypes.node,
+  usePadding: PropTypes.bool,
 };
 
 ProfileForm.defaultProps = {
@@ -187,6 +195,7 @@ ProfileForm.defaultProps = {
   uploadImage: () => {},
   spinning: false,
   children: null,
+  usePadding: false,
 };
 
 const mapStateToProps = state => ({

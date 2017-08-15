@@ -267,6 +267,7 @@ class StudentForm extends React.Component {
           isDisabled={this._disabled}
           submitButtonText={this.props.submitButtonText}
           onSubmit={this._submit}
+          usePadding={this.props.mode === 'add'}
         >
           {content}
         </ProfileForm>

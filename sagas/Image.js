@@ -7,30 +7,6 @@ import { guid, convertToByteArray } from '../helpers';
 import { FBstorageRef } from '../helpers/firebase';
 import { Types, Actions } from '../actions/Image';
 
-// const _uploadAsByteArray = async (pickerResultAsByteArray, progressCallback?) => {
-//   try {
-//     const metadata = {
-//       contentType: 'image/jpeg',
-//     };
-//
-//     const photoRef = FBstorageRef().child(`images/${guid()}`);
-//     const uploadTask = photoRef.put(pickerResultAsByteArray, metadata);
-//     uploadTask.on('state_changed', (snapshot) => {
-//       progressCallback && progressCallback(snapshot.bytesTransferred / snapshot.totalBytes);
-//
-//       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//       console.log(`Upload is ${progress}% done`);
-//     }, (error) => {
-//       console.log('in _uploadAsByteArray ', error);
-//     }, () => {
-//       console.log('_uploadAsByteArray ', uploadTask.snapshot.downloadURL);
-//     });
-//   } catch (ee) {
-//     console.log('when trying to load _uploadAsByteArray ', ee);
-//   }
-// };
-//
-
 const uploadImageAsync = (imageData: string) => {
   const bytes = convertToByteArray(imageData);
   const photoRef = FBstorageRef().child(`images/${guid()}`);

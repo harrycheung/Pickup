@@ -3,12 +3,10 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { gstyles } from '../../../config/styles';
 import drawerHeader from '../../../components/DrawerHeader';
 import ProfileForm from '../../../components/ProfileForm';
 import { Actions as UserActions } from '../../../actions/User';
@@ -34,11 +32,8 @@ class Profile extends React.Component {
         submitButtonText={this.props.firstName === '' ? 'Save' : 'Update'}
         onSubmit={this.props.updateUser}
         spinning={this.props.spinning}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={[gstyles.flex1, { alignSelf: 'stretch' }]} />
-        </TouchableWithoutFeedback>
-      </ProfileForm>
+        usePadding
+      />
     );
   }
 }

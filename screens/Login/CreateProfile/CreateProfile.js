@@ -36,6 +36,7 @@ class CreateProfile extends React.Component {
       <ProfileForm
         submitButtonText="Create"
         onSubmit={this.props.createUser}
+        usePadding
       />
     );
   }
