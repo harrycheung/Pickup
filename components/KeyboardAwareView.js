@@ -120,6 +120,7 @@ class KeyboardAwareView extends React.Component {
       offset: 0,
       isKeyboardOpened: false,
     });
+    this._focusedInput = null;
   }
 
   _onFocus(event) {
@@ -137,6 +138,7 @@ class KeyboardAwareView extends React.Component {
         return child;
       });
     }
+    return null;
   }
 
   render() {
