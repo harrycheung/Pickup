@@ -74,6 +74,8 @@ class ProfileForm extends React.Component {
   }
 
   async _takePhoto() {
+    Keyboard.dismiss();
+
     const pickerResult = await ImagePicker.launchCameraAsync({
       aspect: [1, 1],
       base64: true,
@@ -147,7 +149,7 @@ class ProfileForm extends React.Component {
             autoCapitalize="words"
             clearButtonMode="while-editing"
             borderBottomColor={colors.darkGrey}
-            onChangeText={text => this._updateState({ firstName: text })}
+            onChangeText={text => this._updateState({ firstName: text.trim() })}
             defaultValue={this.state.firstName}
             onSubmitEditing={Keyboard.dismiss}
             keyboardAwareInput
@@ -159,7 +161,7 @@ class ProfileForm extends React.Component {
             autoCapitalize="words"
             clearButtonMode="while-editing"
             borderBottomColor={colors.darkGrey}
-            onChangeText={text => this._updateState({ lastInitial: text })}
+            onChangeText={text => this._updateState({ lastInitial: text.trim() })}
             defaultValue={this.state.lastInitial}
             onSubmitEditing={Keyboard.dismiss}
             keyboardAwareInput
