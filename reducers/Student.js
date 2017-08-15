@@ -13,9 +13,6 @@ export default (state: Object = initialState, action: Object) => {
     case Types.SET:
       return { students: action.students };
 
-    case Types.ADD_STUDENT_SUCCEEDED:
-      return { students: state.students.concat([action.student]) };
-
     case Types.EDIT_STUDENT_SUCCEEDED:
       return {
         students: state.students.map((student) => {
@@ -25,11 +22,6 @@ export default (state: Object = initialState, action: Object) => {
 
           return student;
         }),
-      };
-
-    case Types.DELETE_STUDENT_SUCCEEDED:
-      return {
-        students: state.students.filter(student => (student.key !== action.studentKey)),
       };
 
     case Types.UPDATE_RELATIONSHIP: {

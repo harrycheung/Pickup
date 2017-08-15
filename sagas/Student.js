@@ -51,8 +51,7 @@ const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship
   FBref('/students').push().then((studentRef) => {
     const relationships = {};
     relationships[uid] = relationship;
-    const studentUpdate = {};
-    studentUpdate[`students/${studentRef.key}`] = {
+    const student = {
       firstName,
       lastInitial,
       name: `${firstName} ${lastInitial}`,
@@ -60,8 +59,10 @@ const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship
       grade,
       relationships,
     };
+    const studentUpdate = {};
+    studentUpdate[`students/${studentRef.key}`] = student;
     studentUpdate[`users/${uid}/students/${studentRef.key}`] = relationship;
-    return FBref('/').update(studentUpdate).then(() => studentRef.key);
+    return FBref('/').update(studentUpdate);
   })
 );
 
@@ -69,7 +70,7 @@ function* addStudent(action) {
   try {
     const { firstName, lastInitial, image, grade, relationship } = action;
     const state = yield select();
-    const studentKey = yield call(
+    yield call(
       addStudentAsync,
       state.auth.user.uid,
       firstName,
@@ -78,9 +79,6 @@ function* addStudent(action) {
       grade,
       relationship,
     );
-    yield put(StudentActions.addStudentSucceeded({
-      key: studentKey, firstName, lastInitial, image, grade, relationship,
-    }));
     yield put(NavActions.back());
   } catch (error) {
     console.log('addStudent failed', error);
@@ -136,7 +134,6 @@ function* deleteStudent(action) {
   try {
     const state = yield select();
     yield call(deleteStudentAsync, state.auth.user.uid, action.studentKey);
-    yield put(StudentActions.deleteStudentSucceeded(action.studentKey));
     yield put(NavActions.back());
   } catch (error) {
     console.log('deleteStudent failed', error);

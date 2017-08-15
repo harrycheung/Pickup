@@ -4,11 +4,9 @@
 export const Types = {
   SET: 'Student/SET',
   ADD_STUDENT: 'Student/ADD_STUDENT',
-  ADD_STUDENT_SUCCEEDED: 'Student/ADD_STUDENT_SUCCEEDED',
   EDIT_STUDENT: 'Student/EDIT_STUDENT',
   EDIT_STUDENT_SUCCEEDED: 'Student/EDIT_STUDENT_SUCCEEDED',
   DELETE_STUDENT: 'Student/DELETE_STUDENT',
-  DELETE_STUDENT_SUCCEEDED: 'Student/DELETE_STUDENT_SUCCEEDED',
   ADD_RELATIONSHIP: 'Student/ADD_RELATIONSHIP',
   REMOVE_RELATIONSHIP: 'Student/REMOVE_RELATIONSHIP',
   UPDATE_RELATIONSHIP: 'Student/UPDATE_RELATIONSHIP',
@@ -21,9 +19,6 @@ export const Actions = {
   addStudent: (firstName: string, lastInitial: string, imageURL: string, grade: string, relationship: string) => ({
     type: Types.ADD_STUDENT, firstName, lastInitial, image: imageURL, grade, relationship,
   }),
-  addStudentSucceeded: (student: Object) => ({
-    type: Types.ADD_STUDENT_SUCCEEDED, student,
-  }),
   editStudent: (student: Object) => ({
     type: Types.EDIT_STUDENT, student,
   }),
@@ -32,9 +27,6 @@ export const Actions = {
   }),
   deleteStudent: (studentKey: string) => ({
     type: Types.DELETE_STUDENT, studentKey,
-  }),
-  deleteStudentSucceeded: (studentKey: string) => ({
-    type: Types.DELETE_STUDENT_SUCCEEDED, studentKey,
   }),
   addRelationship: (studentKey: string, uid: string, relationship: string) => ({
     type: Types.ADD_RELATIONSHIP, studentKey, uid, relationship,
