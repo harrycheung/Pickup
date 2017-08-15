@@ -3,7 +3,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Animated, StyleSheet, Text, View, ViewPropTypes } from 'react-native';
+import {
+  Animated,
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  ViewPropTypes,
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -32,23 +39,24 @@ class MessageView extends React.Component {
   state = {
     fadeAnimationValue: new Animated.Value(0),
     message: '',
+    duration: 1000,
   }
 
   componentWillMount() {
     // Because this component could get unmounted
     if (this.props.message !== '') {
-      this._showMessage(this.props.message);
+      this._showMessage(this.props.message, this.props.duration);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.message !== '') {
-      this._showMessage(nextProps.message);
+      this._showMessage(nextProps.message, nextProps.duration);
     }
   }
 
-  _showMessage(message) {
-    this.setState({ message }, () => {
+  _showMessage(message, duration) {
+    this.setState({ message, duration }, () => {
       this.state.fadeAnimationValue.setValue(1);
       if (this.props.duration > 0) {
         Animated.timing(
@@ -72,6 +80,9 @@ class MessageView extends React.Component {
           pointerEvents="none"
         >
           <View style={styles.dialog}>
+            {this.state.duration === 0 &&
+              <ActivityIndicator animating color="white" size="small" />
+            }
             <Text style={[{ color: 'white' }, gstyles.font18]}>
               {this.state.message}
             </Text>

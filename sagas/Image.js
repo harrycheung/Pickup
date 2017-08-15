@@ -29,7 +29,7 @@ function* uploadImage() {
       const { imageData } = yield take(Types.UPLOAD);
       yield put(MessageActions.showMessage('Uploading...', 0));
       const imageURL = yield call(uploadImageAsync, imageData);
-      yield put(MessageActions.showMessage('done', 1000));
+      yield put(MessageActions.showMessage('Finished', 1000));
       yield put(Actions.setImage(imageURL));
     } catch (error) {
       console.log('uploadImage error', error);
