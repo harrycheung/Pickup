@@ -212,7 +212,10 @@ class StudentForm extends React.Component {
                 </Text>
                 <IconButton
                   icon="md-add"
-                  onPress={() => this.setState({ showAddModal: true })}
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    this.setState({ showAddModal: true });
+                  }}
                 />
               </View>
               <View style={gstyles.flex1}>
