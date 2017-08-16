@@ -13,7 +13,7 @@ export const time = (timestamp: number) => (
 );
 
 export const truncate = (str: string, n: number) => (
-  ((str.length > n) ? `${str.substr(0, n - 1)}&hellip;` : str)
+  ((str.length > n) ? `${str.substr(0, n - 1)}...` : str)
 );
 
 const atob = (input) => {
