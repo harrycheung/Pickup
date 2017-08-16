@@ -118,20 +118,23 @@ class StudentSelect extends React.Component {
       );
     } else {
       studentViews = this.props.students.map((student) => {
-        const selected = this.state.students.includes(student);
-        const style = [gstyles.profilePic100, selected ? styles.selected : {}];
-        return (
-          <TouchableOpacity
-            key={student.key}
-            style={styles.student}
-            onPress={() => this._selectStudent(student)}
-          >
-            <Image style={style} source={{ uri: student.image }} />
-            <Text style={gstyles.font18}>
-              {student.firstName} {student.lastInitial} ({student.grade})
-            </Text>
-          </TouchableOpacity>
-        );
+        if (typeof student === 'object') {
+          const selected = this.state.students.includes(student);
+          const style = [gstyles.profilePic100, selected ? styles.selected : {}];
+          return (
+            <TouchableOpacity
+              key={student.key}
+              style={styles.student}
+              onPress={() => this._selectStudent(student)}
+            >
+              <Image style={style} source={{ uri: student.image }} />
+              <Text style={gstyles.font18}>
+                {student.firstName} {student.lastInitial} ({student.grade})
+              </Text>
+            </TouchableOpacity>
+          );
+        }
+        return <View key={student} />
       });
     }
 

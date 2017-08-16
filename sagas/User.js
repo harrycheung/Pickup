@@ -7,6 +7,7 @@ import { FBref } from '../helpers/firebase';
 import { Types as UserTypes, Actions as UserActions } from '../actions/User';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as SpinnerActions } from '../actions/Spinner';
+import { Actions as StudentActions } from '../actions/Student';
 
 const loadUserAsync = uid => (
   FBref(`/users/${uid}`).once('value').then(snapshot => snapshot.val())
@@ -23,8 +24,9 @@ function* loadUser(action) {
     if (response === null) {
       yield put(UserActions.setUser('', '', '', '', false));
     } else {
-      const { firstName, lastInitial, image, admin = false } = response;
+      const { firstName, lastInitial, image, admin = false, students } = response;
       yield put(UserActions.setUser(uid, firstName, lastInitial, image, admin));
+      yield put(StudentActions.setStudents(Object.keys(students)));
     }
     yield put(UserActions.loadedUser());
   } catch (error) {

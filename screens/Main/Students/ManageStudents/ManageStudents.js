@@ -72,37 +72,40 @@ class ManageStudents extends React.Component {
   }
 
   _renderRow(student, sectionID, rowID) {
-    const relationship = student.relationships[this.props.uid];
-    const parent = relationship === 'Parent';
-    let RowElement = View;
-    if (parent) {
-      RowElement = TouchableOpacity;
-    }
+    if (typeof student === 'object') {
+      const relationship = student.relationships[this.props.uid];
+      const parent = relationship === 'Parent';
+      let RowElement = View;
+      if (parent) {
+        RowElement = TouchableOpacity;
+      }
 
-    return (
-      <RowElement
-        style={[styles.student, gstyles.flexCenter]}
-        key={`${sectionID}-${rowID}`}
-        onPress={() => this.props.navigate('EditStudent', { student })}
-      >
-        <Image
-          style={[gstyles.profilePic50]}
-          source={{ uri: student.image }}
-        />
-        <View style={styles.studentInfo}>
-          <Text style={gstyles.font18}>
-            {student.firstName} {student.lastInitial} ({student.grade})
-          </Text>
-          <Text style={gstyles.font14}>
-            {typeof relationship === 'object' ? relationship.role : relationship }
-          </Text>
-        </View>
-        <View style={gstyles.flex1} />
-        {parent &&
-          <Icon name="ios-arrow-forward" size={30} color={colors.buttonBackground} />
-        }
-      </RowElement>
-    );
+      return (
+        <RowElement
+          style={[styles.student, gstyles.flexCenter]}
+          key={`${sectionID}-${rowID}`}
+          onPress={() => this.props.navigate('EditStudent', { student })}
+        >
+          <Image
+            style={[gstyles.profilePic50]}
+            source={{ uri: student.image }}
+          />
+          <View style={styles.studentInfo}>
+            <Text style={gstyles.font18}>
+              {student.firstName} {student.lastInitial} ({student.grade})
+            </Text>
+            <Text style={gstyles.font14}>
+              {typeof relationship === 'object' ? relationship.role : relationship }
+            </Text>
+          </View>
+          <View style={gstyles.flex1} />
+          {parent &&
+            <Icon name="ios-arrow-forward" size={30} color={colors.buttonBackground} />
+          }
+        </RowElement>
+      );
+    }
+    return <View key={`${sectionID}-${rowID}`} />
   }
 
   render() {
