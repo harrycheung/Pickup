@@ -134,7 +134,10 @@ class ProfileForm extends React.Component {
 
     return (
       <View style={gstyles.flex1}>
-        <KeyboardAwareView style={[gstyles.flex1, gstyles.marginH15, gstyles.marginTop10]}>
+        <KeyboardAwareView
+          style={[gstyles.flex1, gstyles.marginH15, gstyles.marginTop10]}
+          centerOnInput
+        >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={gstyles.flexCenter}>
               {imageJSX}

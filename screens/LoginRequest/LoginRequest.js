@@ -62,7 +62,10 @@ class LoginRequest extends React.Component {
     }
 
     return (
-      <KeyboardAwareView style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}>
+      <KeyboardAwareView
+        style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}
+        centerOnInput
+      >
         <Text style={gstyles.font18}>Enter your phone number</Text>
         <Text style={gstyles.font18}>to get a magic link</Text>
         <LinedTextInput

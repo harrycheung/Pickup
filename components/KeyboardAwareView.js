@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  Dimensions,
   Keyboard,
   LayoutAnimation,
   View,
@@ -38,11 +39,13 @@ class KeyboardAwareView extends React.Component {
   static propTypes = {
     style: ViewPropTypes.style,
     children: PropTypes.node,
+    centerOnInput: PropTypes.bool,
   };
 
   static defaultProps = {
     style: {},
     children: null,
+    centerOnInput: false,
   };
 
   constructor(props: Object) {
@@ -94,7 +97,18 @@ class KeyboardAwareView extends React.Component {
       LayoutAnimation.configureNext(animationConfig);
     }
 
-    if (this._focusedInput) {
+    if (!this.props.centerOnInput) {
+      const screenHeight = Dimensions.get('window').height;
+      // const screenHeight = Dimensions.get('window').height;
+      // when external physical keyboard is connected
+      // event.endCoordinates.height still equals virtual keyboard height
+      // however only the keyboard toolbar is showing if there should be one
+      const offset = -(screenHeight - event.endCoordinates.screenY);
+      this.setState({
+        offset,
+        isKeyboardOpened: true,
+      });
+    } else if (this._focusedInput) {
       this._focusedInput.measure((x, y, w, h, px, py) => {
         const offset = this.state.offset - (py - ((event.endCoordinates.screenY - h) / 2));
         this.setState({
