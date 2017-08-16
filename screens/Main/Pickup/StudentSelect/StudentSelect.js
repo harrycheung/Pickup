@@ -51,6 +51,13 @@ class StudentSelect extends React.Component {
     this.props.listenStudents(this.props.user.uid);
   }
 
+  componentWillReceiveProps(nextProps) {
+    // For when a pickup is canceled by you or someone else.
+    if (nextProps.pickup === null) {
+      this.setState({ existingPickup: null });
+    }
+  }
+
   componentWillUnmount() {
     this.props.unlistenStudents();
   }
