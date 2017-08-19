@@ -24,9 +24,8 @@ function* loadUser(action) {
     if (response === null) {
       yield put(UserActions.setUser('', '', '', '', false));
     } else {
-      const { firstName, lastInitial, image, admin = false, students } = response;
-      yield put(UserActions.setUser(uid, firstName, lastInitial, image, admin));
-      yield put(StudentActions.setStudents(Object.keys(students)));
+      yield put(UserActions.setUser(uid, response));
+      yield put(StudentActions.setStudents(Object.keys(response.students)));
     }
     yield put(UserActions.loadedUser());
   } catch (error) {
@@ -74,10 +73,33 @@ function* watchCreateUser() {
   yield takeEvery(UserTypes.CREATE, createUser);
 }
 
+const updateVehiclesAsync = (uid, vehicles) => (
+  FBref(`/users/${uid}`).update({ vehicles })
+);
+
+function* updateVehicles() {
+  try {
+    const { user } = yield select();
+    yield call(updateVehiclesAsync, user.uid, user.vehicles);
+  } catch (error) {
+    console.log('updateVehicles failed', error);
+  }
+}
+
+function* watchAddVehicle() {
+  yield takeEvery(UserTypes.ADD_VEHICLE, updateVehicles);
+}
+
+function* watchRemoveVehicle() {
+  yield takeEvery(UserTypes.REMOVE_VEHICLE, updateVehicles);
+}
+
 export default function* userSaga() {
   yield all([
     watchLoadUser(),
     watchCreateUser(),
     watchUpdateUser(),
+    watchAddVehicle(),
+    watchRemoveVehicle(),
   ]);
 }

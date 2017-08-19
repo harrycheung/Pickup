@@ -9,7 +9,7 @@ import { Types, Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as MessageActions } from '../actions/Message';
 
-const createPickupAsync = (requestor, students) => {
+const createPickupAsync = (requestor, students, location, vehicle) => {
   const pickupStudents = students.reduce((acc, student) => {
     acc[student.key] = {
       key: student.key,
@@ -30,6 +30,8 @@ const createPickupAsync = (requestor, students) => {
     requestor: cleanRequestor,
     students: pickupStudents,
     grades,
+    location,
+    vehicle,
     createdAt: Date.now(),
   };
   return FBref('/pickups').push(pickup).then(pickupRef => (
@@ -49,7 +51,13 @@ const createPickupAsync = (requestor, students) => {
 
 function* createPickup(action) {
   try {
-    const pickup = yield call(createPickupAsync, action.requestor, action.students);
+    const pickup = yield call(
+      createPickupAsync,
+      action.requestor,
+      action.students,
+      action.location,
+      action.vehicle,
+    );
     yield put(PickupActions.createdPickup(pickup));
     yield put(NavActions.navigate('PickupRequest'));
   } catch (error) {

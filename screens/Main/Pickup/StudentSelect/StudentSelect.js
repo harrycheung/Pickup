@@ -3,18 +3,34 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Keyboard,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { BlurView } from 'expo';
+import Icon from 'react-native-vector-icons/Ionicons';
 
+import * as C from '../../../../config/constants';
 import styles from './styles';
 import { gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
+import MessageView from '../../../../components/MessageView';
+import Picker from '../../../../components/Picker';
+import IconButton from '../../../../components/IconButton';
+import LinedTextInput from '../../../../components/LinedTextInput';
+import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as StudentActions } from '../../../../actions/Student';
-import MessageView from '../../../../components/MessageView';
+import { Actions as UserActions } from '../../../../actions/User';
 
 class StudentSelect extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -33,18 +49,31 @@ class StudentSelect extends React.Component {
     super(props);
 
     this.state = {
-      students: [],
       existingPickup: props.pickup,
+      students: [],
+      configurePickup: false,
+      showAddVehicle: false,
+      addVehicle: '',
+      location: '',
+      vehicle: 'In person',
     };
 
     this._selectStudent = this._selectStudent.bind(this);
+    this._configure = this._configure.bind(this);
     this._pickup = this._pickup.bind(this);
     this._cancelPickup = this._cancelPickup.bind(this);
+    this._addVehicle = this._addVehicle.bind(this);
+    this._clearConfigurePickup = this._clearConfigurePickup.bind(this);
   }
 
   state: {
-    students: Object[],
     existingPickup: Object,
+    students: Object[],
+    configurePickup: boolean,
+    showAddVehicle: boolean,
+    addVehicle: string,
+    location: string,
+    vehicle: string,
   }
 
   componentWillMount() {
@@ -74,14 +103,37 @@ class StudentSelect extends React.Component {
     }
   }
 
+  _configure() {
+    this.setState({ configurePickup: true });
+  }
+
   _pickup() {
-    this.props.createPickup(this.props.user, this.state.students);
-    this.setState({ students: [] });
+    this.props.createPickup(
+      this.props.user,
+      this.state.students,
+      this.state.location,
+      this.state.vehicle,
+    );
+    this._clearConfigurePickup();
   }
 
   _cancelPickup() {
     this.setState({ existingPickup: null });
     this.props.cancelPickup(this.props.pickup);
+  }
+
+  _addVehicle() {
+    this.props.addVehicle(this.state.addVehicle);
+    this.setState({ showAddVehicle: false, addVehicle: '' });
+  }
+
+  _clearConfigurePickup() {
+    this.setState({
+      students: [],
+      configurePickup: false,
+      showAddVehicle: false,
+      addVehicle: '',
+    });
   }
 
   render() {
@@ -152,9 +204,112 @@ class StudentSelect extends React.Component {
         </ScrollView>
         <Button
           disabled={this.state.students.length < 1}
-          onPress={this._pickup}
+          onPress={this._configure}
           content="Pickup"
         />
+        {this.state.configurePickup &&
+          <View style={styles.configureModal}>
+            <KeyboardAwareView
+              style={[gstyles.flex1, {
+                alignSelf: 'stretch',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }]}
+              centerOnInput
+            >
+              <TouchableWithoutFeedback
+                onPress={this._clearConfigurePickup}
+              >
+                <BlurView style={[styles.configureModal]} tint="light" intensity={75} />
+              </TouchableWithoutFeedback>
+              <View style={[styles.pickup, { alignItems: 'flex-start' }]}>
+                <Text style={gstyles.font18}>Where are you?</Text>
+                <Picker
+                  style={[{ alignSelf: 'stretch' }, gstyles.marginTop10]}
+                  values={C.Locations}
+                  onChange={value => this.setState({ location: value })}
+                  columns={2}
+                />
+                <View
+                  style={[
+                    {
+                      alignSelf: 'stretch',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    },
+                    gstyles.marginTop10]
+                  }
+                >
+                  <Text style={gstyles.font18}>In a car?</Text>
+                  {!this.state.showAddVehicle &&
+                    <View style={{ marginRight: 5 }}>
+                      <IconButton
+                        icon="md-add"
+                        onPress={() => this.setState({ showAddVehicle: true })}
+                      />
+                    </View>
+                  }
+                </View>
+                {this.state.showAddVehicle &&
+                  <View
+                    style={{
+                      alignSelf: 'stretch',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <LinedTextInput
+                      style={{ flex: 3 }}
+                      placeholder="Describe vehicle"
+                      autoCapitalize="words"
+                      clearButtonMode="while-editing"
+                      borderBottomColor={'darkgray'}
+                      onChangeText={text => this.setState({ addVehicle: text })}
+                      defaultValue=""
+                      onSubmitEditing={Keyboard.dismiss}
+                      keyboardAwareInput
+                    />
+                    <View style={{ width: 5 }} />
+                    <Button
+                      content="Add"
+                      disabled={this.state.addVehicle.length < 6}
+                      onPress={this._addVehicle}
+                    />
+                    <View style={{ width: 5 }} />
+                    <Button
+                      content={(
+                        <Icon
+                          style={{ marginHorizontal: 10 }}
+                          name="md-close"
+                          size={24}
+                          color="#fff"
+                        />
+                      )}
+                      backgroundColor="darkgray"
+                      onPress={() => this.setState({
+                        showAddVehicle: false,
+                        addVehicle: '',
+                      })}
+                    />
+                  </View>
+                }
+                <Picker
+                  style={[{ alignSelf: 'stretch' }, gstyles.marginTop10]}
+                  columns={2}
+                  values={['In person'].concat(this.props.user.vehicles)}
+                  onChange={vehicle => this.setState({ vehicle })}
+                />
+                <Button
+                  style={{ marginTop: 20 }}
+                  disabled={this.state.students.length < 1}
+                  onPress={this._pickup}
+                  content="Request Pickup"
+                />
+              </View>
+            </KeyboardAwareView>
+          </View>
+        }
       </MessageView>
     );
   }
@@ -170,6 +325,7 @@ StudentSelect.propTypes = {
   cancelPickup: PropTypes.func.isRequired,
   listenStudents: PropTypes.func.isRequired,
   unlistenStudents: PropTypes.func.isRequired,
+  addVehicle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -182,6 +338,7 @@ const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
   ...bindActionCreators(StudentActions, dispatch),
+  ...bindActionCreators(UserActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentSelect);

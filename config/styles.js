@@ -54,8 +54,8 @@ export const gstyles = StyleSheet.create({
   },
   textInput: {
     height: 44,
-    marginTop: 10,
     paddingHorizontal: 5,
+    fontSize: 18,
   },
   button: {
     height: 44,

@@ -11,6 +11,7 @@ const initialState = {
   image: '',
   name: '',
   admin: false,
+  vehicles: [],
 };
 
 export default (state: Object = initialState, action: Object) => {
@@ -18,11 +19,12 @@ export default (state: Object = initialState, action: Object) => {
     case Types.SET:
       return {
         uid: action.uid,
-        firstName: action.firstName,
-        lastInitial: action.lastInitial,
-        image: action.image || '',
-        name: `${action.firstName} ${action.lastInitial}`,
-        admin: action.admin,
+        firstName: action.user.firstName,
+        lastInitial: action.user.lastInitial,
+        image: action.user.image || '',
+        name: `${action.user.firstName} ${action.user.lastInitial}`,
+        admin: action.user.admin || false,
+        vehicles: action.user.vehicles || [],
       };
 
     case Types.CREATE:
@@ -33,6 +35,27 @@ export default (state: Object = initialState, action: Object) => {
         lastInitial: action.lastInitial,
         image: action.image,
       };
+
+    case Types.ADD_VEHICLE: {
+      const vehicles = state.vehicles.slice();
+      vehicles.push(action.vehicle);
+      const newState = {
+        ...state,
+        vehicles,
+      };
+      return newState;
+    }
+
+    case Types.REMOVE_VEHICLE: {
+      const index = state.vehicles.indexOf(action.vehicle);
+      if (index > -1) {
+        return {
+          ...state,
+          vehicles: state.vehicles.slice(index, 1),
+        };
+      }
+      return state;
+    }
 
     case AuthTypes.LOGOUT:
       return initialState;

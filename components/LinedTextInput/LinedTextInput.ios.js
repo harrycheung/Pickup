@@ -3,27 +3,30 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { TextInput, View, ViewPropTypes } from 'react-native';
 
-const styles = StyleSheet.create({
-  view: {
-    alignSelf: 'stretch',
-    borderBottomWidth: 1,
-    borderBottomColor: 'darkgray',
-  },
-});
+import { gstyles } from '../../config/styles';
 
 const LinedTextInput = (props: Object) => (
-  <View style={[styles.view, { borderBottomColor: props.borderBottomColor }]}>
-    <TextInput {...props} />
+  <View
+    style={[props.style, {
+      height: 38,
+      marginBottom: 6,
+      borderBottomWidth: 1,
+      borderBottomColor: props.borderBottomColor,
+    }]}
+  >
+    <TextInput {...props} style={gstyles.textInput} />
   </View>
 );
 
 LinedTextInput.propTypes = {
+  style: ViewPropTypes.style,
   borderBottomColor: PropTypes.string,
 };
 
 LinedTextInput.defaultProps = {
+  style: {},
   borderBottomColor: 'blue',
 };
 

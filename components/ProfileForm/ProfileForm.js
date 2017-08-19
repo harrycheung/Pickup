@@ -16,7 +16,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImagePicker } from 'expo';
-// import RNFS from 'react-native-fs';
 
 import { colors, gstyles } from '../../config/styles';
 import LinedTextInput from '../LinedTextInput';
@@ -147,7 +146,6 @@ class ProfileForm extends React.Component {
             </View>
           </TouchableWithoutFeedback>
           <LinedTextInput
-            style={[gstyles.textInput, gstyles.font18]}
             placeholder="First Name"
             autoCapitalize="words"
             clearButtonMode="while-editing"
@@ -158,7 +156,6 @@ class ProfileForm extends React.Component {
             keyboardAwareInput
           />
           <LinedTextInput
-            style={[gstyles.textInput, gstyles.font18]}
             placeholder="Last Initial"
             maxLength={1}
             autoCapitalize="words"

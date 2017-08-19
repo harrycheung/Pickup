@@ -20,8 +20,12 @@ export const Types = {
 };
 
 export const Actions = {
-  createPickup: (requestor: Object, students: Object[]) => ({
-    type: Types.CREATE, requestor, students,
+  createPickup: (requestor: Object, students: Object[], location: string, vehicle: string) => ({
+    type: Types.CREATE,
+    requestor,
+    students,
+    location,
+    vehicle: (vehicle === 'In person' ? 'person' : vehicle),
   }),
   createdPickup: (pickup: Object) => ({ type: Types.CREATED, pickup }),
   cancelPickup: (pickup: Object) => ({ type: Types.CANCEL, pickup }),

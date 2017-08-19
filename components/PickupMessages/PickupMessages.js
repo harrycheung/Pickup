@@ -80,7 +80,7 @@ class PickupMessages extends React.Component {
         messageJSX = (
           <View style={styles.request}>
             <Text style={styles.messageText}>
-              {message.sender.name} at the front gate
+              {message.sender.name} at {this.props.pickup.location} in {this.props.pickup.vehicle}
             </Text>
             {studentsJSX}
           </View>

@@ -144,7 +144,7 @@ class HandlePickup extends React.Component {
               source={{ uri: this.props.pickup.requestor.image }}
             />
             <Text style={gstyles.font14}>
-              {this.props.pickup.requestor.name} @ front gate
+              {pickup.requestor.name} @ {pickup.location} in {pickup.vehicle}
             </Text>
           </View>
         </View>

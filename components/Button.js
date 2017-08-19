@@ -16,6 +16,7 @@ class Button extends React.Component {
           style={{
             fontSize: this.props.textSize || 18,
             color: colors.buttonText,
+            paddingHorizontal: 10,
           }}
         >
           {this.props.content}

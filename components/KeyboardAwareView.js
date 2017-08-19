@@ -141,16 +141,23 @@ class KeyboardAwareView extends React.Component {
     this._focusedInput = ReactNativeComponentTree.getInstanceFromNode(event.currentTarget);
   }
 
-  renderChildren() {
-    if (this.props.children) {
-      return React.Children.map(this.props.children, (child) => {
-        if (child && child.props && child.props.keyboardAwareInput) {
-          return React.cloneElement(child, {
-            onFocus: this._onFocus,
-          });
+  renderChildren(props) {
+    if (props.children) {
+      const children = React.Children.map(props.children, (child) => {
+        if (child && child.props) {
+          if (child.props.keyboardAwareInput) {
+            return React.cloneElement(child, {
+              onFocus: this._onFocus,
+            });
+          }
+
+          if (child.props.children) {
+            return React.cloneElement(child, null, this.renderChildren(child.props));
+          }
         }
         return child;
       });
+      return children.length === 1 ? children[0] : children;
     }
     return null;
   }
@@ -158,7 +165,7 @@ class KeyboardAwareView extends React.Component {
   render() {
     return (
       <View style={[styles.container, { top: this.state.offset }, this.props.style]}>
-        {this.renderChildren()}
+        {this.renderChildren(this.props)}
       </View>
     );
   }

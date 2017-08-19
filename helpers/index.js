@@ -16,6 +16,14 @@ export const truncate = (str: string, n: number) => (
   ((str.length > n) ? `${str.substr(0, n - 1)}...` : str)
 );
 
+export const chunkArray = (array: Array<any>, size: number) => {
+  const arrays = [];
+  while (array.length > 0) {
+    arrays.push(array.splice(0, size));
+  }
+  return arrays;
+};
+
 const atob = (input) => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
