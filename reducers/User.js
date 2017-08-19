@@ -47,14 +47,10 @@ export default (state: Object = initialState, action: Object) => {
     }
 
     case Types.REMOVE_VEHICLE: {
-      const index = state.vehicles.indexOf(action.vehicle);
-      if (index > -1) {
-        return {
-          ...state,
-          vehicles: state.vehicles.slice(index, 1),
-        };
-      }
-      return state;
+      return {
+        ...state,
+        vehicles: state.vehicles.filter(vehicle => vehicle !== action.vehicle),
+      };
     }
 
     case AuthTypes.LOGOUT:

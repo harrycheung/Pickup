@@ -88,7 +88,7 @@ class Profile extends React.Component {
                 }}
               >
                 <LinedTextInput
-                  style={{ flex: 3 }}
+                  style={{ flex: 3, marginRight: 5 }}
                   placeholder="Describe vehicle"
                   autoCapitalize="words"
                   clearButtonMode="while-editing"
@@ -96,9 +96,9 @@ class Profile extends React.Component {
                   onChangeText={text => this.setState({ vehicle: text })}
                   defaultValue=""
                   onSubmitEditing={Keyboard.dismiss}
+                  value={this.state.vehicle}
                   keyboardAwareInput
                 />
-                <View style={{ width: 5 }} />
                 <Button
                   title="Add"
                   disabled={this.state.vehicle.length < 6}
