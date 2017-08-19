@@ -133,6 +133,8 @@ class StudentSelect extends React.Component {
       configurePickup: false,
       showAddVehicle: false,
       addVehicle: '',
+      location: '',
+      vehicle: '',
     });
   }
 
@@ -302,7 +304,7 @@ class StudentSelect extends React.Component {
                 />
                 <Button
                   style={{ marginTop: 20 }}
-                  disabled={this.state.students.length < 1}
+                  disabled={this.state.vehicle === '' || this.state.location === ''}
                   onPress={this._pickup}
                   content="Request Pickup"
                 />
