@@ -141,31 +141,36 @@ class ProfileForm extends React.Component {
             <View style={gstyles.flexCenter}>
               {imageJSX}
               <View style={gstyles.marginTop10}>
-                <Button title="Change photo" onPress={this._takePhoto} />
+                <Button
+                  title={this.props.imageURL === '' ? "Upload photo" : "Change photo"}
+                  onPress={this._takePhoto}
+                />
               </View>
             </View>
           </TouchableWithoutFeedback>
-          <LinedTextInput
-            placeholder="First Name"
-            autoCapitalize="words"
-            clearButtonMode="while-editing"
-            borderBottomColor={colors.darkGrey}
-            onChangeText={text => this._updateState({ firstName: text.trim() })}
-            defaultValue={this.state.firstName}
-            onSubmitEditing={Keyboard.dismiss}
-            keyboardAwareInput
-          />
-          <LinedTextInput
-            placeholder="Last Initial"
-            maxLength={1}
-            autoCapitalize="words"
-            clearButtonMode="while-editing"
-            borderBottomColor={colors.darkGrey}
-            onChangeText={text => this._updateState({ lastInitial: text.trim() })}
-            defaultValue={this.state.lastInitial}
-            onSubmitEditing={Keyboard.dismiss}
-            keyboardAwareInput
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <LinedTextInput
+              style={{ flex: 1, marginRight: 10 }}
+              placeholder="First Name"
+              autoCapitalize="words"
+              clearButtonMode="while-editing"
+              onChangeText={text => this._updateState({ firstName: text.trim() })}
+              defaultValue={this.state.firstName}
+              onSubmitEditing={Keyboard.dismiss}
+              keyboardAwareInput
+            />
+            <LinedTextInput
+              style={{ flex: 1 }}
+              placeholder="Last Initial"
+              maxLength={1}
+              autoCapitalize="words"
+              clearButtonMode="while-editing"
+              onChangeText={text => this._updateState({ lastInitial: text.trim() })}
+              defaultValue={this.state.lastInitial}
+              onSubmitEditing={Keyboard.dismiss}
+              keyboardAwareInput
+            />
+          </View>
           {this.props.children}
           {this.props.usePadding &&
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

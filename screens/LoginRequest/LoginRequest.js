@@ -73,9 +73,7 @@ class LoginRequest extends React.Component {
           placeholder="Phone number"
           maxLength={10}
           clearButtonMode="while-editing"
-          borderBottomColor={colors.darkGrey}
           keyboardType="phone-pad"
-          selectionColor="black"
           onChangeText={this._changeText}
           onBlur={Keyboard.dismiss}
           keyboardAwareInput
