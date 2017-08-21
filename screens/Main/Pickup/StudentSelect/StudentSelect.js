@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  Button,
   Image,
   Keyboard,
   ScrollView,
@@ -19,12 +20,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import * as C from '../../../../config/constants';
 import styles from './styles';
-import { gstyles } from '../../../../config/styles';
+import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
-import Button from '../../../../components/Button';
+import MyButton from '../../../../components/Button';
 import MessageView from '../../../../components/MessageView';
 import Picker from '../../../../components/Picker';
-import IconButton from '../../../../components/IconButton';
+// import IconButton from '../../../../components/IconButton';
 import LinedTextInput from '../../../../components/LinedTextInput';
 import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
@@ -55,7 +56,7 @@ class StudentSelect extends React.Component {
       showAddVehicle: false,
       addVehicle: '',
       location: '',
-      vehicle: 'In person',
+      vehicle: '',
     };
 
     this._selectStudent = this._selectStudent.bind(this);
@@ -148,14 +149,14 @@ class StudentSelect extends React.Component {
               <Button
                 style={gstyles.flex1}
                 onPress={this._cancelPickup}
-                content="Cancel"
+                title="Cancel"
                 backgroundColor="darkgray"
               />
               <View style={{ width: 10 }} />
               <Button
                 style={gstyles.flex1}
                 onPress={() => this.props.resumePickup(this.props.pickup)}
-                content="Continue"
+                title="Continue"
               />
             </View>
           </View>
@@ -173,7 +174,7 @@ class StudentSelect extends React.Component {
           <Button
             style={gstyles.marginTop10}
             onPress={() => this.props.navigate('AddStudent')}
-            content="Add student"
+            title="Add student"
           />
         </View>
       );
@@ -204,7 +205,7 @@ class StudentSelect extends React.Component {
         <ScrollView contentContainerStyle={[gstyles.flex1, gstyles.marginH15, styles.students]}>
           {studentViews}
         </ScrollView>
-        <Button
+        <MyButton
           disabled={this.state.students.length < 1}
           onPress={this._configure}
           content="Pickup"
@@ -225,7 +226,9 @@ class StudentSelect extends React.Component {
                 <BlurView style={[styles.configureModal]} tint="light" intensity={75} />
               </TouchableWithoutFeedback>
               <View style={[styles.pickup, { alignItems: 'flex-start' }]}>
-                <Text style={gstyles.font18}>Where are you?</Text>
+                <Text style={[gstyles.font18, gstyles.marginTop10]}>
+                  Where are you?
+                </Text>
                 <Picker
                   style={[{ alignSelf: 'stretch' }, gstyles.marginTop10]}
                   values={C.Locations}
@@ -238,18 +241,21 @@ class StudentSelect extends React.Component {
                       alignSelf: 'stretch',
                       flexDirection: 'row',
                       justifyContent: 'space-between',
+                      alignItems: 'center',
                     },
                     gstyles.marginTop10]
                   }
                 >
                   <Text style={gstyles.font18}>In a car?</Text>
                   {!this.state.showAddVehicle &&
-                    <View style={{ marginRight: 5 }}>
-                      <IconButton
-                        icon="md-add"
-                        onPress={() => this.setState({ showAddVehicle: true })}
-                      />
-                    </View>
+                    <Icon.Button
+                      name="md-add"
+                      onPress={() => this.setState({ showAddVehicle: true })}
+                      style={{ paddingVertical: 0 }}
+                      iconStyle={{ marginRight: 0 }}
+                      color={colors.buttonBackground}
+                      backgroundColor="white"
+                    />
                   }
                 </View>
                 {this.state.showAddVehicle &&
@@ -274,25 +280,21 @@ class StudentSelect extends React.Component {
                     />
                     <View style={{ width: 5 }} />
                     <Button
-                      content="Add"
+                      title="Add"
                       disabled={this.state.addVehicle.length < 6}
                       onPress={this._addVehicle}
                     />
                     <View style={{ width: 5 }} />
-                    <Button
-                      content={(
-                        <Icon
-                          style={{ marginHorizontal: 10 }}
-                          name="md-close"
-                          size={24}
-                          color="#fff"
-                        />
-                      )}
-                      backgroundColor="darkgray"
+                    <Icon.Button
+                      name="md-close"
                       onPress={() => this.setState({
                         showAddVehicle: false,
                         addVehicle: '',
                       })}
+                      style={{ paddingVertical: 0 }}
+                      iconStyle={{ marginRight: 0 }}
+                      color={colors.buttonBackground}
+                      backgroundColor="white"
                     />
                   </View>
                 }
@@ -302,12 +304,20 @@ class StudentSelect extends React.Component {
                   values={['In person'].concat(this.props.user.vehicles)}
                   onChange={vehicle => this.setState({ vehicle })}
                 />
-                <Button
-                  style={{ marginTop: 20 }}
-                  disabled={this.state.vehicle === '' || this.state.location === ''}
-                  onPress={this._pickup}
-                  content="Request Pickup"
-                />
+                <View
+                  style={{
+                    marginTop: 20,
+                    alignSelf: 'stretch',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Button
+                    disabled={this.state.vehicle === '' || this.state.location === ''}
+                    onPress={this._pickup}
+                    title="Request Pickup"
+                    color={colors.buttonBackground}
+                  />
+                </View>
               </View>
             </KeyboardAwareView>
           </View>
