@@ -9,8 +9,6 @@ import { colors, gstyles } from '../../config/styles';
 import { chunkArray } from '../../helpers';
 
 const styles = StyleSheet.create({
-  container: {
-  },
   row: {
     flexDirection: 'row',
     marginBottom: 5,
@@ -77,11 +75,9 @@ class Picker extends React.Component {
   render() {
     return (
       <View style={this.props.style}>
-        <View style={styles.container}>
-          {chunkArray(this.props.values.slice(), this.props.columns).map(value => (
-            this._renderRow(value)
-          ))}
-        </View>
+        {chunkArray(this.props.values.slice(), this.props.columns).map(value => (
+          this._renderRow(value)
+        ))}
       </View>
     );
   }
