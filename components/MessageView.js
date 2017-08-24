@@ -88,9 +88,12 @@ class MessageView extends React.Component {
   }
 
   render() {
+    const renderChildren = Platform.OS === 'ios' || this.state.message === '';
     return (
       <View style={this.props.style}>
-        {this.props.children}
+        {renderChildren &&
+          this.props.children
+        }
         {this.state.message !== '' &&
           <View style={styles.container}>
             {this.state.duration === 0 && (
