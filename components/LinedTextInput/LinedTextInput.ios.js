@@ -13,6 +13,7 @@ class LinedTextInput extends React.Component {
 
     this.state = {
       borderBottomColor: props.borderBottomColor,
+      borderBottomWidth: 1,
     };
 
     this._onFocus = this._onFocus.bind(this);
@@ -21,14 +22,21 @@ class LinedTextInput extends React.Component {
 
   state: {
     borderBottomColor: string,
+    borderBottomWidth: number,
   }
 
   _onFocus() {
-    this.setState({ borderBottomColor: colors.buttonBackground });
+    this.setState({
+      borderBottomColor: colors.buttonBackground,
+      borderBottomWidth: 2,
+    });
   }
 
   _onBlur() {
-    this.setState({ borderBottomColor: this.props.borderBottomColor });
+    this.setState({
+      borderBottomColor: this.props.borderBottomColor,
+      borderBottomWidth: 1,
+    });
   }
 
   render() {
@@ -38,7 +46,7 @@ class LinedTextInput extends React.Component {
         style={[props.style, {
           height: 38,
           marginBottom: 6,
-          borderBottomWidth: 1,
+          borderBottomWidth: this.state.borderBottomWidth,
           borderBottomColor: this.state.borderBottomColor,
         }]}
       >
