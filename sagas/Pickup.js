@@ -51,6 +51,7 @@ const createPickupAsync = (requestor, students, location, vehicle) => {
 
 function* createPickup(action) {
   try {
+    yield put(MessageActions.showMessage('Creating pickup', 0));
     const pickup = yield call(
       createPickupAsync,
       action.requestor,
@@ -63,6 +64,8 @@ function* createPickup(action) {
   } catch (error) {
     console.log('createPickup failed', error);
     // Do nothing?
+  } finally {
+    yield put(MessageActions.clearMessage());
   }
 }
 

@@ -36,7 +36,7 @@ const requestLoginAsync = (phoneNumber) => {
 
 function* requestLogin(action) {
   try {
-    yield put(SpinnerActions.start());
+    yield put(MessageActions.showMessage('Requesting...', 0));
     const { phoneNumber } = action;
     const response = yield call(requestLoginAsync, phoneNumber);
     yield put(AuthActions.requestLoginSucceeded());
@@ -46,7 +46,7 @@ function* requestLogin(action) {
     console.log('requestLogin failed', error);
     yield put(AuthActions.authFailure());
   } finally {
-    yield put(SpinnerActions.stop());
+    yield put(MessageActions.clearMessage());
   }
 }
 
@@ -93,7 +93,6 @@ function* login() {
         } else {
           const pickup = yield call(getActivePickup, state.auth.user.uid);
           yield put(PickupActions.loadPickup(pickup));
-          yield put(MessageActions.clearMessage());
           yield put(NavActions.resetNavigation('Main'));
         }
       } finally {

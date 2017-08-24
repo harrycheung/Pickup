@@ -3,15 +3,16 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Keyboard, Text } from 'react-native';
+import { Button, Keyboard, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { colors, gstyles } from '../../config/styles';
 import { validPhoneNumber } from '../../helpers';
-import Button from '../../components/Button';
 import { Actions as AuthActions } from '../../actions/Auth';
+import { Actions as MessageActions } from '../../actions/Message';
 import LinedTextInput from '../../components/LinedTextInput';
+import MessageView from '../../components/MessageView';
 import KeyboardAwareView from '../../components/KeyboardAwareView';
 
 class LoginRequest extends React.Component {
@@ -34,10 +35,6 @@ class LoginRequest extends React.Component {
     requested: boolean,
   };
 
-  componentWillReceiveProps(nextProps: Object) {
-    this.setState({ disabled: nextProps.spinning });
-  }
-
   _changeText(phoneNumber) {
     const disabled = !validPhoneNumber(phoneNumber);
     this.setState({ disabled, phoneNumber });
@@ -50,61 +47,45 @@ class LoginRequest extends React.Component {
   }
 
   render() {
-    let buttonContent = null;
-    if (this.props.spinning) {
-      buttonContent = (
-        <ActivityIndicator animating color="white" size="small" />
-      );
-    } else if (this.props.requested) {
-      buttonContent = 'Get magic link again';
-    } else {
-      buttonContent = 'Get magic link';
-    }
-
     return (
-      <KeyboardAwareView
-        style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}
-        centerOnInput
-      >
-        <Text style={gstyles.font18}>Enter your phone number</Text>
-        <Text style={gstyles.font18}>to get a magic link</Text>
-        <LinedTextInput
-          style={{ alignSelf: 'stretch' }}
-          placeholder="Phone number"
-          maxLength={10}
-          clearButtonMode="while-editing"
-          keyboardType="phone-pad"
-          onChangeText={this._changeText}
-          onBlur={Keyboard.dismiss}
-          keyboardAwareInput
-        />
-        <Button
-          onPress={this._login}
-          style={gstyles.marginTop10}
-          disabled={this.state.disabled}
-          content={buttonContent}
-        />
-      </KeyboardAwareView>
+      <MessageView style={gstyles.flex1}>
+        <KeyboardAwareView
+          style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}
+          centerOnInput
+        >
+          <Text style={gstyles.font18}>Enter your phone number</Text>
+          <Text style={gstyles.font18}>to get a magic link</Text>
+          <LinedTextInput
+            style={{ alignSelf: 'stretch' }}
+            placeholder="Phone number"
+            maxLength={10}
+            clearButtonMode="while-editing"
+            keyboardType="phone-pad"
+            onChangeText={this._changeText}
+            onBlur={Keyboard.dismiss}
+            keyboardAwareInput
+          />
+          <Button
+            onPress={this._login}
+            style={gstyles.marginTop10}
+            disabled={this.state.disabled}
+            title="Get magic link"
+            color={colors.buttonBackground}
+          />
+        </KeyboardAwareView>
+      </MessageView>
     );
   }
 }
 
 LoginRequest.propTypes = {
-  requested: PropTypes.bool,
-  spinning: PropTypes.bool.isRequired,
   requestLogin: PropTypes.func.isRequired,
+  showMessage: PropTypes.func.isRequired,
 };
-
-LoginRequest.defaultProps = {
-  requested: false,
-};
-
-const mapStateToProps = state => ({
-  spinning: state.spinner,
-});
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(AuthActions, dispatch),
+  ...bindActionCreators(MessageActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginRequest);
+export default connect(null, mapDispatchToProps)(LoginRequest);

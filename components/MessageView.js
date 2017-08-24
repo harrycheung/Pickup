@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {
   Animated,
   ActivityIndicator,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -13,6 +14,7 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { BlurView } from 'expo';
 
 import { gstyles } from '../config/styles';
 import { Actions as MessageActions } from '../actions/Message';
@@ -32,7 +34,12 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'darkgray',
     alignItems: 'center',
+    justifyContent: 'center',
   },
+  background: {
+    backgroundColor: 'black',
+    opacity: 0.7,
+  }
 });
 
 class MessageView extends React.Component {
@@ -50,7 +57,11 @@ class MessageView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.message !== '') {
+    if (nextProps.message === '') {
+      this.setState({ message: '', duration: 0 }, () => {
+        this.state.fadeAnimationValue.setValue(0);
+      });
+    } else {
       this._showMessage(nextProps.message, nextProps.duration);
     }
   }
@@ -66,8 +77,13 @@ class MessageView extends React.Component {
             duration: this.props.duration,
           },
         ).start();
+        this.state.fadeAnimationValue.addListener((value) => {
+          if (value === 0) {
+            this.props.clearMessage();
+            this.state.fadeAnimationValue.removeAllListeners();
+          }
+        });
       }
-      this.props.clearMessage();
     });
   }
 
@@ -75,19 +91,36 @@ class MessageView extends React.Component {
     return (
       <View style={this.props.style}>
         {this.props.children}
-        <Animated.View
-          style={[styles.container, { opacity: this.state.fadeAnimationValue }]}
-          pointerEvents="none"
-        >
-          <View style={styles.dialog}>
-            {this.state.duration === 0 &&
-              <ActivityIndicator animating color="white" size="small" />
+        {this.state.message !== '' &&
+          <View style={styles.container}>
+            {this.state.duration === 0 && (
+              (Platform.OS === 'ios' &&
+                <BlurView style={styles.container} tint="light" intensity={70} />
+              ) ||
+              (Platform.OS === 'android' &&
+                <View style={[styles.container, styles.background]} />
+              ))
             }
-            <Text style={[{ color: 'white' }, gstyles.font18]}>
-              {this.state.message}
-            </Text>
+            <Animated.View
+              style={[styles.container, { opacity: this.state.fadeAnimationValue }]}
+              pointerEvents="none"
+            >
+              <View style={styles.dialog}>
+                <Text style={[{ color: 'white' }, gstyles.font18]}>
+                  {this.state.message}
+                </Text>
+                {this.state.duration === 0 &&
+                  <ActivityIndicator
+                    style={{ margin: 15 }}
+                    animating
+                    color="white"
+                    size="large"
+                  />
+                }
+              </View>
+            </Animated.View>
           </View>
-        </Animated.View>
+        }
       </View>
     );
   }
