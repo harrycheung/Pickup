@@ -25,12 +25,11 @@ export default StyleSheet.create({
     borderWidth: 3,
     borderColor: colors.buttonBackground,
     borderRadius: 5,
-    margin: 15,
+    marginTop: 15,
     padding: 15,
     backgroundColor: 'white',
     flexDirection: 'column',
     alignItems: 'center',
-    alignSelf: 'stretch',
   },
   configureModal: {
     position: 'absolute',

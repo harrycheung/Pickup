@@ -27,6 +27,9 @@ export const gstyles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  flexRow: {
+    flexDirection: 'row',
+  },
   flexCenter: {
     justifyContent: 'center',
     alignItems: 'center',

@@ -143,24 +143,28 @@ class StudentSelect extends React.Component {
     if (this.state.existingPickup) {
       return (
         <View style={[gstyles.flex1, gstyles.flexStart]}>
-          <View style={styles.dialog}>
-            <Text style={gstyles.font18}>Continue your previous pickup?</Text>
-            <View style={[gstyles.marginTop10, { flexDirection: 'row', alignItems: 'center' }]}>
-              <View style={gstyles.flex1}>
-                <Button
-                  onPress={this._cancelPickup}
-                  title="Cancel"
-                  color="red"
-                />
-              </View>
-              <View style={{ width: 10 }} />
-              <View style={gstyles.flex1}>
-                <Button
-                  onPress={() => this.props.resumePickup(this.props.pickup)}
-                  title="Continue"
-                />
+          <View style={gstyles.flexRow}>
+            <View style={gstyles.flex1} />
+            <View style={styles.dialog}>
+              <Text style={gstyles.font18}>Continue your previous pickup?</Text>
+              <View style={[gstyles.marginTop10, { flexDirection: 'row', alignItems: 'center' }]}>
+                <View style={gstyles.flex1}>
+                  <Button
+                    onPress={this._cancelPickup}
+                    title="Cancel"
+                    color="red"
+                  />
+                </View>
+                <View style={{ width: 10 }} />
+                <View style={gstyles.flex1}>
+                  <Button
+                    onPress={() => this.props.resumePickup(this.props.pickup)}
+                    title="Continue"
+                  />
+                </View>
               </View>
             </View>
+            <View style={gstyles.flex1} />
           </View>
         </View>
       );
