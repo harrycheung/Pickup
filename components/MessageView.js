@@ -77,8 +77,8 @@ class MessageView extends React.Component {
             duration: this.props.duration,
           },
         ).start();
-        this.state.fadeAnimationValue.addListener((value) => {
-          if (value === 0) {
+        this.state.fadeAnimationValue.addListener((event) => {
+          if (event.value === 0) {
             this.props.clearMessage();
             this.state.fadeAnimationValue.removeAllListeners();
           }
