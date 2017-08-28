@@ -48,27 +48,27 @@ class Root extends React.Component {
 
   componentWillMount() {
     var self = this;
-    AppState.addEventListener('change', this._handleAppStateChange.bind(this));
-    AsyncStorage.getItem('reduxStore')
-    .then((value) => {
-      if (value && value.length) {
-        let previousStore = JSON.parse(value);
-        self.setState({
-          store: createStore(AppReducers, previousStore, middleware),
-          isStoreLoading: false,
-        }, () => {
-          // Rerun saga on previous store
-          sagaMiddleware.run(rootSaga);
-        });
-        // self.setState({store: store, isStoreLoading: false});
-      } else {
-        self.setState({isStoreLoading: false});
-      }
-    })
-    .catch((error) => {
+    // AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+    // AsyncStorage.getItem('reduxStore')
+    // .then((value) => {
+    //   if (value && value.length) {
+    //     let previousStore = JSON.parse(value);
+    //     self.setState({
+    //       store: createStore(AppReducers, previousStore, middleware),
+    //       isStoreLoading: false,
+    //     }, () => {
+    //       // Rerun saga on previous store
+    //       sagaMiddleware.run(rootSaga);
+    //     });
+    //     // self.setState({store: store, isStoreLoading: false});
+    //   } else {
+    //     self.setState({isStoreLoading: false});
+    //   }
+    // })
+    // .catch((error) => {
       self.setState({store: store});
       self.setState({isStoreLoading: false});
-    })
+    // })
   }
 
   componentWillUnmount() {
