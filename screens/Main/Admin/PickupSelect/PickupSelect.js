@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, ListView, TouchableOpacity, View } from 'react-native';
+import { Image, SectionList, TouchableOpacity, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -26,18 +26,17 @@ class PickupSelect extends React.Component {
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      pickups: [],
-      dataSource: ds.cloneWithRows([]),
+      live: [],
+      completed: [],
     };
 
     this._renderRow = this._renderRow.bind(this);
   }
 
   state: {
-    pickups: Array<Object>,
-    dataSource: ListView.DataSource,
+    live: Array<Object>,
+    completed: Array<Object>,
   }
 
   componentDidMount() {
@@ -45,13 +44,14 @@ class PickupSelect extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const pickups = [];
+    let pickups = [];
     Object.keys(nextProps.pickups).forEach((key) => {
       pickups.push(Object.assign({}, nextProps.pickups[key], { key }));
     });
+    pickups = pickups.sort((a, b) => b.createdAt - a.createdAt);
     this.setState({
-      pickups,
-      dataSource: this.state.dataSource.cloneWithRows(pickups),
+      live: pickups.filter(item => !('completedAt' in item)),
+      completed: pickups.filter(item => 'completedAt' in item),
     });
   }
 
@@ -59,7 +59,7 @@ class PickupSelect extends React.Component {
     this.props.unlistenPickups();
   }
 
-  _renderRow(pickup, sectionID, rowID) {
+  _renderRow(pickup) {
     const students = [];
     Object.keys(pickup.students).forEach((key) => {
       const student = pickup.students[key];
@@ -82,8 +82,7 @@ class PickupSelect extends React.Component {
 
     return (
       <TouchableOpacity
-        key={`${sectionID}-${rowID}`}
-        style={styles.request}
+        style={[styles.request, gstyles.marginH15]}
         onPress={() => this.props.handlePickup(pickup)}
       >
         {students}
@@ -95,12 +94,30 @@ class PickupSelect extends React.Component {
 
   render() {
     return (
-      <MessageView style={[gstyles.flex1, gstyles.marginH15]}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          renderSeparator={PickupSelect._renderSeparator}
-          enableEmptySections
+      <MessageView style={gstyles.flex1}>
+        <SectionList
+          renderItem={({ item }) => this._renderRow(item)}
+          renderSectionHeader={({ section }) => {
+            if (section.key === 'Completed') {
+              return (
+                <View
+                  style={{
+                    backgroundColor: colors.buttonBackground,
+                    paddingVertical: 2,
+                  }}
+                >
+                  <Text style={[gstyles.marginH15, { color: 'white' }]}>
+                    {section.key}
+                  </Text>
+                </View>
+              );
+            }
+            return null;
+          }}
+          sections={[
+            { data: this.state.live, key: 'Live' },
+            { data: this.state.completed, key: 'Completed' },
+          ]}
         />
       </MessageView>
     );
