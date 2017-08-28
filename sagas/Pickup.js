@@ -140,7 +140,7 @@ function* listenPickup() {
 
       const back = function* (message) {
         yield put(NavActions.back());
-        yield put(MessageActions.showMessage(message, 3000));
+        yield put(MessageActions.showMessage(message, 1500));
         yield put(PickupActions.clearPickup());
       };
 

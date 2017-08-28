@@ -74,18 +74,20 @@ class Profile extends React.Component {
           onSubmit={this.props.updateUser}
           spinning={this.props.spinning}
         >
-          <View style={[gstyles.flex1, gstyles.marginTop10, { alignSelf: 'stretch' }]}>
+          <View style={[gstyles.flex1, gstyles.marginTop10, gstyles.flexStretch]}>
             <Text style={gstyles.font18}>
               Vehicles:
             </Text>
             <View style={gstyles.flex1}>
               <View
-                style={{
-                  alignSelf: 'stretch',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
+                style={[
+                  gstyles.flexStretch,
+                  gstyles.flexRow,
+                  {
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  },
+                ]}
               >
                 <LinedTextInput
                   style={{ flex: 3, marginRight: 5 }}

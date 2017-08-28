@@ -10,7 +10,6 @@ export default StyleSheet.create({
   },
   studentRequest: {
     flexDirection: 'row',
-    height: 100,
     marginBottom: 10,
   },
   student: {
@@ -18,10 +17,6 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 100,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   requestor: {
     alignSelf: 'flex-end',

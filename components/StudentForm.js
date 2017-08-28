@@ -201,7 +201,7 @@ class StudentForm extends React.Component {
       );
     } else if (this.props.mode === 'edit') {
       content = (
-        <View style={[gstyles.flex1, { alignSelf: 'stretch' }]}>
+        <View style={[gstyles.flex1, gstyles.flexStretch]}>
           <Text style={[styles.pickerLabel, gstyles.marginTop10]}>
             Level: {this.props.grade}
           </Text>

@@ -174,7 +174,7 @@ class ProfileForm extends React.Component {
           {this.props.children}
           {this.props.usePadding &&
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View style={[gstyles.flex1, { alignSelf: 'stretch' }]} />
+              <View style={[gstyles.flex1, gstyles.flexStretch]} />
             </TouchableWithoutFeedback>
           }
         </KeyboardAwareView>

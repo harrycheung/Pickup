@@ -5,12 +5,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextInput, ViewPropTypes } from 'react-native';
 
-import { colors } from '../../config/styles';
+import { colors, gstyles } from '../../config/styles';
 
 const LinedTextInput = props => (
   <TextInput
     {...props}
-    style={[props.style, { height: 44, paddingLeft: 5, alignSelf: 'stretch' }]}
+    style={[props.style, gstyles.flexStretch, { height: 44, paddingLeft: 5 }]}
     selectionColor={'black'}
     underlineColorAndroid={props.borderBottomColor}
   />

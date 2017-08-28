@@ -25,7 +25,7 @@ export default StyleSheet.create({
     borderWidth: 3,
     borderColor: colors.buttonBackground,
     borderRadius: 5,
-    marginTop: 15,
+    margin: 15,
     padding: 15,
     backgroundColor: 'white',
     flexDirection: 'column',

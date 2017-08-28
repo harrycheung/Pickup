@@ -9,24 +9,6 @@ export default StyleSheet.create({
     marginHorizontal: 15,
     paddingBottom: 15,
   },
-  student: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  released: {
-    opacity: 0.3,
-  },
-  escort: {
-    borderWidth: 3,
-    borderColor: 'green',
-  },
-  studentName: {
-    marginLeft: 15,
-    fontSize: 22,
-    color: 'white',
-  },
   senderImage: {
     width: 40,
     height: 40,
@@ -72,5 +54,31 @@ export default StyleSheet.create({
     marginTop: 5,
     fontSize: 10,
     color: 'white',
+  },
+  students: {
+    flexDirection: 'column',
+    marginBottom: 5,
+  },
+  studentRequest: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  studentImage: {
+    borderWidth: 2,
+    marginRight: 5,
+  },
+  unescort: {
+    borderColor: 'yellow',
+  },
+  escort: {
+    borderColor: 'green',
+  },
+  released: {
+    opacity: 0.3,
+    borderWidth: 0,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

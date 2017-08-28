@@ -147,7 +147,7 @@ class StudentSelect extends React.Component {
             <View style={gstyles.flex1} />
             <View style={styles.dialog}>
               <Text style={gstyles.font18}>Continue your previous pickup?</Text>
-              <View style={[gstyles.marginTop10, { flexDirection: 'row', alignItems: 'center' }]}>
+              <View style={[gstyles.marginTop10, gstyles.flexRow, { alignItems: 'center' }]}>
                 <View style={gstyles.flex1}>
                   <Button
                     onPress={this._cancelPickup}
@@ -219,11 +219,7 @@ class StudentSelect extends React.Component {
         {this.state.configurePickup &&
           <View style={styles.configureModal}>
             <KeyboardAwareView
-              style={[gstyles.flex1, {
-                alignSelf: 'stretch',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }]}
+              style={[gstyles.flex1, gstyles.flexStretch, gstyles.flexCenter]}
               centerOnInput
             >
               <TouchableWithoutFeedback
@@ -231,12 +227,12 @@ class StudentSelect extends React.Component {
               >
                 <BlurView style={[styles.configureModal]} tint="light" intensity={75} />
               </TouchableWithoutFeedback>
-              <View style={[styles.dialog, { alignItems: 'flex-start' }]}>
+              <View style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch ]}>
                 <Text style={[gstyles.font18, gstyles.marginTop10]}>
                   Where are you?
                 </Text>
                 <Picker
-                  style={[{ alignSelf: 'stretch' }, gstyles.marginTop10]}
+                  style={[gstyles.flexStretch, gstyles.marginTop10]}
                   values={C.Locations}
                   onChange={value => this.setState({ location: value })}
                   columns={2}
@@ -244,11 +240,11 @@ class StudentSelect extends React.Component {
                 <View
                   style={[
                     {
-                      alignSelf: 'stretch',
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     },
+                    gstyles.flexStretch,
                     gstyles.marginTop10]
                   }
                 >
@@ -266,12 +262,14 @@ class StudentSelect extends React.Component {
                 </View>
                 {this.state.showAddVehicle &&
                   <View
-                    style={{
-                      alignSelf: 'stretch',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
+                    style={[
+                      gstyles.flexStretch,
+                      gstyles.flexRow,
+                      {
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }
+                    ]}
                   >
                     <LinedTextInput
                       style={{ flex: 3 }}
@@ -305,17 +303,19 @@ class StudentSelect extends React.Component {
                   </View>
                 }
                 <Picker
-                  style={[{ alignSelf: 'stretch' }, gstyles.marginTop10]}
+                  style={[gstyles.flexStretch, gstyles.marginTop10]}
                   columns={2}
                   values={['In person'].concat(this.props.user.vehicles)}
                   onChange={vehicle => this.setState({ vehicle })}
                 />
                 <View
-                  style={{
-                    marginTop: 20,
-                    alignSelf: 'stretch',
-                    justifyContent: 'center',
-                  }}
+                  style={[
+                    {
+                      marginTop: 20,
+                      justifyContent: 'center',
+                    },
+                    gstyles.flexStretch,
+                  ]}
                 >
                   <Button
                     disabled={this.state.vehicle === '' || this.state.location === ''}

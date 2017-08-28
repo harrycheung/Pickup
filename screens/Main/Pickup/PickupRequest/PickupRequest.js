@@ -10,7 +10,6 @@ import { gstyles } from '../../../../config/styles';
 import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import PickupMessages from '../../../../components/PickupMessages';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
-import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class PickupRequest extends React.Component {
   static navigationOptions = {
@@ -69,7 +68,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  navigateBack: () => dispatch(NavActions.back()),
   ...bindActionCreators(PickupActions, dispatch),
 });
 

@@ -24,7 +24,7 @@ class Button extends React.Component {
       );
     }
     return (
-      <View style={[{ height: 44, alignSelf: 'stretch' }, this.props.style]}>
+      <View style={[{ height: 44 }, gstyles.flexStretch, this.props.style]}>
         <View
           style={{
             position: 'absolute',

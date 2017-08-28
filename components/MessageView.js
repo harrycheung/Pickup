@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
   },
   background: {
     backgroundColor: 'black',
-    opacity: 0.7,
-  }
+    opacity: 0.5,
+  },
 });
 
 class MessageView extends React.Component {
@@ -57,30 +57,32 @@ class MessageView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.message === '') {
-      this.setState({ message: '', duration: 0 }, () => {
-        this.state.fadeAnimationValue.setValue(0);
-      });
-    } else {
-      this._showMessage(nextProps.message, nextProps.duration);
+    if (this.props.message !== nextProps.message) {
+      if (nextProps.message === '') {
+        this.setState({ message: '', duration: 0 }, () => {
+          this.state.fadeAnimationValue.setValue(0);
+        });
+      } else {
+        this._showMessage(nextProps.message, nextProps.duration);
+      }
     }
   }
 
   _showMessage(message, duration) {
     this.setState({ message, duration }, () => {
       this.state.fadeAnimationValue.setValue(1);
-      if (this.props.duration > 0) {
+      if (this.state.duration > 0) {
         Animated.timing(
           this.state.fadeAnimationValue,
           {
             toValue: 0,
-            duration: this.props.duration,
+            duration: this.state.duration,
           },
         ).start();
         this.state.fadeAnimationValue.addListener((event) => {
           if (event.value === 0) {
-            this.props.clearMessage();
             this.state.fadeAnimationValue.removeAllListeners();
+            this.props.clearMessage();
           }
         });
       }

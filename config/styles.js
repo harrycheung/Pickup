@@ -37,11 +37,17 @@ export const gstyles = StyleSheet.create({
   flexStart: {
     justifyContent: 'flex-start',
   },
+  flexStretch: {
+    alignSelf: 'stretch',
+  },
   width10: {
     width: 10,
   },
   font14: {
     fontSize: 14,
+  },
+  font16: {
+    fontSize: 16,
   },
   font18: {
     fontSize: 18,

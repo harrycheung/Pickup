@@ -4,16 +4,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  Alert,
+  Button,
   Image,
   Keyboard,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import moment from 'moment';
 
 import styles from './styles';
 import { gstyles } from '../../config/styles';
-import { time } from '../../helpers';
 import AutoScrollView from '../AutoScrollView';
 
 class PickupMessages extends React.Component {
@@ -25,6 +27,7 @@ class PickupMessages extends React.Component {
     };
 
     this._postMessage = this._postMessage.bind(this);
+    this._release = this._release.bind(this);
   }
 
   state: {
@@ -82,7 +85,6 @@ class PickupMessages extends React.Component {
             <Text style={styles.messageText}>
               {message.sender.name} at {this.props.pickup.location} in {this.props.pickup.vehicle}
             </Text>
-            {studentsJSX}
           </View>
         );
         break;
@@ -118,10 +120,24 @@ class PickupMessages extends React.Component {
             messageJSX
           }
           <Text style={styles.timestamp}>
-            {time(message.createdAt)}
+            {moment(message.createdAt).format('LT')}
           </Text>
         </View>
       </View>
+    );
+  }
+
+  _release(pickup, student) {
+    Alert.alert(
+      'Confirm release',
+      null,
+      [
+        { text: 'Cancel', onPress: null, style: 'cancel' },
+        { text: 'OK',
+          onPress: () => this.props.releaseStudent(pickup, this.props.user, student),
+        },
+      ],
+      { cancelable: false },
     );
   }
 
@@ -136,6 +152,77 @@ class PickupMessages extends React.Component {
   }
 
   render() {
+    const { pickup, user } = this.props;
+    const students = [];
+    Object.keys(pickup.students).forEach((key) => {
+      const student = pickup.students[key];
+      const escort = student.escort.uid === user.uid;
+      let actions = [];
+      if (student.released) {
+        actions = [(
+          <Text key="released" style={gstyles.font14}>
+            released by {escort ? 'You' : student.escort.name}
+          </Text>
+        )];
+      } else if (escort) {
+        actions = [(
+          <Button
+            key="cancel"
+            style={gstyles.flex1}
+            onPress={() => this.props.cancelEscort(pickup, user, student)}
+            title="Cancel"
+            color="darkgray"
+          />
+        ), (
+          <View key="spacer" style={gstyles.width10} />
+        ), (
+          <Button
+            key="release"
+            style={gstyles.flex1}
+            onPress={() => this._release(pickup, student)}
+            title="Release"
+          />
+        )];
+      } else if (user.admin && student.escort.uid === '') {
+        actions = [(
+          <Button
+            key="escort"
+            style={gstyles.flex1}
+            onPress={() => this.props.escortStudent(pickup, user, student)}
+            title="Escort"
+          />
+        )];
+      } else if (!user.admin && student.escort.uid === '') {
+        actions = [<Text key="waiting" style={gstyles.font14}>waiting</Text>];
+      } else {
+        actions = [(
+          <Text key="escort" style={gstyles.font14}>
+            escorted by {student.escort.name}
+          </Text>
+        )];
+      }
+
+      students.push((
+        <View
+          key={student.key}
+          style={[gstyles.flexCenter, styles.studentRequest]}
+        >
+          <View style={[gstyles.flex1, gstyles.flexRow]}>
+            <Image
+              style={gstyles.profilePic50}
+              source={{ uri: student.image }}
+            />
+            <Text style={[gstyles.font16, { marginLeft: 5, alignSelf: 'center' }]}>
+              {student.name} ({student.grade})
+            </Text>
+          </View>
+          <View style={[gstyles.flex1, styles.actionsContainer, gstyles.flexCenter]}>
+            {actions}
+          </View>
+        </View>
+      ));
+    });
+
     const messages = [];
     Object.keys(this.props.pickup.messages || {}).forEach((key) => {
       const message = this.props.pickup.messages[key];
@@ -145,6 +232,19 @@ class PickupMessages extends React.Component {
 
     return (
       <View style={gstyles.flex1}>
+        <View style={{ paddingHorizontal: 15, paddingVertical: 10, justifyContent: 'flex-start', borderBottomWidth: 1, borderBottomColor: 'lightgray' }}>
+          <View style={styles.students}>
+            {students}
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text>
+              {this.props.pickup.requestor.name} at {this.props.pickup.location} in {this.props.pickup.vehicle}
+            </Text>
+            <Text style={{ fontSize: 10, color: 'black', alignSelf: 'flex-end' }}>
+              {moment(this.props.pickup.createdAt).format('LT')}
+            </Text>
+          </View>
+        </View>
         <AutoScrollView contentContainerStyle={styles.messagesContainer}>
           {messages}
         </AutoScrollView>
@@ -168,10 +268,16 @@ PickupMessages.propTypes = {
   pickup: PropTypes.object.isRequired,
   postMessage: PropTypes.func.isRequired,
   hideRequest: PropTypes.bool,
+  cancelEscort: PropTypes.func,
+  escortStudent: PropTypes.func,
+  releaseStudent: PropTypes.func,
 };
 
 PickupMessages.defaultProps = {
   hideRequest: false,
+  cancelEscort: () => {},
+  escortStudent: () => {},
+  releaseStudent: () => {},
 };
 
 export default PickupMessages;

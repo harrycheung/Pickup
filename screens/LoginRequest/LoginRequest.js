@@ -56,7 +56,7 @@ class LoginRequest extends React.Component {
           <Text style={gstyles.font18}>Enter your phone number</Text>
           <Text style={gstyles.font18}>to get a magic link</Text>
           <LinedTextInput
-            style={{ alignSelf: 'stretch' }}
+            style={gstyles.flexStretch}
             placeholder="Phone number"
             maxLength={10}
             clearButtonMode="while-editing"
