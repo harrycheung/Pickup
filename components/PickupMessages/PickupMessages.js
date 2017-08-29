@@ -232,7 +232,7 @@ class PickupMessages extends React.Component {
 
     return (
       <View style={gstyles.flex1}>
-        <View style={{ paddingHorizontal: 15, paddingVertical: 10, justifyContent: 'flex-start', borderBottomWidth: 1, borderBottomColor: 'lightgray' }}>
+        <View style={{ flex: 1, paddingHorizontal: 15, paddingVertical: 10, justifyContent: 'flex-start' }}>
           <View style={styles.students}>
             {students}
           </View>
@@ -245,21 +245,23 @@ class PickupMessages extends React.Component {
             </Text>
           </View>
         </View>
-        <AutoScrollView contentContainerStyle={styles.messagesContainer}>
-          {messages}
-        </AutoScrollView>
-        <View style={styles.composeContainer}>
-          <TextInput
-            style={{ height: 44, paddingHorizontal: 15 }}
-            placeholder="Send a message"
-            returnKeyType="send"
-            onChangeText={text => this.setState({ message: text })}
-            onSubmitEditing={this._postMessage}
-            value={this.state.message}
-          />
-        </View>
       </View>
     );
+    //     <AutoScrollView contentContainerStyle={styles.messagesContainer}>
+    //       {messages}
+    //     </AutoScrollView>
+    //     <View style={styles.composeContainer}>
+    //       <TextInput
+    //         style={{ height: 44, paddingHorizontal: 15 }}
+    //         placeholder="Send a message"
+    //         returnKeyType="send"
+    //         onChangeText={text => this.setState({ message: text })}
+    //         onSubmitEditing={this._postMessage}
+    //         value={this.state.message}
+    //       />
+    //     </View>
+    //   </View>
+    // );
   }
 }
 
