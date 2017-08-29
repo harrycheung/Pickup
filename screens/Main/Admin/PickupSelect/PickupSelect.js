@@ -19,8 +19,8 @@ class PickupSelect extends React.Component {
     title: navigation.state.params.grade,
   });
 
-  static _renderSeparator(sectionID, rowID) {
-    return <View key={`${sectionID}-${rowID}`} style={styles.separator} />;
+  static _renderSeparator() {
+    return <View style={styles.separator} />;
   }
 
   constructor(props) {
@@ -118,6 +118,7 @@ class PickupSelect extends React.Component {
             { data: this.state.live, key: 'Live' },
             { data: this.state.completed, key: 'Completed' },
           ]}
+          ItemSeparatorComponent={PickupSelect._renderSeparator}
         />
       </MessageView>
     );

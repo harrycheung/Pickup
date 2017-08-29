@@ -5,9 +5,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Alert,
+  FlatList,
   Image,
   Keyboard,
-  ListView,
   Platform,
   StyleSheet,
   Text,
@@ -103,11 +103,10 @@ class StudentForm extends React.Component {
   constructor(props: Object) {
     super(props);
 
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       grade: this.props.grade,
       relationship: this.props.relationship,
-      relationshipsDS: ds.cloneWithRows(StudentForm.loadRelationships(this.props.relationships)),
+      data: StudentForm.loadRelationships(this.props.relationships),
       showAddModal: false,
       addRelPhone: '',
       addRelRelationship: 'Parent',
@@ -124,7 +123,7 @@ class StudentForm extends React.Component {
   state: {
     grade: string,
     relationship: string,
-    relationshipsDS: Object,
+    data: Array<Object>,
     showAddModal: boolean,
     addRelPhone: string,
     addRelRelationship: string,
@@ -138,10 +137,7 @@ class StudentForm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.relationships !== nextProps.relationships) {
       this.setState({
-        relationshipsDS:
-          this.state.relationshipsDS.cloneWithRows(
-            StudentForm.loadRelationships(nextProps.relationships),
-          ),
+        data: StudentForm.loadRelationships(nextProps.relationships),
       });
     }
   }
@@ -220,21 +216,25 @@ class StudentForm extends React.Component {
                 />
               </View>
               <View style={gstyles.flex1}>
-                <ListView
+                <FlatList
                   style={gstyles.flex1}
-                  dataSource={this.state.relationshipsDS}
-                  enableEmptySections
-                  renderRow={(relationship, sectionID, rowID) => (
+                  data={this.state.data}
+                  renderItem={({ item }) => (
                     <View
-                      key={`${sectionID}-${rowID}`}
-                      style={{ paddingTop: 5, flexDirection: 'row', alignItems: 'center' }}
+                      style={[
+                        {
+                          paddingTop: 5,
+                          alignItems: 'center',
+                        },
+                        gstyles.flexRow,
+                      ]}
                     >
                       <Image
                         style={[gstyles.profilePic40, { marginRight: 10 }]}
-                        source={{ uri: relationship.image }}
+                        source={{ uri: item.image }}
                       />
                       <Text style={[gstyles.font18, { marginRight: 10 }]}>
-                        {relationship.name} ({relationship.role})
+                        {item.name} ({item.role})
                       </Text>
                       <IconButton
                         icon="md-trash"
@@ -245,7 +245,7 @@ class StudentForm extends React.Component {
                             [
                               { text: 'Cancel', onPress: null, style: 'cancel' },
                               { text: 'OK',
-                                onPress: () => this.props.removeRelationship(relationship.key),
+                                onPress: () => this.props.removeRelationship(item.key),
                               },
                             ],
                             { cancelable: false },
@@ -290,7 +290,7 @@ class StudentForm extends React.Component {
                   <IconButton icon="md-close" onPress={this._closeModal} />
                 </View>
                 <LinedTextInput
-                  style={[gstyles.textInput, gstyles.marginTop10]}
+                  style={gstyles.marginTop10}
                   placeholder="Phone number"
                   maxLength={10}
                   clearButtonMode="while-editing"

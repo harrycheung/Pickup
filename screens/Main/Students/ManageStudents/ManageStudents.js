@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, ListView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -36,42 +36,25 @@ class ManageStudents extends React.Component {
     })
   );
 
-  static _renderSeparator = (sectionID, rowID) => (
-    <View key={`${sectionID}-${rowID}`} style={styles.separator} />
+  static _renderSeparator = () => (
+    <View style={styles.separator} />
   );
 
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.state = {
-      dataSource: ds.cloneWithRows(this.props.students),
-    };
-
     this._renderRow = this._renderRow.bind(this);
   }
 
-  state: {
-    dataSource: ListView.DataSource,
-  };
-
   componentWillMount() {
     this.props.listenStudents(this.props.uid);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.students !== nextProps.students) {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(nextProps.students),
-      });
-    }
   }
 
   componentWillUnmount() {
     this.props.unlistenStudents();
   }
 
-  _renderRow(student, sectionID, rowID) {
+  _renderRow(student) {
     if (typeof student === 'object') {
       const relationship = student.relationships[this.props.uid];
       const parent = relationship === 'Parent';
@@ -83,7 +66,6 @@ class ManageStudents extends React.Component {
       return (
         <RowElement
           style={[styles.student, gstyles.flexCenter]}
-          key={`${sectionID}-${rowID}`}
           onPress={() => this.props.navigate('EditStudent', { student })}
         >
           <Image
@@ -105,17 +87,16 @@ class ManageStudents extends React.Component {
         </RowElement>
       );
     }
-    return <View key={`${sectionID}-${rowID}`} />
+    return <View />
   }
 
   render() {
     return (
       <View style={[gstyles.marginH15, gstyles.flex1]}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          renderSeparator={ManageStudents._renderSeparator}
-          enableEmptySections
+        <FlatList
+          data={this.props.students}
+          renderItem={({ item }) => this._renderRow(item)}
+          ItemSeparatorComponent={ManageStudents._renderSeparator}
         />
       </View>
     );

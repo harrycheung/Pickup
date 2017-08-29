@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImagePicker } from 'expo';
 
-import { colors, gstyles } from '../../config/styles';
+import { gstyles } from '../../config/styles';
 import LinedTextInput from '../LinedTextInput';
 import KeyboardAwareView from '../KeyboardAwareView';
 import CustomButton from '../Button';

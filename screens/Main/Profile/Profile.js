@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Keyboard, ListView, Text, View } from 'react-native';
+import { Button, FlatList, Keyboard, Text, View } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -28,12 +28,9 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       showAddVehicle: false,
       vehicle: '',
-      vehicles: props.vehicles,
-      vehiclesDS: ds.cloneWithRows(props.vehicles),
     };
 
     this._addVehicle = this._addVehicle.bind(this);
@@ -42,21 +39,10 @@ class Profile extends React.Component {
   state: {
     showAddVehicle: boolean,
     vehicle: string,
-    vehicles: Array<string>,
-    vehiclesDS: Object,
   }
 
   componentWillMount() {
     this.props.setImage(this.props.imageURL);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.vehicles !== nextProps.vehicles) {
-      this.setState({
-        vehiclesDS:
-          this.state.vehiclesDS.cloneWithRows(nextProps.vehicles),
-      });
-    }
   }
 
   _addVehicle() {
@@ -107,21 +93,19 @@ class Profile extends React.Component {
                   onPress={this._addVehicle}
                 />
               </View>
-              <ListView
+              <FlatList
                 style={gstyles.flex1}
-                dataSource={this.state.vehiclesDS}
-                enableEmptySections
-                renderRow={(vehicle, sectionID, rowID) => (
+                data={this.props.vehicles}
+                renderItem={({ item }) => (
                   <View
-                    key={`${sectionID}-${rowID}`}
-                    style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center' }}
+                    style={[{ marginTop: 5, alignItems: 'center' }, gstyles.flexRow]}
                   >
                     <Text style={[gstyles.font18, { marginRight: 15 }]}>
-                      {vehicle}
+                      {item}
                     </Text>
                     <IconButton
                       icon="md-trash"
-                      onPress={() => this.props.removeVehicle(vehicle)}
+                      onPress={() => this.props.removeVehicle(item)}
                     />
                   </View>
                 )}
