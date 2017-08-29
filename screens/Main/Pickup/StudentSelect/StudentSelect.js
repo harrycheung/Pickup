@@ -158,7 +158,10 @@ class StudentSelect extends React.Component {
                 <View style={{ width: 10 }} />
                 <View style={gstyles.flex1}>
                   <Button
-                    onPress={() => this.props.resumePickup(this.props.pickup)}
+                    onPress={() => {
+                      this.setState({ existingPickup: null });
+                      this.props.resumePickup(this.props.pickup);
+                    }}
                     title="Continue"
                   />
                 </View>
