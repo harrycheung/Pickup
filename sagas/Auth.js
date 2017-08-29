@@ -57,18 +57,22 @@ function* watchRequestLogin() {
 const loginAsync = token => FBauth.signInWithCustomToken(token);
 
 const getActivePickup = uid => FBref('/pickups')
-  .orderByChild('requestor/uid').equalTo(uid).limitToFirst(1)
-  .once('value')
+  .orderByChild('requestor/uid').equalTo(uid).once('value')
   .then((snapshot) => {
     let pickup = null;
     snapshot.forEach((pickupSnapshot) => {
       pickup = pickupSnapshot.val();
       pickup.key = pickupSnapshot.key;
-      const students = [];
-      Object.keys(pickup.students).forEach((key) => {
-        students.push(Object.assign(pickup.students[key], { key }));
-      });
-      pickup.students = students;
+      if (!('completedAt' in pickup)) {
+        const students = [];
+        Object.keys(pickup.students).forEach((key) => {
+          students.push(Object.assign(pickup.students[key], { key }));
+        });
+        pickup.students = students;
+        // Returning true breaks the forEach loop
+        return true;
+      }
+      return false;
     });
     return pickup;
   });
