@@ -232,8 +232,8 @@ class StudentSelect extends React.Component {
               >
                 <BlurView style={[styles.configureModal]} tint="light" intensity={75} />
               </TouchableWithoutFeedback>
-              <View style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch ]}>
-                <Text style={[gstyles.font18, gstyles.marginTop10]}>
+              <View style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch]}>
+                <Text style={[gstyles.flexStretch, gstyles.font18, gstyles.marginTop10]}>
                   Where are you?
                 </Text>
                 <Picker

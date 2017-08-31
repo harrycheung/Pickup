@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Alert,
+  Button,
   FlatList,
   Image,
   Keyboard,
@@ -22,20 +23,8 @@ import ProfileForm from './ProfileForm';
 import Picker from './Picker';
 import IconButton from './IconButton';
 import LinedTextInput from './LinedTextInput';
-import Button from './Button';
 
 const styles = StyleSheet.create({
-  picker: {
-    alignSelf: 'stretch',
-    ...Platform.select({
-      ios: {
-        marginTop: 5,
-      },
-      android: {
-        flex: 1,
-      },
-    }),
-  },
   pickerLabel: {
     ...Platform.select({
       ios: {
@@ -47,19 +36,6 @@ const styles = StyleSheet.create({
         marginRight: 20,
       },
     })
-  },
-  pickerContainer: {
-    alignSelf: 'stretch',
-    ...Platform.select({
-      ios: {
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-      },
-      android: {
-        flexDirection: 'row',
-        alignItems: 'stretch',
-      },
-    }),
   },
   relationshipsHeader: {
     marginTop: 15,
@@ -184,7 +160,7 @@ class StudentForm extends React.Component {
     let content = null;
     if (this.props.mode === 'add') {
       content = (
-        <View style={[styles.pickerContainer, gstyles.marginTop10]}>
+        <View style={gstyles.marginTop10}>
           <Text style={styles.pickerLabel}>Level</Text>
           <Picker
             style={styles.picker}
@@ -223,7 +199,7 @@ class StudentForm extends React.Component {
                     <View
                       style={[
                         {
-                          paddingTop: 5,
+                          paddingVertical: 5,
                           alignItems: 'center',
                         },
                         gstyles.flexRow,
@@ -298,29 +274,30 @@ class StudentForm extends React.Component {
                   keyboardType="phone-pad"
                   onChangeText={this._addRelationshipPhone}
                 />
-                <View style={[styles.pickerContainer, gstyles.marginTop10]}>
+                <View style={gstyles.marginTop10}>
                   <Text style={styles.pickerLabel}>
                     Relationship to Student
                   </Text>
                   <Picker
-                    style={styles.picker}
+                    style={[gstyles.flexStretch, gstyles.marginTop10]}
                     values={C.Relationships}
                     onChange={value => this._updateState({ addRelRelationship: value })}
                     value={this.state.addRelRelationship}
                   />
                 </View>
-                <Button
-                  onPress={() => {
-                    this.props.addRelationship(
-                      this.state.addRelPhone,
-                      this.state.addRelRelationship,
-                    );
-                    this._closeModal();
-                  }}
-                  style={{ marginTop: 20 }}
-                  disabled={this.state.addRelDisabled}
-                  content="Add"
-                />
+                <View style={{ marginTop: 20 }}>
+                  <Button
+                    onPress={() => {
+                      this.props.addRelationship(
+                        this.state.addRelPhone,
+                        this.state.addRelRelationship,
+                      );
+                      this._closeModal();
+                    }}
+                    disabled={this.state.addRelDisabled}
+                    title="Add"
+                  />
+                </View>
               </View>
             </TouchableWithoutFeedback>
           </View>

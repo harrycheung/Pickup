@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, FlatList, Keyboard, Text, View } from 'react-native';
+import { Button, FlatList, Keyboard, Platform, Text, View } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,6 +14,7 @@ import ProfileForm from '../../../components/ProfileForm';
 import MessageView from '../../../components/MessageView';
 import LinedTextInput from '../../../components/LinedTextInput';
 import IconButton from '../../../components/IconButton';
+import MyButton from '../../../components/Button';
 import { Actions as UserActions } from '../../../actions/User';
 import { Actions as ImageActions } from '../../../actions/Image';
 
@@ -64,10 +65,9 @@ class Profile extends React.Component {
             <Text style={gstyles.font18}>
               Vehicles:
             </Text>
-            <View style={gstyles.flex1}>
+            <View>
               <View
                 style={[
-                  gstyles.flexStretch,
                   gstyles.flexRow,
                   {
                     alignItems: 'center',
@@ -87,30 +87,39 @@ class Profile extends React.Component {
                   value={this.state.vehicle}
                   keyboardAwareInput
                 />
-                <Button
-                  title="Add"
-                  disabled={this.state.vehicle.length < 6}
-                  onPress={this._addVehicle}
-                />
+                {Platform.OS === 'ios' ?
+                  <Button
+                    title="Add"
+                    disabled={this.state.vehicle.length < 6}
+                    onPress={this._addVehicle}
+                  />
+                  :
+                  <MyButton
+                    content="Add"
+                    disabled={this.state.vehicle.length < 6}
+                    onPress={this._addVehicle}
+                    round
+                  />
+                }
               </View>
-              <FlatList
-                style={gstyles.flex1}
-                data={this.props.vehicles.map(vehicle => ({ key: vehicle }))}
-                renderItem={({ item }) => (
-                  <View
-                    style={[{ marginTop: 5, alignItems: 'center' }, gstyles.flexRow]}
-                  >
-                    <Text style={[gstyles.font18, { marginRight: 15 }]}>
-                      {item.key}
-                    </Text>
-                    <IconButton
-                      icon="md-trash"
-                      onPress={() => this.props.removeVehicle(item)}
-                    />
-                  </View>
-                )}
-              />
             </View>
+            <FlatList
+              style={gstyles.flex1}
+              data={this.props.vehicles.map(vehicle => ({ key: vehicle }))}
+              renderItem={({ item }) => (
+                <View
+                  style={[{ marginTop: 5, alignItems: 'center' }, gstyles.flexRow]}
+                >
+                  <Text style={[gstyles.font18, { marginRight: 15 }]}>
+                    {item.key}
+                  </Text>
+                  <IconButton
+                    icon="md-trash"
+                    onPress={() => this.props.removeVehicle(item.key)}
+                  />
+                </View>
+              )}
+            />
           </View>
         </ProfileForm>
       </MessageView>

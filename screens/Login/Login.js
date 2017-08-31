@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Keyboard, Linking, Text } from 'react-native';
+import { Button, Keyboard, Linking, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -73,17 +73,21 @@ class Login extends React.Component {
         >
           <Text style={gstyles.font18}>Enter your phone number</Text>
           <Text style={gstyles.font18}>to get a magic link</Text>
-          <LinedTextInput
-            style={{ width: '75%', alignItems: 'center' }}
-            placeholder="Phone number"
-            maxLength={10}
-            clearButtonMode="while-editing"
-            keyboardType="phone-pad"
-            onChangeText={this._changeText}
-            onBlur={Keyboard.dismiss}
-            keyboardAwareInput
-            textAlign="center"
-          />
+          <View style={gstyles.flexRow}>
+            <View style={gstyles.flex1} />
+            <LinedTextInput
+              style={{ width: '75%', alignItems: 'center', alignSelf: 'center' }}
+              placeholder="Phone number"
+              maxLength={10}
+              clearButtonMode="while-editing"
+              keyboardType="phone-pad"
+              onChangeText={this._changeText}
+              onBlur={Keyboard.dismiss}
+              keyboardAwareInput
+              textAlign="center"
+            />
+            <View style={gstyles.flex1} />
+          </View>
           <Button
             onPress={this._getLink}
             style={gstyles.marginTop10}
