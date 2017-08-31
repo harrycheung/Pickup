@@ -49,7 +49,7 @@ const createPickupAsync = (requestor, students, location, vehicle) => {
     });
 };
 
-function* createPickup(action) {
+const createPickup = function* createPickup(action) {
   try {
     yield put(MessageActions.showMessage('Creating pickup', 0));
     const pickup = yield call(
@@ -69,7 +69,7 @@ function* createPickup(action) {
   }
 }
 
-function* watchCreatePickup() {
+const watchCreatePickup = function* watchCreatePickup() {
   yield takeEvery(Types.CREATE, createPickup);
 }
 
@@ -77,7 +77,7 @@ const cancelPickupAsync = (pickupKey) => {
   FBref(`/pickups/${pickupKey}`).remove();
 };
 
-function* cancelPickup(action) {
+const cancelPickup = function* cancelPickup(action) {
   try {
     yield call(cancelPickupAsync, action.pickup.key);
   } catch (error) {
@@ -86,11 +86,11 @@ function* cancelPickup(action) {
   }
 }
 
-function* watchCancelPickup() {
+const watchCancelPickup = function* watchCancelPickup() {
   yield takeEvery(Types.CANCEL, cancelPickup);
 }
 
-function* resumePickup() {
+const resumePickup = function* resumePickup() {
   try {
     yield put(NavActions.navigate('PickupRequest'));
   } catch (error) {
@@ -98,11 +98,11 @@ function* resumePickup() {
   }
 }
 
-function* watchResumePickup() {
+const watchResumePickup = function* watchResumePickup() {
   yield takeEvery(Types.RESUME, resumePickup);
 }
 
-function* handlePickup() {
+const handlePickup = function* handlePickup() {
   try {
     yield put(NavActions.navigate('HandlePickup'));
   } catch (error) {
@@ -110,11 +110,11 @@ function* handlePickup() {
   }
 }
 
-function* watchHandlePickup() {
+const watchHandlePickup = function* watchHandlePickup() {
   yield takeEvery(Types.HANDLE, handlePickup);
 }
 
-function* postMessage(action) {
+const postMessage = function* postMessage(action) {
   try {
     const { sender } = action;
     const messageData = {
@@ -129,11 +129,11 @@ function* postMessage(action) {
   }
 }
 
-function* watchPostMessage() {
+const watchPostMessage = function* watchPostMessage() {
   yield takeEvery(Types.POST_MESSAGE, postMessage);
 }
 
-function* listenPickup() {
+const listenPickup = function* listenPickup() {
   while (true) {
     try {
       const { pickup } = yield take(Types.LISTEN);
@@ -201,7 +201,7 @@ function* listenPickup() {
   }
 }
 
-function* watchListenPickup() {
+const watchListenPickup = function* watchListenPickup() {
   yield fork(listenPickup);
 }
 
@@ -213,7 +213,7 @@ const completePickup = (pickupKey) => {
   FBref(`/pickups/${pickupKey}`).update({ completedAt: Date.now() });
 };
 
-function* updateStudent(type, action) {
+const updateStudent = function* updateStudent(type, action) {
   try {
     const { pickup, user, student } = action;
 
@@ -271,19 +271,19 @@ function* updateStudent(type, action) {
   }
 }
 
-function* watchEscortStudent() {
+const watchEscortStudent = function* watchEscortStudent() {
   yield takeEvery(Types.ESCORT_STUDENT, updateStudent, 'escort');
 }
 
-function* watchCancelEscort() {
+const watchCancelEscort = function* watchCancelEscort() {
   yield takeEvery(Types.CANCEL_ESCORT, updateStudent, 'cancel');
 }
 
-function* watchReleaseStudent() {
+const watchReleaseStudent = function* watchReleaseStudent() {
   yield takeEvery(Types.RELEASE_STUDENT, updateStudent, 'release');
 }
 
-export default function* pickupSaga() {
+const pickupSaga = function* pickupSaga() {
   yield all([
     watchCreatePickup(),
     watchCancelPickup(),
@@ -295,4 +295,6 @@ export default function* pickupSaga() {
     watchCancelEscort(),
     watchReleaseStudent(),
   ]);
-}
+};
+
+export default pickupSaga;

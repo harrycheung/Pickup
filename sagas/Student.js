@@ -20,7 +20,7 @@ const loadStudentsAsync = relationships => Promise.all(
   )),
 );
 
-function* listenStudents() {
+const listenStudents = function* listenStudents() {
   while (true) {
     try {
       const { uid } = yield take(Types.LISTEN_STUDENTS);
@@ -43,7 +43,7 @@ function* listenStudents() {
   }
 }
 
-function* watchlistenStudents() {
+const watchlistenStudents = function* watchlistenStudents() {
   yield fork(listenStudents);
 }
 
@@ -66,7 +66,7 @@ const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship
   })
 );
 
-function* addStudent(action) {
+const addStudent = function* addStudent(action) {
   try {
     const { firstName, lastInitial, image, grade, relationship } = action;
     const state = yield select();
@@ -86,7 +86,7 @@ function* addStudent(action) {
   }
 }
 
-function* watchAddStudent() {
+const watchAddStudent = function* watchAddStudent() {
   yield takeEvery(Types.ADD_STUDENT, addStudent);
 }
 
@@ -107,7 +107,7 @@ const editStudentAsync = (uid, student) => {
   return FBref('/').update(studentUpdate);
 };
 
-function* editStudent(action) {
+const editStudent = function* editStudent(action) {
   try {
     const state = yield select();
     yield call(editStudentAsync, state.auth.user.uid, action.student);
@@ -119,7 +119,7 @@ function* editStudent(action) {
   }
 }
 
-function* watchEditStudent() {
+const watchEditStudent = function* watchEditStudent() {
   yield takeEvery(Types.EDIT_STUDENT, editStudent);
 }
 
@@ -130,7 +130,7 @@ const deleteStudentAsync = (uid, key) => {
   return FBref('/').update(studentUpdate);
 };
 
-function* deleteStudent(action) {
+const deleteStudent = function* deleteStudent(action) {
   try {
     const state = yield select();
     yield call(deleteStudentAsync, state.auth.user.uid, action.studentKey);
@@ -141,7 +141,7 @@ function* deleteStudent(action) {
   }
 }
 
-function* watchDeleteStudent() {
+const watchDeleteStudent = function* watchDeleteStudent() {
   yield takeEvery(Types.DELETE_STUDENT, deleteStudent);
 }
 
@@ -164,7 +164,7 @@ const addRelationshipAsync = (studentKey, uid, relationship) => (
   })
 );
 
-function* addRelationship(action) {
+const addRelationship = function* addRelationship(action) {
   try {
     const { studentKey, uid, relationship } = action;
     const result = yield call(addRelationshipAsync, studentKey, uid, relationship);
@@ -181,7 +181,7 @@ function* addRelationship(action) {
   }
 }
 
-function* watchAddRelationship() {
+const watchAddRelationship = function* watchAddRelationship() {
   yield takeEvery(Types.ADD_RELATIONSHIP, addRelationship);
 }
 
@@ -192,7 +192,7 @@ const removeRelationshipAsync = (studentKey, uid) => {
   return FBref().update(updates);
 };
 
-function* removeRelationship(action) {
+const removeRelationship = function* removeRelationship(action) {
   try {
     const { studentKey, uid } = action;
     yield call(removeRelationshipAsync, studentKey, uid);
@@ -202,11 +202,11 @@ function* removeRelationship(action) {
   }
 }
 
-function* watchRemoveRelationship() {
+const watchRemoveRelationship = function* watchRemoveRelationship() {
   yield takeEvery(Types.REMOVE_RELATIONSHIP, removeRelationship);
 }
 
-export default function* studentSaga() {
+const studentSaga = function* studentSaga() {
   yield all([
     watchAddStudent(),
     watchEditStudent(),
@@ -215,4 +215,6 @@ export default function* studentSaga() {
     watchlistenStudents(),
     watchRemoveRelationship(),
   ]);
-}
+};
+
+export default studentSaga;

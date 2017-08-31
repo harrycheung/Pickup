@@ -32,7 +32,7 @@ const requestLoginAsync = (phoneNumber) => {
     });
 };
 
-function* requestLogin(action) {
+const requestLogin = function* requestLogin(action) {
   try {
     yield put(MessageActions.showMessage('Requesting...', 0));
     const { phoneNumber } = action;
@@ -47,7 +47,7 @@ function* requestLogin(action) {
   }
 }
 
-function* watchRequestLogin() {
+const watchRequestLogin = function* watchRequestLogin() {
   yield takeLatest(AuthTypes.REQUEST_LOGIN, requestLogin);
 }
 
@@ -90,7 +90,7 @@ const logoutAsync = () => FBauth().signOut();
 
 const getState = state => state;
 
-function* login() {
+const login = function* login() {
   while (true) {
     const { token } = yield take(AuthTypes.LOGIN);
     try {
@@ -127,13 +127,15 @@ function* login() {
   }
 }
 
-function* watchLogin() {
+const watchLogin = function* watchLogin() {
   yield fork(login);
 }
 
-export default function* authSaga() {
+const authSaga = function* authSaga() {
   yield all([
     watchRequestLogin(),
     watchLogin(),
   ]);
-}
+};
+
+export default authSaga;

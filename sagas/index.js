@@ -11,7 +11,7 @@ import adminSaga from './Admin';
 import imageSaga from './Image';
 
 // single entry point to start all Sagas at once
-export default function* rootSaga() {
+const rootSaga = function* rootSaga() {
   yield all([
     authSaga(),
     studentSaga(),
@@ -20,4 +20,6 @@ export default function* rootSaga() {
     adminSaga(),
     imageSaga(),
   ]);
-}
+};
+
+export default rootSaga;

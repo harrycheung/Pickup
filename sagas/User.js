@@ -13,7 +13,7 @@ const loadUserAsync = uid => (
   FBref(`/users/${uid}`).once('value').then(snapshot => snapshot.val())
 );
 
-function* loadUser(action) {
+const loadUser = function* loadUser(action) {
   try {
     let { uid } = action;
     if (uid === undefined) {
@@ -36,7 +36,7 @@ function* loadUser(action) {
   }
 }
 
-function* watchLoadUser() {
+const watchLoadUser = function* watchLoadUser() {
   yield takeEvery(UserTypes.LOAD, loadUser);
 }
 
@@ -44,7 +44,7 @@ const updateUserAsync = (uid, firstName, lastInitial, image) => (
   FBref(`/users/${uid}`).update({ firstName, lastInitial, name: `${firstName} ${lastInitial}`, image })
 );
 
-function* updateUserWithNav(action, navAction) {
+const updateUserWithNav = function* updateUserWithNav(action, navAction) {
   try {
     yield put(SpinnerActions.start());
     const { firstName, lastInitial, image } = action;
@@ -59,19 +59,19 @@ function* updateUserWithNav(action, navAction) {
   }
 }
 
-function* updateUser(action) {
+const updateUser = function* updateUser(action) {
   yield call(updateUserWithNav, action, NavActions.back());
 }
 
-function* watchUpdateUser() {
+const watchUpdateUser = function* watchUpdateUser() {
   yield takeEvery(UserTypes.UPDATE, updateUser);
 }
 
-function* createUser(action) {
+const createUser = function* createUser(action) {
   yield call(updateUserWithNav, action, NavActions.resetNavigation('Main'));
 }
 
-function* watchCreateUser() {
+const watchCreateUser = function* watchCreateUser() {
   yield takeEvery(UserTypes.CREATE, createUser);
 }
 
@@ -79,7 +79,7 @@ const updateVehiclesAsync = (uid, vehicles) => (
   FBref(`/users/${uid}`).update({ vehicles })
 );
 
-function* updateVehicles() {
+const updateVehicles = function* updateVehicles() {
   try {
     const { user } = yield select();
     yield call(updateVehiclesAsync, user.uid, user.vehicles);
@@ -88,15 +88,15 @@ function* updateVehicles() {
   }
 }
 
-function* watchAddVehicle() {
+const watchAddVehicle = function* watchAddVehicle() {
   yield takeEvery(UserTypes.ADD_VEHICLE, updateVehicles);
 }
 
-function* watchRemoveVehicle() {
+const watchRemoveVehicle = function* watchRemoveVehicle() {
   yield takeEvery(UserTypes.REMOVE_VEHICLE, updateVehicles);
 }
 
-export default function* userSaga() {
+const userSaga = function* userSaga() {
   yield all([
     watchLoadUser(),
     watchCreateUser(),
@@ -104,4 +104,6 @@ export default function* userSaga() {
     watchAddVehicle(),
     watchRemoveVehicle(),
   ]);
-}
+};
+
+export default userSaga;

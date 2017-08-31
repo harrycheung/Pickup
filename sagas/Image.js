@@ -23,7 +23,7 @@ const uploadImageAsync = (imageData: string) => {
   });
 };
 
-function* uploadImage() {
+const uploadImage = function* uploadImage() {
   while (true) {
     try {
       const { imageData } = yield take(Types.UPLOAD);
@@ -38,12 +38,14 @@ function* uploadImage() {
   }
 }
 
-function* watchUploadImage() {
+const watchUploadImage = function* watchUploadImage() {
   yield fork(uploadImage);
 }
 
-export default function* imageSaga() {
+const imageSaga = function* imageSaga() {
   yield all([
     watchUploadImage(),
   ]);
-}
+};
+
+export default imageSaga;

@@ -7,7 +7,7 @@ import { FBref } from '../helpers/firebase';
 import { firebaseChannel } from './helpers';
 import { Types, Actions } from '../actions/Admin';
 
-function* listenPickups() {
+const listenPickups = function* listenPickups() {
   while (true) {
     try {
       const { grade } = yield take(Types.LISTEN_PICKUPS);
@@ -31,12 +31,14 @@ function* listenPickups() {
   }
 }
 
-function* watchListenPickups() {
+const watchListenPickups = function* watchListenPickups() {
   yield fork(listenPickups);
 }
 
-export default function* adminSaga() {
+const adminSaga = function* adminSaga() {
   yield all([
     watchListenPickups(),
   ]);
-}
+};
+
+export default adminSaga;
