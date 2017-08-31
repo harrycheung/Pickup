@@ -57,7 +57,7 @@ class ManageStudents extends React.Component {
   _renderRow(student) {
     if (typeof student === 'object') {
       const relationship = student.relationships[this.props.uid];
-      const parent = relationship === 'Parent';
+      const parent = relationship.role === 'Parent';
       let RowElement = View;
       if (parent) {
         RowElement = TouchableOpacity;

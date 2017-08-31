@@ -38,7 +38,7 @@ export default (state: Object = initialState, action: Object) => {
             return updatedStudent;
           }
           return student;
-        })
+        }),
       };
     }
 

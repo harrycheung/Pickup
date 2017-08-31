@@ -20,37 +20,55 @@ const loadStudentsAsync = relationships => Promise.all(
   )),
 );
 
-const listenStudents = function* listenStudents() {
-  while (true) {
-    try {
-      const { uid } = yield take(Types.LISTEN_STUDENTS);
-      const studentsChannel = firebaseChannel(`/users/${uid}/students`, 'value');
-      const studentsListener = function* (channel) {
-        while (true) {
-          const snapshot = yield take(channel);
-          const relationships = snapshot.val() === null ? {} : snapshot.val();
-          const students = yield call(loadStudentsAsync, relationships);
-          yield put(StudentActions.setStudents(students));
-        }
-      };
+let listenerCount = 0;
+let studentsChannel = null;
 
-      yield fork(studentsListener, studentsChannel);
-      yield take(Types.UNLISTEN_STUDENTS);
-      studentsChannel.close();
-    } catch (error) {
-      console.log('listenStudents failed', error);
-    }
+const studentsListener = function* (channel) {
+  while (true) {
+    const snapshot = yield take(channel);
+    const relationships = snapshot.val() === null ? {} : snapshot.val();
+    const students = yield call(loadStudentsAsync, relationships);
+    yield put(StudentActions.setStudents(students));
   }
-}
+};
+
+const listenStudents = function* listenStudents(action) {
+  try {
+    if (listenerCount === 0) {
+      studentsChannel = firebaseChannel(`/users/${action.uid}/students`, 'value');
+      yield fork(studentsListener, studentsChannel);
+    }
+    listenerCount += 1;
+  } catch (error) {
+    console.log('listenStudents failed', error);
+  }
+};
+
+const unlistenStudents = () => {
+  try {
+    listenerCount -= 1;
+    if (listenerCount === 0) {
+      studentsChannel.close();
+      studentsChannel = null;
+    }
+  } catch (error) {
+    console.log('unlistenStudents failed', error);
+  }
+};
 
 const watchlistenStudents = function* watchlistenStudents() {
-  yield fork(listenStudents);
-}
+  yield takeEvery(Types.LISTEN_STUDENTS, listenStudents);
+  yield takeEvery(Types.UNLISTEN_STUDENTS, unlistenStudents);
+};
 
-const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship) => (
+const addStudentAsync = (user, firstName, lastInitial, image, grade, relationship) => (
   FBref('/students').push().then((studentRef) => {
     const relationships = {};
-    relationships[uid] = relationship;
+    relationships[user.uid] = {
+      role: 'Parent',
+      name: user.name,
+      image: user.image,
+    };
     const student = {
       firstName,
       lastInitial,
@@ -61,7 +79,7 @@ const addStudentAsync = (uid, firstName, lastInitial, image, grade, relationship
     };
     const studentUpdate = {};
     studentUpdate[`students/${studentRef.key}`] = student;
-    studentUpdate[`users/${uid}/students/${studentRef.key}`] = relationship;
+    studentUpdate[`users/${user.uid}/students/${studentRef.key}`] = 'Parent';
     return FBref('/').update(studentUpdate);
   })
 );
@@ -72,7 +90,7 @@ const addStudent = function* addStudent(action) {
     const state = yield select();
     yield call(
       addStudentAsync,
-      state.auth.user.uid,
+      state.user,
       firstName,
       lastInitial,
       image,

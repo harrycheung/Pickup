@@ -74,14 +74,13 @@ class EditStudent extends React.Component {
     });
   }
 
-  _edit(firstName, lastInitial, imageURL, grade, relationship) {
+  _edit(firstName, lastInitial, imageURL, grade) {
     this.props.editStudent({
       ...this.state.student,
       firstName,
       lastInitial,
       image: imageURL,
       grade,
-      relationship,
     });
   }
 
