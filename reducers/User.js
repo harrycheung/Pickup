@@ -19,8 +19,8 @@ export default (state: Object = initialState, action: Object) => {
     case Types.SET:
       return {
         uid: action.uid,
-        firstName: action.user.firstName,
-        lastInitial: action.user.lastInitial,
+        firstName: action.user.firstName || '',
+        lastInitial: action.user.lastInitial || '',
         image: action.user.image || '',
         name: `${action.user.firstName} ${action.user.lastInitial}`,
         admin: action.user.admin || false,

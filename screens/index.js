@@ -7,13 +7,13 @@ import { StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import LoginRequestScreen from './LoginRequest';
-import LoginScreen from './Login';
+import CreateProfileScreen from './CreateProfile';
 import MainScreen from './Main';
 
 export const AppNavigator = StackNavigator({
   Main: { screen: MainScreen },
   LoginRequest: { screen: LoginRequestScreen },
-  Login: { screen: LoginScreen },
+  CreateProfile: { screen: CreateProfileScreen },
 }, {
   headerMode: 'screen',
   navigationOptions: {

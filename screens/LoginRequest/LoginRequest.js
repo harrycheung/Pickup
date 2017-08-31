@@ -3,14 +3,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Keyboard, Text } from 'react-native';
+import { Button, Keyboard, Linking, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { colors, gstyles } from '../../config/styles';
 import { validPhoneNumber } from '../../helpers';
 import { Actions as AuthActions } from '../../actions/Auth';
-import { Actions as MessageActions } from '../../actions/Message';
 import LinedTextInput from '../../components/LinedTextInput';
 import MessageView from '../../components/MessageView';
 import KeyboardAwareView from '../../components/KeyboardAwareView';
@@ -26,6 +25,7 @@ class LoginRequest extends React.Component {
     };
 
     this._changeText = this._changeText.bind(this);
+    this._getLink = this._getLink.bind(this);
     this._login = this._login.bind(this);
   }
 
@@ -35,12 +35,24 @@ class LoginRequest extends React.Component {
     requested: boolean,
   };
 
+  componentDidMount() {
+    Linking.addEventListener('url', this._login);
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this._login);
+  }
+
+  _login({ url }) {
+    this.props.login(url.split('+').pop());
+  }
+
   _changeText(phoneNumber) {
     const disabled = !validPhoneNumber(phoneNumber);
     this.setState({ disabled, phoneNumber });
   }
 
-  _login() {
+  _getLink() {
     Keyboard.dismiss();
     this.props.requestLogin(this.state.phoneNumber);
     this.setState({ requested: true });
@@ -66,7 +78,7 @@ class LoginRequest extends React.Component {
             keyboardAwareInput
           />
           <Button
-            onPress={this._login}
+            onPress={this._getLink}
             style={gstyles.marginTop10}
             disabled={this.state.disabled}
             title="Get magic link"
@@ -80,12 +92,11 @@ class LoginRequest extends React.Component {
 
 LoginRequest.propTypes = {
   requestLogin: PropTypes.func.isRequired,
-  showMessage: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(AuthActions, dispatch),
-  ...bindActionCreators(MessageActions, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(LoginRequest);

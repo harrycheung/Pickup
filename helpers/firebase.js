@@ -17,6 +17,6 @@ firebase.initializeApp(FirebaseConfig);
 firebase.storage().setMaxOperationRetryTime(60000);
 firebase.storage().setMaxUploadRetryTime(60000);
 
-export const FBauth = firebase.auth();
+export const FBauth = firebase.auth;
 export const FBref = (ref?: string) => firebase.database().ref(ref);
 export const FBstorageRef = (ref?: string) => firebase.storage().ref(ref);

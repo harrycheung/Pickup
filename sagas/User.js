@@ -25,7 +25,9 @@ function* loadUser(action) {
       yield put(UserActions.setUser('', '', '', '', false));
     } else {
       yield put(UserActions.setUser(uid, response));
-      yield put(StudentActions.setStudents(Object.keys(response.students)));
+      if (response.students) {
+        yield put(StudentActions.setStudents(Object.keys(response.students)));
+      }
     }
     yield put(UserActions.loadedUser());
   } catch (error) {

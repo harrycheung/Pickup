@@ -7,12 +7,12 @@ import { Button } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { gstyles } from '../../../config/styles';
-import ProfileForm from '../../../components/ProfileForm';
-import MessageView from '../../../components/MessageView';
-import { Actions as UserActions } from '../../../actions/User';
-import { Actions as AuthActions } from '../../../actions/Auth';
-import { Actions as ImageActions } from '../../../actions/Image';
+import { gstyles } from '../../config/styles';
+import ProfileForm from '../../components/ProfileForm';
+import MessageView from '../../components/MessageView';
+import { Actions as UserActions } from '../../actions/User';
+import { Actions as AuthActions } from '../../actions/Auth';
+import { Actions as ImageActions } from '../../actions/Image';
 
 class CreateProfile extends React.Component {
   static navigationOptions = ({ navigation }) => {

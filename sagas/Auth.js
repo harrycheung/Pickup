@@ -7,10 +7,8 @@ import CryptoJS from 'crypto-js';
 import { FBauth, FBref, FBfunctions } from '../helpers/firebase';
 import { Actions as AuthActions, Types as AuthTypes } from '../actions/Auth';
 import { Actions as UserActions, Types as UserTypes } from '../actions/User';
-import { Actions as StudentActions, Types as StudentTypes } from '../actions/Student';
 import { Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
-import { Actions as SpinnerActions } from '../actions/Spinner';
 import { Actions as MessageActions } from '../actions/Message';
 
 const requestLoginAsync = (phoneNumber) => {
@@ -30,7 +28,7 @@ const requestLoginAsync = (phoneNumber) => {
       if (response.status === 200) {
         return response.text();
       }
-      throw response;
+      throw response.status;
     });
 };
 
@@ -41,10 +39,9 @@ function* requestLogin(action) {
     const response = yield call(requestLoginAsync, phoneNumber);
     yield put(AuthActions.requestLoginSucceeded());
     // TODO: remove this call
-    yield put(NavActions.resetNavigation('Login', { token: response }));
+    // yield put(NavActions.resetNavigation('Login', { token: response }));
   } catch (error) {
     console.log('requestLogin failed', error);
-    yield put(AuthActions.authFailure());
   } finally {
     yield put(MessageActions.clearMessage());
   }
@@ -54,7 +51,19 @@ function* watchRequestLogin() {
   yield takeLatest(AuthTypes.REQUEST_LOGIN, requestLogin);
 }
 
-const loginAsync = token => FBauth.signInWithCustomToken(token);
+const loginAsync = (shortToken) => {
+  return FBauth().signOut()
+    .then(() => fetch(`https://${FBfunctions}/getLongToken?token=${shortToken}`))
+    .then((response) => {
+      if (response.status === 200) {
+        return response.text();
+      }
+      throw "DANGER!";
+    })
+    .then((responseText) => {
+      return FBauth().signInWithCustomToken(responseText);
+    });
+};
 
 const getActivePickup = uid => FBref('/pickups')
   .orderByChild('requestor/uid').equalTo(uid).once('value')
@@ -77,7 +86,7 @@ const getActivePickup = uid => FBref('/pickups')
     return pickup;
   });
 
-const logoutAsync = () => FBauth.signOut();
+const logoutAsync = () => FBauth().signOut();
 
 const getState = state => state;
 
@@ -85,46 +94,41 @@ function* login() {
   while (true) {
     const { token } = yield take(AuthTypes.LOGIN);
     try {
-      try {
-        yield put(SpinnerActions.start());
-        const user = yield call(loginAsync, token);
-        yield put(AuthActions.setUser(user));
-        yield put(UserActions.loadUser());
-        yield take(UserTypes.LOADED);
-        const state = yield select(getState);
-        if (state.user.firstName === '') {
-          yield put(NavActions.navigate('CreateProfile'));
-        } else {
-          const pickup = yield call(getActivePickup, state.auth.user.uid);
-          yield put(PickupActions.loadPickup(pickup));
-          yield put(NavActions.resetNavigation('Main'));
-        }
-      } finally {
-        yield put(SpinnerActions.stop());
-      }
-      yield take(AuthTypes.LOGOUT);
-      yield call(logoutAsync);
-      yield put(AuthActions.clear());
-      yield put(NavActions.resetNavigation('LoginRequest'));
+      yield put(MessageActions.showMessage('Authenticating', 0));
+      const user = yield call(loginAsync, token);
+      yield put(AuthActions.setUser(user));
+      yield put(UserActions.loadUser());
+      yield take(UserTypes.LOADED);
     } catch (error) {
       console.log('Authentication failed', error);
-      yield put(AuthActions.authFailure());
+      yield put(MessageActions.showMessage('Authentication failed', 1000));
+      continue;
+    }
+    const state = yield select(getState);
+    if (state.user.firstName === '') {
+      yield put(MessageActions.clearMessage());
+      yield put(NavActions.navigate('CreateProfile'));
+    } else {
+      yield put(MessageActions.clearMessage());
+      const pickup = yield call(getActivePickup, state.auth.user.uid);
+      yield put(PickupActions.loadPickup(pickup));
+      yield put(NavActions.resetNavigation('Main'));
+    }
+    yield take(AuthTypes.LOGOUT);
+    try {
+      yield call(logoutAsync);
+    } catch (error) {
+      // Do nothing
+      console.log('Authentication failed', error);
+    } finally {
       yield put(AuthActions.clear());
       yield put(NavActions.resetNavigation('LoginRequest'));
     }
   }
 }
 
-function* logout() {
-  yield take(AuthTypes.LOGOUT);
-  yield call(logoutAsync);
-  yield put(AuthActions.clear());
-  yield put(NavActions.resetNavigation('LoginRequest'));
-}
-
 function* watchLogin() {
   yield fork(login);
-  yield fork(logout); // TODO: take out
 }
 
 export default function* authSaga() {
