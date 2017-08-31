@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { gstyles } from '../../../config/styles';
+import { colors, gstyles } from '../../../config/styles';
 import drawerHeader from '../../../components/DrawerHeader';
 import ProfileForm from '../../../components/ProfileForm';
 import MessageView from '../../../components/MessageView';
@@ -95,13 +95,13 @@ class Profile extends React.Component {
               </View>
               <FlatList
                 style={gstyles.flex1}
-                data={this.props.vehicles}
+                data={this.props.vehicles.map(vehicle => ({ key: vehicle }))}
                 renderItem={({ item }) => (
                   <View
                     style={[{ marginTop: 5, alignItems: 'center' }, gstyles.flexRow]}
                   >
                     <Text style={[gstyles.font18, { marginRight: 15 }]}>
-                      {item}
+                      {item.key}
                     </Text>
                     <IconButton
                       icon="md-trash"
@@ -145,4 +145,9 @@ const mapDispatchToProps = dispatch => ({
 
 export default StackNavigator({
   Profile: { screen: connect(mapStateToProps, mapDispatchToProps)(Profile) },
+}, {
+  navigationOptions: {
+    headerStyle: { backgroundColor: colors.buttonBackground },
+    headerTintColor: 'white',
+  },
 });

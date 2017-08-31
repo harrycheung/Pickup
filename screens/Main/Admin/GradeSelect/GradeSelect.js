@@ -45,9 +45,10 @@ class Home extends React.Component {
     const gradeButtons = grades.map(grade => (
       <Button
         key={grade}
-        style={gstyles.button}
+        style={{ marginHorizontal: 15, marginTop: 15 }}
         onPress={() => this._selectLevel(grade)}
         content={grade}
+        round
       />
     ));
 

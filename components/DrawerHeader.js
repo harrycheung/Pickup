@@ -19,7 +19,7 @@ export default (navigation: NavigationActions, screenProps: Object, options: Obj
           marginLeft: 15,
         }}
       >
-        <Icon name="md-menu" size={30} color="#000000" />
+        <Icon name="md-menu" size={30} color="white" />
       </TouchableOpacity>
     ),
   })

@@ -29,7 +29,7 @@ class EditStudent extends React.Component {
             marginHorizontal: 15,
           }}
         >
-          <Icon name="md-trash" size={30} color={colors.black} />
+          <Icon name="md-trash" size={30} color="white" />
         </TouchableOpacity>
       ),
     };

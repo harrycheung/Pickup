@@ -14,7 +14,13 @@ import LinedTextInput from '../../components/LinedTextInput';
 import MessageView from '../../components/MessageView';
 import KeyboardAwareView from '../../components/KeyboardAwareView';
 
-class LoginRequest extends React.Component {
+class Login extends React.Component {
+  static navigationOptions = () => ({
+    title: 'Synapse Pickup',
+    headerStyle: { backgroundColor: colors.buttonBackground },
+    headerTintColor: 'white',
+  });
+
   constructor(props) {
     super(props);
 
@@ -91,7 +97,7 @@ class LoginRequest extends React.Component {
   }
 }
 
-LoginRequest.propTypes = {
+Login.propTypes = {
   requestLogin: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
 };
@@ -100,4 +106,4 @@ const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(AuthActions, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(LoginRequest);
+export default connect(null, mapDispatchToProps)(Login);

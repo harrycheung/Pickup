@@ -30,7 +30,7 @@ class ManageStudents extends React.Component {
             marginHorizontal: 15,
           }}
         >
-          <Icon name="md-add" size={30} color={colors.black} />
+          <Icon name="md-add" size={30} color="white" />
         </TouchableOpacity>
       ),
     })

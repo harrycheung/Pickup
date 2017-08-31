@@ -22,7 +22,7 @@ const loadUser = function* loadUser(action) {
     }
     const response = yield call(loadUserAsync, uid);
     if (response === null) {
-      yield put(UserActions.setUser('', '', '', '', false));
+      yield put(UserActions.setUser('', {}));
     } else {
       yield put(UserActions.setUser(uid, response));
       if (response.students) {
@@ -34,11 +34,11 @@ const loadUser = function* loadUser(action) {
     console.log('loadUser failed', error);
     // Do nothing?
   }
-}
+};
 
 const watchLoadUser = function* watchLoadUser() {
   yield takeEvery(UserTypes.LOAD, loadUser);
-}
+};
 
 const updateUserAsync = (uid, firstName, lastInitial, image) => (
   FBref(`/users/${uid}`).update({ firstName, lastInitial, name: `${firstName} ${lastInitial}`, image })
@@ -57,23 +57,23 @@ const updateUserWithNav = function* updateUserWithNav(action, navAction) {
   } finally {
     yield put(SpinnerActions.stop());
   }
-}
+};
 
 const updateUser = function* updateUser(action) {
   yield call(updateUserWithNav, action, NavActions.back());
-}
+};
 
 const watchUpdateUser = function* watchUpdateUser() {
   yield takeEvery(UserTypes.UPDATE, updateUser);
-}
+};
 
 const createUser = function* createUser(action) {
   yield call(updateUserWithNav, action, NavActions.resetNavigation('Main'));
-}
+};
 
 const watchCreateUser = function* watchCreateUser() {
   yield takeEvery(UserTypes.CREATE, createUser);
-}
+};
 
 const updateVehiclesAsync = (uid, vehicles) => (
   FBref(`/users/${uid}`).update({ vehicles })
@@ -86,15 +86,15 @@ const updateVehicles = function* updateVehicles() {
   } catch (error) {
     console.log('updateVehicles failed', error);
   }
-}
+};
 
 const watchAddVehicle = function* watchAddVehicle() {
   yield takeEvery(UserTypes.ADD_VEHICLE, updateVehicles);
-}
+};
 
 const watchRemoveVehicle = function* watchRemoveVehicle() {
   yield takeEvery(UserTypes.REMOVE_VEHICLE, updateVehicles);
-}
+};
 
 const userSaga = function* userSaga() {
   yield all([

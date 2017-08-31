@@ -125,7 +125,7 @@ const login = function* login() {
       console.log('Authentication failed', error);
     } finally {
       yield put(AuthActions.clear());
-      yield put(NavActions.resetNavigation('LoginRequest'));
+      yield put(NavActions.resetNavigation('Login'));
     }
   }
 }

@@ -6,25 +6,20 @@ import PropTypes from 'prop-types';
 import { StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { connect } from 'react-redux';
 
-import LoginRequestScreen from './LoginRequest';
-import CreateProfileScreen from './CreateProfile';
+import LoginScreen from './Login';
 import MainScreen from './Main';
 
 export const AppNavigator = StackNavigator({
   Main: { screen: MainScreen },
-  LoginRequest: { screen: LoginRequestScreen },
-  CreateProfile: { screen: CreateProfileScreen },
+  Login: { screen: LoginScreen },
 }, {
-  headerMode: 'screen',
-  navigationOptions: {
-    header: null,
-  },
-  initialRouteName: 'LoginRequest',
+  initialRouteName: 'Login',
+  headerMode: 'none',
 });
 
-const AppWithNavigationState = ({ dispatch, nav }) => {
-  return <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />;
-};
+const AppWithNavigationState = ({ dispatch, nav }) => (
+  <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />
+);
 
 AppWithNavigationState.propTypes = {
   dispatch: PropTypes.func.isRequired,

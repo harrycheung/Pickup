@@ -138,7 +138,7 @@ class ProfileForm extends React.Component {
           centerOnInput
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={gstyles.flexCenter}>
+            <View style={[gstyles.flexCenter, { paddingTop: 10 }]}>
               {imageJSX}
               <View style={gstyles.marginTop10}>
                 <Button
@@ -178,11 +178,14 @@ class ProfileForm extends React.Component {
             </TouchableWithoutFeedback>
           }
         </KeyboardAwareView>
-        <CustomButton
-          onPress={this._submit}
-          disabled={this.state.disabled}
-          content={buttonContents}
-        />
+        <View style={{ padding: 10, borderTopWidth: 1, borderTopColor: 'darkgray' }}>
+          <CustomButton
+            onPress={this._submit}
+            disabled={this.state.disabled}
+            content={buttonContents}
+            round
+          />
+        </View>
       </View>
     );
   }
