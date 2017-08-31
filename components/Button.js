@@ -33,6 +33,7 @@ class Button extends React.Component {
             left: 0,
             right: 0,
             backgroundColor: 'white',
+            borderRadius: this.props.round ? 5 : 0,
           }}
         />
         <TouchableOpacity
@@ -45,7 +46,10 @@ class Button extends React.Component {
               gstyles.flex1,
               gstyles.flexCenter,
               this.props.disabled ? { opacity: 0.3 } : {},
-              { backgroundColor: this.props.backgroundColor },
+              {
+                backgroundColor: this.props.backgroundColor,
+                borderRadius: this.props.round ? 5 : 0,
+              },
             ]}
           >
             {content}
@@ -63,6 +67,7 @@ Button.propTypes = {
   textSize: PropTypes.number,
   backgroundColor: PropTypes.string,
   style: ViewPropTypes.style,
+  round: PropTypes.bool,
 };
 
 Button.defaultProps = {
@@ -72,6 +77,7 @@ Button.defaultProps = {
   textSize: 18,
   backgroundColor: colors.buttonBackground,
   style: {},
+  round: false,
 };
 
 export default Button;

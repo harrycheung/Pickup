@@ -215,9 +215,11 @@ class StudentSelect extends React.Component {
           {studentViews}
         </ScrollView>
         <MyButton
+          style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}
           disabled={this.state.students.length < 1}
           onPress={this._configure}
           content="Pickup"
+          round
         />
         {this.state.configurePickup &&
           <View style={styles.configureModal}>
