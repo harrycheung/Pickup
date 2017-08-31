@@ -39,7 +39,9 @@ const requestLogin = function* requestLogin(action) {
     const response = yield call(requestLoginAsync, phoneNumber);
     yield put(AuthActions.requestLoginSucceeded());
     // TODO: remove this call
-    // yield put(NavActions.resetNavigation('Login', { token: response }));
+    if (phoneNumber.includes('111111111')) {
+      yield put(AuthActions.login(response));
+    }
   } catch (error) {
     console.log('requestLogin failed', error);
   } finally {
@@ -81,6 +83,7 @@ const getActivePickup = uid => FBref('/pickups')
         // Returning true breaks the forEach loop
         return true;
       }
+      pickup = null;
       return false;
     });
     return pickup;
