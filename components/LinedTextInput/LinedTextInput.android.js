@@ -11,7 +11,7 @@ const LinedTextInput = props => (
   <TextInput
     {...props}
     style={[props.style, gstyles.flexStretch, { height: 44, paddingLeft: 5 }]}
-    selectionColor={'black'}
+    selectionColor="black"
     underlineColorAndroid={props.borderBottomColor}
   />
 );
