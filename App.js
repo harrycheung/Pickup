@@ -71,14 +71,14 @@ class Root extends React.Component {
     // })
   }
 
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange.bind(this));
-  }
-
-  _handleAppStateChange(nextAppState) {
-    let storingValue = JSON.stringify(this.state.store.getState());
-    AsyncStorage.setItem('reduxStore', storingValue);
-  }
+  // componentWillUnmount() {
+  //   AppState.removeEventListener('change', this._handleAppStateChange.bind(this));
+  // }
+  //
+  // _handleAppStateChange() {
+  //   let storingValue = JSON.stringify(this.state.store.getState());
+  //   AsyncStorage.setItem('reduxStore', storingValue);
+  // }
 
   render() {
     if (this.state.isStoreLoading) {
