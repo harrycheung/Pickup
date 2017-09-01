@@ -1,5 +1,27 @@
 {
   "expo": {
-    "sdkVersion": "19.0.0"
+    "sdkVersion": "20.0.0",
+    "name": "SynPickup",
+    "icon": "./images/app-icon.png",
+    "version": "1",
+    "slug": "harrycheung-synapse-pickup",
+    "orientation": "portrait",
+    "primaryColor": "#027fbf",
+    "scheme": "synapsepickup",
+    "ios": {
+      "bundleIdentifier": "harrycheung.synapse.pickup.ios",
+      "buildNumber": "2"
+    },
+    "android": {
+      "package": "harrycheung.synapse.pickup.android",
+    },
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#027fbf"
+    },
+    "loading": {
+      "icon": "./images/app-icon.png",
+      "backgroundColor": "#ffffff"
+    }
   }
 }
