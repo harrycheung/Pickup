@@ -44,7 +44,13 @@ class Picker extends React.Component {
 
   state: {
     items: Array<string>,
-    selected: boolean,
+    selected: string,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.state.selected) {
+      this.setState({ selected: nextProps.value });
+    }
   }
 
   _renderRow(items) {

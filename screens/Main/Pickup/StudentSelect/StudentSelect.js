@@ -53,10 +53,11 @@ class StudentSelect extends React.Component {
       existingPickup: props.pickup,
       students: [],
       configurePickup: false,
-      showAddVehicle: false,
-      addVehicle: '',
+      showVehicle: false,
+      addVehicleText: '',
       location: '',
       vehicle: '',
+      disabled: true,
     };
 
     this._selectStudent = this._selectStudent.bind(this);
@@ -65,16 +66,20 @@ class StudentSelect extends React.Component {
     this._cancelPickup = this._cancelPickup.bind(this);
     this._addVehicle = this._addVehicle.bind(this);
     this._clearConfigurePickup = this._clearConfigurePickup.bind(this);
+    this._setLocation = this._setLocation.bind(this);
+    this._changeAddVehicleText = this._changeAddVehicleText.bind(this);
   }
 
   state: {
     existingPickup: Object,
     students: Object[],
     configurePickup: boolean,
-    showAddVehicle: boolean,
-    addVehicle: string,
+    showVehicle: boolean,
+    addVehicleText: string,
     location: string,
     vehicle: string,
+    disabled: boolean,
+    disabledAddVehicle: boolean,
   }
 
   componentWillMount() {
@@ -91,6 +96,8 @@ class StudentSelect extends React.Component {
   componentWillUnmount() {
     this.props.unlistenStudents();
   }
+
+  // vehiclePicker: Object
 
   _selectStudent(selectedStudent) {
     if (this.state.students.includes(selectedStudent)) {
@@ -124,18 +131,36 @@ class StudentSelect extends React.Component {
   }
 
   _addVehicle() {
-    this.props.addVehicle(this.state.addVehicle);
-    this.setState({ showAddVehicle: false, addVehicle: '' });
+    const vehicle = this.state.addVehicleText;
+    this.props.addVehicle(vehicle);
+    this.setState({ vehicle, addVehicleText: '' });
+    Keyboard.dismiss();
   }
 
   _clearConfigurePickup() {
     this.setState({
       students: [],
       configurePickup: false,
-      showAddVehicle: false,
-      addVehicle: '',
+      showVehicle: false,
+      addVehicleText: '',
       location: '',
       vehicle: '',
+      disabled: true,
+    });
+  }
+
+  _setLocation(location) {
+    this.setState({
+      location,
+      showVehicle: location !== 'Playground',
+      disabled: location !== 'Playground',
+    });
+  }
+
+  _changeAddVehicleText(text) {
+    this.setState({
+      addVehicleText: text,
+      disabledAddVehicle: text.length < 6 || this.props.user.vehicles.indexOf(text) > -1,
     });
   }
 
@@ -191,15 +216,17 @@ class StudentSelect extends React.Component {
       studentViews = this.props.students.map((student) => {
         if (typeof student === 'object') {
           const selected = this.state.students.includes(student);
-          const style = [gstyles.profilePic100, selected ? styles.selected : {}];
           return (
             <TouchableOpacity
               key={student.key}
-              style={styles.student}
+              style={[styles.student, selected ? { borderColor: colors.buttonBackground } : {}]}
               onPress={() => this._selectStudent(student)}
             >
-              <Image style={style} source={{ uri: student.image }} />
-              <Text style={gstyles.font18}>
+              <Image
+                style={gstyles.profilePic100}
+                source={{ uri: student.image }}
+              />
+              <Text style={[gstyles.font18, gstyles.marginTop10]}>
                 {student.firstName} {student.lastInitial} ({student.grade})
               </Text>
             </TouchableOpacity>
@@ -233,101 +260,93 @@ class StudentSelect extends React.Component {
                 <BlurView style={[styles.configureModal]} tint="light" intensity={75} />
               </TouchableWithoutFeedback>
               <View style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch]}>
-                <Text style={[gstyles.flexStretch, gstyles.font18, gstyles.marginTop10]}>
-                  Where are you?
-                </Text>
-                <Picker
-                  style={[gstyles.flexStretch, gstyles.marginTop10]}
-                  values={C.Locations}
-                  onChange={value => this.setState({ location: value })}
-                  columns={2}
-                />
                 <View
-                  style={[
-                    {
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    },
-                    gstyles.flexStretch,
-                    gstyles.marginTop10]
-                  }
+                  style={[{ height: 44, backgroundColor: colors.buttonBackground, paddingHorizontal: 15, alignItems: 'center' }, gstyles.flexRow, gstyles.flexStretch]}
                 >
-                  <Text style={gstyles.font18}>In a car?</Text>
-                  {!this.state.showAddVehicle &&
-                    <Icon.Button
-                      name="md-add"
-                      onPress={() => this.setState({ showAddVehicle: true })}
-                      style={{ paddingVertical: 0 }}
-                      iconStyle={{ marginRight: 0 }}
-                      color={colors.buttonBackground}
-                      backgroundColor="white"
-                    />
-                  }
+                  <Text
+                    style={[gstyles.font18, gstyles.flex1, { color: 'white' }]}
+                  >
+                    Configure Pickup
+                  </Text>
+                  <Icon.Button
+                    name="md-close"
+                    onPress={this._clearConfigurePickup}
+                    style={{ paddingVertical: 0 }}
+                    iconStyle={{ marginRight: 0 }}
+                    color="white"
+                    backgroundColor={colors.buttonBackground}
+                  />
                 </View>
-                {this.state.showAddVehicle &&
+                <View
+                  style={[{ paddingHorizontal: 15, paddingVertical: 10 }, gstyles.flexStretch]}
+                >
+                  <Text style={[gstyles.flexStretch, gstyles.font18, gstyles.marginTop10]}>
+                    Pickup Location:
+                  </Text>
+                  <Picker
+                    style={[gstyles.flexStretch, gstyles.marginTop10]}
+                    values={Object.keys(C.Locations)}
+                    onChange={this._setLocation}
+                    columns={2}
+                  />
+                  {this.state.showVehicle &&
+                    <View style={gstyles.marginTop10}>
+                      <Text style={gstyles.font18}>Your Vehicle:</Text>
+                      {this.props.user.vehicles.length > 0 &&
+                        <Picker
+                          style={[gstyles.flexStretch, gstyles.marginTop10]}
+                          columns={2}
+                          values={this.props.user.vehicles}
+                          onChange={vehicle => this.setState({ vehicle, disabled: false })}
+                          value={this.state.vehicle}
+                        />
+                      }
+                      <View
+                        style={[
+                          gstyles.flexStretch,
+                          gstyles.flexRow,
+                          {
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }
+                        ]}
+                      >
+                        <LinedTextInput
+                          style={{ flex: 1, marginRight: 5 }}
+                          placeholder="Describe vehicle"
+                          autoCapitalize="words"
+                          clearButtonMode="while-editing"
+                          borderBottomColor={'darkgray'}
+                          onChangeText={this._changeAddVehicleText}
+                          value={this.state.addVehicleText}
+                          onSubmitEditing={Keyboard.dismiss}
+                          blurOnSubmit
+                          keyboardAwareInput
+                        />
+                        <Button
+                          title="Add"
+                          disabled={this.state.disabledAddVehicle}
+                          onPress={this._addVehicle}
+                        />
+                      </View>
+                    </View>
+                  }
                   <View
                     style={[
-                      gstyles.flexStretch,
-                      gstyles.flexRow,
                       {
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }
+                        marginTop: 20,
+                        justifyContent: 'center',
+                      },
+                      gstyles.flexStretch,
                     ]}
                   >
-                    <LinedTextInput
-                      style={{ flex: 3 }}
-                      placeholder="Describe vehicle"
-                      autoCapitalize="words"
-                      clearButtonMode="while-editing"
-                      borderBottomColor={'darkgray'}
-                      onChangeText={text => this.setState({ addVehicle: text })}
-                      defaultValue=""
-                      onSubmitEditing={Keyboard.dismiss}
-                      keyboardAwareInput
-                    />
-                    <View style={{ width: 5 }} />
                     <Button
-                      title="Add"
-                      disabled={this.state.addVehicle.length < 6}
-                      onPress={this._addVehicle}
-                    />
-                    <View style={{ width: 5 }} />
-                    <Icon.Button
-                      name="md-close"
-                      onPress={() => this.setState({
-                        showAddVehicle: false,
-                        addVehicle: '',
-                      })}
-                      style={{ paddingVertical: 0 }}
-                      iconStyle={{ marginRight: 0 }}
+                      disabled={this.state.disabled}
+                      onPress={this._pickup}
+                      title="Request Pickup"
                       color={colors.buttonBackground}
-                      backgroundColor="white"
                     />
                   </View>
-                }
-                <Picker
-                  style={[gstyles.flexStretch, gstyles.marginTop10]}
-                  columns={2}
-                  values={['In person'].concat(this.props.user.vehicles)}
-                  onChange={vehicle => this.setState({ vehicle })}
-                />
-                <View
-                  style={[
-                    {
-                      marginTop: 20,
-                      justifyContent: 'center',
-                    },
-                    gstyles.flexStretch,
-                  ]}
-                >
-                  <Button
-                    disabled={this.state.vehicle === '' || this.state.location === ''}
-                    onPress={this._pickup}
-                    title="Request Pickup"
-                    color={colors.buttonBackground}
-                  />
                 </View>
               </View>
             </KeyboardAwareView>

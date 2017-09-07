@@ -11,22 +11,23 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
   },
   student: {
-    height: 125,
     marginTop: 15,
+    marginHorizontal: 10,
+    padding: 5,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  selected: {
     borderWidth: 3,
-    borderColor: colors.buttonBackground,
+    borderColor: 'transparent',
+    borderRadius: 5,
+    maxWidth: 140,
+
   },
   dialog: {
     borderWidth: 3,
     borderColor: colors.buttonBackground,
     borderRadius: 5,
     margin: 15,
-    padding: 15,
     backgroundColor: 'white',
     flexDirection: 'column',
     alignItems: 'center',

@@ -32,14 +32,17 @@ class Profile extends React.Component {
     this.state = {
       showAddVehicle: false,
       vehicle: '',
+      disabledAddVehicle: true,
     };
 
     this._addVehicle = this._addVehicle.bind(this);
+    this._changeAddVehicleText = this._changeAddVehicleText.bind(this);
   }
 
   state: {
     showAddVehicle: boolean,
     vehicle: string,
+    disabledAddVehicle: boolean,
   }
 
   componentWillMount() {
@@ -49,6 +52,13 @@ class Profile extends React.Component {
   _addVehicle() {
     this.props.addVehicle(this.state.vehicle);
     this.setState({ vehicle: '' });
+  }
+
+  _changeAddVehicleText(text) {
+    this.setState({
+      vehicle: text,
+      disabledAddVehicle: text.length < 6 || this.props.vehicles.indexOf(text) > -1,
+    });
   }
 
   render() {
@@ -81,7 +91,7 @@ class Profile extends React.Component {
                   autoCapitalize="words"
                   clearButtonMode="while-editing"
                   borderBottomColor={'darkgray'}
-                  onChangeText={text => this.setState({ vehicle: text })}
+                  onChangeText={this._changeAddVehicleText}
                   defaultValue=""
                   onSubmitEditing={Keyboard.dismiss}
                   value={this.state.vehicle}
@@ -90,13 +100,13 @@ class Profile extends React.Component {
                 {Platform.OS === 'ios' ?
                   <Button
                     title="Add"
-                    disabled={this.state.vehicle.length < 6}
+                    disabled={this.state.disabledAddVehicle}
                     onPress={this._addVehicle}
                   />
                   :
                   <MyButton
                     content="Add"
-                    disabled={this.state.vehicle.length < 6}
+                    disabled={this.state.disabledAddVehicle}
                     onPress={this._addVehicle}
                     round
                   />
