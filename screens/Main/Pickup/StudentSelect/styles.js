@@ -9,19 +9,17 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
+    paddingVertical: 15,
   },
   student: {
-    marginTop: 15,
     marginHorizontal: 10,
     padding: 5,
     flexDirection: 'column',
-    justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 3,
     borderColor: 'transparent',
     borderRadius: 5,
     maxWidth: 140,
-
   },
   dialog: {
     borderWidth: 3,

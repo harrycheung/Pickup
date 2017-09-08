@@ -232,13 +232,14 @@ class StudentSelect extends React.Component {
             </TouchableOpacity>
           );
         }
+        // If the student information isn't loaded yet, show a blank view.
         return <View key={student} />
       });
     }
 
     return (
       <MessageView style={[gstyles.flex1, gstyles.flexStart]}>
-        <ScrollView contentContainerStyle={[gstyles.flex1, gstyles.marginH15, styles.students]}>
+        <ScrollView contentContainerStyle={[gstyles.marginH15, styles.students]}>
           {studentViews}
         </ScrollView>
         <MyButton
