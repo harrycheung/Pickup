@@ -61,7 +61,7 @@ const watchlistenStudents = function* watchlistenStudents() {
   yield takeEvery(Types.UNLISTEN_STUDENTS, unlistenStudents);
 };
 
-const addStudentAsync = (user, firstName, lastInitial, image, grade, relationship) => (
+const addStudentAsync = (user, firstName, lastInitial, image, grade) => (
   FBref('/students').push().then((studentRef) => {
     const relationships = {};
     relationships[user.uid] = {
@@ -86,7 +86,7 @@ const addStudentAsync = (user, firstName, lastInitial, image, grade, relationshi
 
 const addStudent = function* addStudent(action) {
   try {
-    const { firstName, lastInitial, image, grade, relationship } = action;
+    const { firstName, lastInitial, image, grade } = action;
     const state = yield select();
     yield call(
       addStudentAsync,
@@ -95,7 +95,6 @@ const addStudent = function* addStudent(action) {
       lastInitial,
       image,
       grade,
-      relationship,
     );
     yield put(NavActions.back());
   } catch (error) {
@@ -109,9 +108,7 @@ const watchAddStudent = function* watchAddStudent() {
 }
 
 const editStudentAsync = (uid, student) => {
-  const { key, firstName, lastInitial, image, grade, relationship } = student;
-  const relationships = {};
-  relationships[uid] = relationship;
+  const { key, firstName, lastInitial, image, grade } = student;
   const studentUpdate = {};
   studentUpdate[`students/${key}`] = {
     firstName,
@@ -119,9 +116,7 @@ const editStudentAsync = (uid, student) => {
     name: `${firstName} ${lastInitial}`,
     image,
     grade,
-    relationships,
   };
-  studentUpdate[`users/${uid}/students/${key}`] = relationship;
   return FBref('/').update(studentUpdate);
 };
 
