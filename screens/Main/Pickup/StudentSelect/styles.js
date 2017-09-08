@@ -9,10 +9,11 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
-    paddingVertical: 15,
+    paddingBottom: 15,
   },
   student: {
     marginHorizontal: 10,
+    marginTop: 15,
     padding: 5,
     flexDirection: 'column',
     alignItems: 'center',
