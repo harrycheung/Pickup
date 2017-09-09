@@ -37,6 +37,7 @@ const requestLogin = function* requestLogin(action) {
     yield put(MessageActions.showMessage('Requesting...', 0));
     const { phoneNumber } = action;
     const response = yield call(requestLoginAsync, phoneNumber);
+    yield put(MessageActions.clearMessage());
     yield put(AuthActions.requestLoginSucceeded());
     // TODO: remove this call
     if (phoneNumber.includes('111111111')) {
@@ -44,8 +45,7 @@ const requestLogin = function* requestLogin(action) {
     }
   } catch (error) {
     console.log('requestLogin failed', error);
-  } finally {
-    yield put(MessageActions.clearMessage());
+    yield put(MessageActions.showMessage('Request failed', 1000));
   }
 }
 
