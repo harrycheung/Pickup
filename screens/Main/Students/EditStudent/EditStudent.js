@@ -3,12 +3,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { colors, gstyles } from '../../../../config/styles';
+import { gstyles } from '../../../../config/styles';
 import StudentForm from '../../../../components/StudentForm';
 import MessageView from '../../../../components/MessageView';
 import { Actions as StudentActions } from '../../../../actions/Student';
@@ -21,7 +21,19 @@ class EditStudent extends React.Component {
       title: 'Edit',
       headerRight: (
         <TouchableOpacity
-          onPress={() => deleteStudent(student.key)}
+          onPress={() => {
+            Alert.alert(
+              'Remove student?',
+              null,
+              [
+                { text: 'Cancel', onPress: null, style: 'cancel' },
+                { text: 'OK',
+                  onPress: () => deleteStudent(student.key),
+                },
+              ],
+              { cancelable: false },
+            );
+          }}
           style={{
             justifyContent: 'center',
             alignItems: 'center',
