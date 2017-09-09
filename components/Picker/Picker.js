@@ -57,22 +57,36 @@ class Picker extends React.Component {
     return (
       <View key={items.join()} style={styles.row}>
         {items.map((item, index) => (
-          <TouchableOpacity
-            key={item}
-            style={[
-              styles.item,
-              item === this.state.selected ? styles.selected : {},
-              index > 0 ? { marginLeft: 5 } : {},
-            ]}
-            onPress={() => {
-              this.setState({ selected: item });
-              this.props.onChange(item);
-            }}
-          >
-            <Text style={gstyles.font18} numberOfLines={1}>
-              {item}
-            </Text>
-          </TouchableOpacity>
+          (item === this.state.selected ?
+            <View
+              key={item}
+              style={[
+                styles.item,
+                styles.selected,
+                index > 0 ? { marginLeft: 5 } : {},
+              ]}
+            >
+              <Text style={gstyles.font18} numberOfLines={1}>
+                {item}
+              </Text>
+            </View>
+            :
+            <TouchableOpacity
+              key={item}
+              style={[
+                styles.item,
+                index > 0 ? { marginLeft: 5 } : {},
+              ]}
+              onPress={() => {
+                this.setState({ selected: item });
+                this.props.onChange(item);
+              }}
+            >
+              <Text style={gstyles.font18} numberOfLines={1}>
+                {item}
+              </Text>
+            </TouchableOpacity>
+          )
         ))}
       </View>
     );

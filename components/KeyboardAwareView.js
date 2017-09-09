@@ -147,7 +147,12 @@ class KeyboardAwareView extends React.Component {
         if (child && child.props) {
           if (child.props.keyboardAwareInput) {
             return React.cloneElement(child, {
-              onFocus: this._onFocus,
+              onFocus: (event) => {
+                this._onFocus(event);
+                if (child.props.onFocus) {
+                  child.props.onFocus(event);
+                }
+              },
             });
           }
 

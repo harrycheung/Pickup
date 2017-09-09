@@ -58,6 +58,7 @@ class StudentSelect extends React.Component {
       location: '',
       vehicle: '',
       disabled: true,
+      disabledAddVehicle: true,
     };
 
     this._selectStudent = this._selectStudent.bind(this);
@@ -97,7 +98,8 @@ class StudentSelect extends React.Component {
     this.props.unlistenStudents();
   }
 
-  // vehiclePicker: Object
+  vehiclePicker: Object
+  vehicleInput: Object
 
   _selectStudent(selectedStudent) {
     if (this.state.students.includes(selectedStudent)) {
@@ -153,7 +155,8 @@ class StudentSelect extends React.Component {
     this.setState({
       location,
       showVehicle: location !== 'Playground',
-      disabled: location !== 'Playground',
+      disabled: location !== 'Playground' && this.state.vehicle === '',
+      vehicle: location === 'Playground' ? '' : this.state.vehicle,
     });
   }
 
@@ -233,7 +236,7 @@ class StudentSelect extends React.Component {
           );
         }
         // If the student information isn't loaded yet, show a blank view.
-        return <View key={student} />
+        return <View key={student} />;
       });
     }
 
@@ -289,16 +292,21 @@ class StudentSelect extends React.Component {
                     values={Object.keys(C.Locations)}
                     onChange={this._setLocation}
                     columns={2}
+                    value={this.state.location}
                   />
                   {this.state.showVehicle &&
                     <View style={gstyles.marginTop10}>
                       <Text style={gstyles.font18}>Your Vehicle:</Text>
                       {this.props.user.vehicles.length > 0 &&
                         <Picker
+                          ref={(picker) => { this.vehiclePicker = picker; }}
                           style={[gstyles.flexStretch, gstyles.marginTop10]}
                           columns={2}
                           values={this.props.user.vehicles}
-                          onChange={vehicle => this.setState({ vehicle, disabled: false })}
+                          onChange={(vehicle) => {
+                            this.setState({ vehicle, disabled: false });
+                            this.vehicleInput.blur();
+                          }}
                           value={this.state.vehicle}
                         />
                       }
@@ -309,10 +317,11 @@ class StudentSelect extends React.Component {
                           {
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                          }
+                          },
                         ]}
                       >
                         <LinedTextInput
+                          ref={(input) => { this.vehicleInput = input; }}
                           style={{ flex: 1, marginRight: 5 }}
                           placeholder="Describe vehicle"
                           autoCapitalize="words"
@@ -321,6 +330,9 @@ class StudentSelect extends React.Component {
                           onChangeText={this._changeAddVehicleText}
                           value={this.state.addVehicleText}
                           onSubmitEditing={Keyboard.dismiss}
+                          onFocus={() => {
+                            this.setState({ vehicle: '', disabled: true });
+                          }}
                           blurOnSubmit
                           keyboardAwareInput
                         />

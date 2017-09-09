@@ -24,6 +24,7 @@ class LinedTextInput extends React.Component {
     borderBottomColor: string,
     borderBottomWidth: number,
   }
+  textInput: Object
 
   _onFocus() {
     this.setState({
@@ -39,8 +40,14 @@ class LinedTextInput extends React.Component {
     });
   }
 
+  blur() {
+    this.textInput.blur();
+  }
+
   render() {
     const props = Object.assign({}, this.props);
+    const container = this;
+
     return (
       <View
         style={[props.style, {
@@ -52,10 +59,11 @@ class LinedTextInput extends React.Component {
       >
         <TextInput
           {...props}
+          ref={(input) => { this.textInput = input; }}
           style={gstyles.textInput}
           onFocus={(event) => {
-            this._onFocus();
-            this.props.onFocus(event);
+            container._onFocus();
+            container.props.onFocus(event);
           }}
           onBlur={this._onBlur}
         />
@@ -73,7 +81,7 @@ LinedTextInput.propTypes = {
 LinedTextInput.defaultProps = {
   style: {},
   borderBottomColor: 'lightgray',
-  onFocus: () => {},
+  onFocus: () => { console.log('bogus onfocus'); },
 };
 
 export default LinedTextInput;
