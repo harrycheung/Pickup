@@ -91,8 +91,7 @@ class StudentForm extends React.Component {
     addRelPhone: string,
     addRelRelationship: string,
     addRelDisabled: boolean,
-  };
-  profileForm: Object;
+  }
 
   componentDidMount() {
     this._updateState({});
@@ -105,6 +104,9 @@ class StudentForm extends React.Component {
       });
     }
   }
+
+  profileForm: Object
+  phoneInput: Object
 
   _loadRelationships(obj) {
     const relationships = [];
@@ -256,6 +258,7 @@ class StudentForm extends React.Component {
                   <IconButton icon="md-close" onPress={this._closeModal} />
                 </View>
                 <LinedTextInput
+                  ref={(input) => { this.phoneInput = input; }}
                   style={gstyles.marginTop10}
                   placeholder="Phone number"
                   maxLength={10}
@@ -271,8 +274,12 @@ class StudentForm extends React.Component {
                   <Picker
                     style={[gstyles.flexStretch, gstyles.marginTop10]}
                     values={C.Relationships}
-                    onChange={value => this._updateState({ addRelRelationship: value })}
+                    onChange={(value) => {
+                      this._updateState({ addRelRelationship: value });
+                      this.phoneInput.blur();
+                    }}
                     value={this.state.addRelRelationship}
+                    columns={2}
                   />
                 </View>
                 <View style={{ marginTop: 20 }}>
