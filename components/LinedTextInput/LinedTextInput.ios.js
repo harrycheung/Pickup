@@ -81,7 +81,7 @@ LinedTextInput.propTypes = {
 LinedTextInput.defaultProps = {
   style: {},
   borderBottomColor: 'lightgray',
-  onFocus: () => { console.log('bogus onfocus'); },
+  onFocus: () => {},
 };
 
 export default LinedTextInput;
