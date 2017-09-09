@@ -6,17 +6,15 @@ import PropTypes from 'prop-types';
 import {
   Alert,
   Button,
-  Image,
   Keyboard,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import moment from 'moment';
 
 import styles from './styles';
 import { gstyles } from '../../config/styles';
-import AutoScrollView from '../AutoScrollView';
+import CachedImage from '../../components/CachedImage';
 
 class PickupMessages extends React.Component {
   constructor(props: Object) {
@@ -70,7 +68,7 @@ class PickupMessages extends React.Component {
           }
           studentsJSX.push((
             <View key={key} style={styles.student}>
-              <Image
+              <CachedImage
                 style={[gstyles.profilePic50, studentStyle]}
                 source={{ uri: student.image }}
               />
@@ -111,7 +109,7 @@ class PickupMessages extends React.Component {
     return (
       <View key={message.key} style={containerStyle}>
         {sender !== null &&
-          <Image style={styles.senderImage} source={{ uri: sender.image }} />
+          <CachedImage style={styles.senderImage} source={{ uri: sender.image }} />
         }
         <View style={messageStyle}>
           {typeof messageJSX === 'string' ?
@@ -208,7 +206,7 @@ class PickupMessages extends React.Component {
           style={[gstyles.flexCenter, styles.studentRequest]}
         >
           <View style={[gstyles.flex1, gstyles.flexRow]}>
-            <Image
+            <CachedImage
               style={gstyles.profilePic50}
               source={{ uri: student.image }}
             />

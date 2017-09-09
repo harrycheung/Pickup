@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,6 +11,7 @@ import update from 'react-addons-update';
 
 import { colors, gstyles } from '../../config/styles';
 import Button from '../../components/Button';
+import CachedImage from '../../components/CachedImage';
 import PickupScreen from './Pickup';
 import StudentsScreen from './Students';
 import LogoutScreen from './Logout';
@@ -32,7 +33,7 @@ const Drawer = (props) => {
           alignItems: 'center',
         }}
       >
-        <Image
+        <CachedImage
           style={[gstyles.profilePic100, { backgroundColor: 'transparent' }]}
           source={{ uri: props.image }}
         />

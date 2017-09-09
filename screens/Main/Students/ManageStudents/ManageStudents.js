@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
+import CachedImage from '../../../../components/CachedImage';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as StudentActions } from '../../../../actions/Student';
 
@@ -68,7 +69,7 @@ class ManageStudents extends React.Component {
           style={[styles.student, gstyles.flexCenter]}
           onPress={() => this.props.navigate('EditStudent', { student })}
         >
-          <Image
+          <CachedImage
             style={[gstyles.profilePic50]}
             source={{ uri: student.image }}
           />

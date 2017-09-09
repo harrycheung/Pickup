@@ -7,7 +7,6 @@ import {
   Alert,
   Button,
   FlatList,
-  Image,
   Keyboard,
   Platform,
   StyleSheet,
@@ -23,6 +22,7 @@ import ProfileForm from './ProfileForm';
 import Picker from './Picker';
 import IconButton from './IconButton';
 import LinedTextInput from './LinedTextInput';
+import CachedImage from './CachedImage';
 
 const styles = StyleSheet.create({
   pickerLabel: {
@@ -198,7 +198,7 @@ class StudentForm extends React.Component {
                       gstyles.flexRow,
                     ]}
                   >
-                    <Image
+                    <CachedImage
                       style={[gstyles.profilePic40, { marginRight: 10 }]}
                       source={{ uri: item.image }}
                     />

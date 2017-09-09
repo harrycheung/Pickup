@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import {
   ActivityIndicator,
   Button,
-  Image,
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -21,6 +20,7 @@ import { gstyles } from '../../config/styles';
 import LinedTextInput from '../LinedTextInput';
 import KeyboardAwareView from '../KeyboardAwareView';
 import CustomButton from '../Button';
+import CachedImage from '../CachedImage';
 import { Actions as ImageActions } from '../../actions/Image';
 import { Actions as MessageActions } from '../../actions/Message';
 
@@ -115,7 +115,7 @@ class ProfileForm extends React.Component {
       );
     } else {
       imageJSX = (
-        <Image
+        <CachedImage
           style={[gstyles.profilePic200, { backgroundColor: 'transparent' }]}
           source={{ uri: this.props.imageURL }}
         />

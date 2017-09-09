@@ -3,13 +3,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, SectionList, TouchableOpacity, Text, View } from 'react-native';
+import { SectionList, TouchableOpacity, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
+import CachedImage from '../../../../components/CachedImage';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as AdminActions } from '../../../../actions/Admin';
 import MessageView from '../../../../components/MessageView';
@@ -72,7 +73,7 @@ class PickupSelect extends React.Component {
       }
 
       students.push((
-        <Image
+        <CachedImage
           key={student.key}
           style={[gstyles.profilePic50, styles.studentImage, studentStyle]}
           source={{ uri: student.image }}

@@ -5,7 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Image,
   Keyboard,
   ScrollView,
   Text,
@@ -25,9 +24,9 @@ import drawerHeader from '../../../../components/DrawerHeader';
 import MyButton from '../../../../components/Button';
 import MessageView from '../../../../components/MessageView';
 import Picker from '../../../../components/Picker';
-// import IconButton from '../../../../components/IconButton';
 import LinedTextInput from '../../../../components/LinedTextInput';
 import KeyboardAwareView from '../../../../components/KeyboardAwareView';
+import CachedImage from '../../../../components/CachedImage';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as StudentActions } from '../../../../actions/Student';
@@ -232,7 +231,7 @@ class StudentSelect extends React.Component {
               style={[styles.student, selected ? { borderColor: colors.buttonBackground } : {}]}
               onPress={() => this._selectStudent(student)}
             >
-              <Image
+              <CachedImage
                 style={gstyles.profilePic100}
                 source={{ uri: student.image }}
               />
