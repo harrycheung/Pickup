@@ -40,8 +40,14 @@ const watchLoadUser = function* watchLoadUser() {
   yield takeEvery(UserTypes.LOAD, loadUser);
 };
 
-const updateUserAsync = (uid, firstName, lastInitial, image) => (
+const updateUserAsync = (uid, firstName, lastInitial, image, students) => (
   FBref(`/users/${uid}`).update({ firstName, lastInitial, name: `${firstName} ${lastInitial}`, image })
+    .then(() => Promise.all(
+      students.map(student => (
+        FBref(`/students/${student.key}/relationships/${uid}`)
+          .update({ name: `${firstName} ${lastInitial}`, image })
+      )),
+    ))
 );
 
 const updateUserWithNav = function* updateUserWithNav(action, navAction) {
@@ -49,7 +55,10 @@ const updateUserWithNav = function* updateUserWithNav(action, navAction) {
     yield put(SpinnerActions.start());
     const { firstName, lastInitial, image } = action;
     const state = yield select();
-    yield call(updateUserAsync, state.auth.user.uid, firstName, lastInitial, image);
+    yield call(updateUserAsync,
+      state.auth.user.uid,
+      firstName, lastInitial, image,
+      state.student.students);
     yield put(navAction);
   } catch (error) {
     console.log('updateUser failed', error);
