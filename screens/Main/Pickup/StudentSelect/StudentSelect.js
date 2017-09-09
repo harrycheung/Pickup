@@ -135,7 +135,12 @@ class StudentSelect extends React.Component {
   _addVehicle() {
     const vehicle = this.state.addVehicleText;
     this.props.addVehicle(vehicle);
-    this.setState({ vehicle, addVehicleText: '' });
+    this.setState({
+      vehicle,
+      addVehicleText: '',
+      disabledAddVehicle: true,
+      disabled: false,
+    });
     Keyboard.dismiss();
   }
 
@@ -157,6 +162,8 @@ class StudentSelect extends React.Component {
       showVehicle: location !== 'Playground',
       disabled: location !== 'Playground' && this.state.vehicle === '',
       vehicle: location === 'Playground' ? '' : this.state.vehicle,
+      disabledAddVehicle: location === 'Playground' ? true : this.state.disabledAddVehicle,
+      addVehicleText: location === 'Playground' ? '' : this.state.addVehicleText,
     });
   }
 
