@@ -40,15 +40,20 @@ const watchLoadUser = function* watchLoadUser() {
   yield takeEvery(UserTypes.LOAD, loadUser);
 };
 
-const updateUserAsync = (uid, firstName, lastInitial, image, students) => (
-  FBref(`/users/${uid}`).update({ firstName, lastInitial, name: `${firstName} ${lastInitial}`, image })
-    .then(() => Promise.all(
-      students.map(student => (
-        FBref(`/students/${student.key}/relationships/${uid}`)
-          .update({ name: `${firstName} ${lastInitial}`, image })
-      )),
-    ))
-);
+const updateUserAsync = (uid, firstName, lastInitial, image, students) => {
+  const name = `${firstName} ${lastInitial}`;
+  const update = {};
+  update[`/users/${uid}/firstName`] = firstName;
+  update[`/users/${uid}/lastInitial`] = lastInitial;
+  update[`/users/${uid}/name`] = name;
+  update[`/users/${uid}/image`] = image;
+  students.reduce((acc, student) => {
+    acc[`/students/${student.key}/relationships/${uid}/name`] = name;
+    acc[`/students/${student.key}/relationships/${uid}/image`] = image;
+    return acc;
+  }, update);
+  return FBref().update(update);
+};
 
 const updateUserWithNav = function* updateUserWithNav(action, navAction) {
   try {
