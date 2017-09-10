@@ -7,14 +7,23 @@ import { TextInput, ViewPropTypes } from 'react-native';
 
 import { colors, gstyles } from '../../config/styles';
 
-const LinedTextInput = props => (
-  <TextInput
-    {...props}
-    style={[props.style, gstyles.flexStretch, { height: 44, paddingLeft: 5 }]}
-    selectionColor="black"
-    underlineColorAndroid={props.borderBottomColor}
-  />
-);
+class LinedTextInput extends React.Component {
+  blur() {
+    this.textInput.blur();
+  }
+
+  render() {
+    return (
+      <TextInput
+        ref={(input) => { this.textInput = input; }}
+        {...this.props}
+        style={[this.props.style, gstyles.flexStretch, { height: 44, paddingLeft: 5 }]}
+        selectionColor="black"
+        underlineColorAndroid={this.props.borderBottomColor}
+      />
+    );
+  }
+}
 
 LinedTextInput.propTypes = {
   style: ViewPropTypes.style,
