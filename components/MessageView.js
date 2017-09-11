@@ -76,7 +76,8 @@ class MessageView extends React.Component {
           this.state.fadeAnimationValue,
           {
             toValue: 0,
-            duration: this.state.duration,
+            delay: this.state.duration,
+            duration: 200,
           },
         ).start();
         this.state.fadeAnimationValue.addListener((event) => {
