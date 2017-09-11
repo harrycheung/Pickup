@@ -45,7 +45,7 @@ const requestLogin = function* requestLogin(action) {
     }
   } catch (error) {
     console.log('requestLogin failed', error);
-    yield put(MessageActions.showMessage('Request failed', 1000));
+    yield put(MessageActions.showMessage('Request failed', 2000));
   }
 }
 
