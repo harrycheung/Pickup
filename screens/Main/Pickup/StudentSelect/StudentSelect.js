@@ -248,28 +248,29 @@ class StudentSelect extends React.Component {
 
     return (
       <MessageView style={[gstyles.flex1, gstyles.flexStart]}>
-        <ScrollView contentContainerStyle={[gstyles.marginH15, styles.students]}>
-          {studentViews}
-        </ScrollView>
-        <MyButton
-          style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}
-          disabled={this.state.students.length < 1}
-          onPress={this._configure}
-          content="Pickup"
-          round
-        />
+        <View style={gstyles.flex1}>
+          <ScrollView contentContainerStyle={[gstyles.marginH15, styles.students]}>
+            {studentViews}
+          </ScrollView>
+          <MyButton
+            style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}
+            disabled={this.state.students.length < 1}
+            onPress={this._configure}
+            content="Pickup"
+            round
+          />
+        </View>
         {this.state.configurePickup &&
           <View style={styles.configureModal}>
-            <KeyboardAwareView
+            <View
               style={[gstyles.flex1, gstyles.flexStretch, gstyles.flexCenter]}
               centerOnInput
             >
-              <TouchableWithoutFeedback
-                onPress={this._clearConfigurePickup}
+              <BlurView style={styles.configureModal} tint="light" intensity={75} />
+              <KeyboardAwareView
+                style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch]}
+                centerOnInput
               >
-                <BlurView style={[styles.configureModal]} tint="light" intensity={75} />
-              </TouchableWithoutFeedback>
-              <View style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch]}>
                 <View
                   style={[{ height: 44, backgroundColor: colors.buttonBackground, paddingHorizontal: 15, alignItems: 'center' }, gstyles.flexRow, gstyles.flexStretch]}
                 >
@@ -367,8 +368,8 @@ class StudentSelect extends React.Component {
                     />
                   </View>
                 </View>
-              </View>
-            </KeyboardAwareView>
+              </KeyboardAwareView>
+            </View>
           </View>
         }
       </MessageView>
