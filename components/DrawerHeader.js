@@ -2,7 +2,7 @@
 // @flow
 
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Keyboard, TouchableOpacity } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { merge } from '../helpers';
@@ -11,7 +11,10 @@ export default (navigation: NavigationActions, screenProps: Object, options: Obj
   merge(options, {
     headerLeft: (
       <TouchableOpacity
-        onPress={() => navigation.navigate('DrawerOpen')}
+        onPress={() => {
+          Keyboard.dismiss();
+          navigation.navigate('DrawerOpen');
+        }}
         style={{
           justifyContent: 'center',
           alignItems: 'center',
