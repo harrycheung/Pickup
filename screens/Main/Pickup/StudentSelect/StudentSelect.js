@@ -266,7 +266,9 @@ class StudentSelect extends React.Component {
               style={[gstyles.flex1, gstyles.flexStretch, gstyles.flexCenter]}
               centerOnInput
             >
-              <BlurView style={styles.configureModal} tint="light" intensity={75} />
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <BlurView style={styles.configureModal} tint="light" intensity={75} />
+              </TouchableWithoutFeedback>
               <KeyboardAwareView
                 style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch]}
                 centerOnInput
