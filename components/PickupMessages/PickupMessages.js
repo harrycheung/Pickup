@@ -81,7 +81,10 @@ class PickupMessages extends React.Component {
         messageJSX = (
           <View style={styles.request}>
             <Text style={styles.messageText}>
-              {message.sender.name} at {this.props.pickup.location} in {this.props.pickup.vehicle}
+              {message.sender.name} at {this.props.pickup.location}
+              {this.props.pickup.location !== 'Playground' &&
+                `in ${this.props.pickup.vehicle}`
+              }
             </Text>
           </View>
         );
