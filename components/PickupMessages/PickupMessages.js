@@ -236,10 +236,7 @@ class PickupMessages extends React.Component {
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Text>
-              {this.props.pickup.requestor.name} at {this.props.pickup.location} in {this.props.pickup.vehicle}
-            </Text>
-            <Text style={{ fontSize: 10, color: 'black', alignSelf: 'flex-end' }}>
-              {moment(this.props.pickup.createdAt).format('LT')}
+              {moment(this.props.pickup.createdAt).format('LT')} - {this.props.pickup.requestor.name} at {this.props.pickup.location} in {this.props.pickup.vehicle}
             </Text>
           </View>
         </View>
