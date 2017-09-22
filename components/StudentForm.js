@@ -188,6 +188,7 @@ class StudentForm extends React.Component {
               <FlatList
                 style={gstyles.flex1}
                 data={this.state.data}
+                scrollEnabled={false}
                 renderItem={({ item }) => (
                   <View
                     style={[

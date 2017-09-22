@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Button,
   Keyboard,
+  ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -133,51 +134,53 @@ class ProfileForm extends React.Component {
 
     return (
       <View style={gstyles.flex1}>
-        <KeyboardAwareView
-          style={[gstyles.flex1, gstyles.marginH15, gstyles.marginTop10]}
-          centerOnInput
-        >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={[gstyles.flexCenter, { paddingTop: 10 }]}>
-              {imageJSX}
-              <View style={gstyles.marginTop10}>
-                <Button
-                  title={this.props.imageURL === '' ? "Upload photo" : "Change photo"}
-                  onPress={this._takePhoto}
-                />
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View style={{ flexDirection: 'row' }}>
-            <LinedTextInput
-              style={{ flex: 1, marginRight: 10 }}
-              placeholder="First Name"
-              autoCapitalize="words"
-              clearButtonMode="while-editing"
-              onChangeText={text => this._updateState({ firstName: text.trim() })}
-              defaultValue={this.state.firstName}
-              onSubmitEditing={Keyboard.dismiss}
-              keyboardAwareInput
-            />
-            <LinedTextInput
-              style={{ flex: 1 }}
-              placeholder="Last Initial"
-              maxLength={1}
-              autoCapitalize="words"
-              clearButtonMode="while-editing"
-              onChangeText={text => this._updateState({ lastInitial: text.trim() })}
-              defaultValue={this.state.lastInitial}
-              onSubmitEditing={Keyboard.dismiss}
-              keyboardAwareInput
-            />
-          </View>
-          {this.props.children}
-          {this.props.usePadding &&
+        <ScrollView>
+          <KeyboardAwareView
+            style={[gstyles.flex1, gstyles.marginH15]}
+            centerOnInput
+          >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View style={[gstyles.flex1, gstyles.flexStretch]} />
+              <View style={[gstyles.flexCenter, { paddingTop: 15 }]}>
+                {imageJSX}
+                <View style={gstyles.marginTop10}>
+                  <Button
+                    title={this.props.imageURL === '' ? "Upload photo" : "Change photo"}
+                    onPress={this._takePhoto}
+                  />
+                </View>
+              </View>
             </TouchableWithoutFeedback>
-          }
-        </KeyboardAwareView>
+            <View style={{ flexDirection: 'row' }}>
+              <LinedTextInput
+                style={{ flex: 1, marginRight: 10 }}
+                placeholder="First Name"
+                autoCapitalize="words"
+                clearButtonMode="while-editing"
+                onChangeText={text => this._updateState({ firstName: text.trim() })}
+                defaultValue={this.state.firstName}
+                onSubmitEditing={Keyboard.dismiss}
+                keyboardAwareInput
+              />
+              <LinedTextInput
+                style={{ flex: 1 }}
+                placeholder="Last Initial"
+                maxLength={1}
+                autoCapitalize="words"
+                clearButtonMode="while-editing"
+                onChangeText={text => this._updateState({ lastInitial: text.trim() })}
+                defaultValue={this.state.lastInitial}
+                onSubmitEditing={Keyboard.dismiss}
+                keyboardAwareInput
+              />
+            </View>
+            {this.props.children}
+            {this.props.usePadding &&
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={[gstyles.flex1, gstyles.flexStretch]} />
+              </TouchableWithoutFeedback>
+            }
+          </KeyboardAwareView>
+        </ScrollView>
         <View style={{ padding: 10, borderTopWidth: 1, borderTopColor: 'darkgray' }}>
           <CustomButton
             onPress={this._submit}
