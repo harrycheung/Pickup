@@ -137,7 +137,12 @@ class ConfigurePickup extends React.Component {
                   columns={2}
                   values={this.props.user.vehicles}
                   onChange={(vehicle) => {
-                    this.setState({ vehicle, disabled: false });
+                    this.setState({
+                      vehicle,
+                      disabled: false,
+                      addVehicleText: '',
+                      disabledAddVehicle: true,
+                    });
                     this.vehicleInput.blur();
                   }}
                   value={this.state.vehicle}
