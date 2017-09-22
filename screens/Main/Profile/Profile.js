@@ -75,6 +75,24 @@ class Profile extends React.Component {
             <Text style={gstyles.font18}>
               Vehicles:
             </Text>
+            <FlatList
+              style={gstyles.flex1}
+              data={this.props.vehicles.map(vehicle => ({ key: vehicle }))}
+              scrollEnabled={false}
+              renderItem={({ item }) => (
+                <View
+                  style={[{ marginTop: 5, alignItems: 'center' }, gstyles.flexRow]}
+                >
+                  <Text style={[gstyles.font18, { marginRight: 15 }]}>
+                    {item.key}
+                  </Text>
+                  <IconButton
+                    icon="md-trash"
+                    onPress={() => this.props.removeVehicle(item.key)}
+                  />
+                </View>
+              )}
+            />
             <View>
               <View
                 style={[
@@ -113,23 +131,6 @@ class Profile extends React.Component {
                 }
               </View>
             </View>
-            <FlatList
-              style={gstyles.flex1}
-              data={this.props.vehicles.map(vehicle => ({ key: vehicle }))}
-              renderItem={({ item }) => (
-                <View
-                  style={[{ marginTop: 5, alignItems: 'center' }, gstyles.flexRow]}
-                >
-                  <Text style={[gstyles.font18, { marginRight: 15 }]}>
-                    {item.key}
-                  </Text>
-                  <IconButton
-                    icon="md-trash"
-                    onPress={() => this.props.removeVehicle(item.key)}
-                  />
-                </View>
-              )}
-            />
           </View>
         </ProfileForm>
       </MessageView>

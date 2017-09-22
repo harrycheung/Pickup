@@ -10,10 +10,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
+import MessageView from '../../../../components/MessageView';
 import CachedImage from '../../../../components/CachedImage';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as AdminActions } from '../../../../actions/Admin';
-import MessageView from '../../../../components/MessageView';
 
 class PickupSelect extends React.Component {
   static navigationOptions = ({ navigation }) => ({

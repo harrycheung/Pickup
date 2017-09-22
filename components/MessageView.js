@@ -7,6 +7,7 @@ import {
   Animated,
   ActivityIndicator,
   Platform,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -16,7 +17,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { BlurView } from 'expo';
 
-import { gstyles } from '../config/styles';
+import { colors, gstyles } from '../config/styles';
 import { Actions as MessageActions } from '../actions/Message';
 
 const styles = StyleSheet.create({
@@ -94,6 +95,10 @@ class MessageView extends React.Component {
     const renderChildren = Platform.OS === 'ios' || this.state.message === '';
     return (
       <View style={this.props.style}>
+        <StatusBar
+          backgroundColor={colors.buttonBackground}
+          barStyle="light-content"
+        />
         {renderChildren &&
           this.props.children
         }

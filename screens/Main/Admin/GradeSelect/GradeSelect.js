@@ -11,6 +11,7 @@ import * as C from '../../../../config/constants';
 import { gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
+import MessageView from '../../../../components/MessageView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
 class Home extends React.Component {
@@ -53,9 +54,9 @@ class Home extends React.Component {
     ));
 
     return (
-      <View style={gstyles.flex1}>
+      <MessageView style={gstyles.flex1}>
         {gradeButtons}
-      </View>
+      </MessageView>
     );
   }
 }

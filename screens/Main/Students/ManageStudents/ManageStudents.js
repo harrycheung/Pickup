@@ -12,6 +12,7 @@ import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import CachedImage from '../../../../components/CachedImage';
+import MessageView from '../../../../components/MessageView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as StudentActions } from '../../../../actions/Student';
 
@@ -93,13 +94,13 @@ class ManageStudents extends React.Component {
 
   render() {
     return (
-      <View style={[gstyles.marginH15, gstyles.flex1]}>
+      <MessageView style={[gstyles.marginH15, gstyles.flex1]}>
         <FlatList
           data={this.props.students}
           renderItem={({ item }) => this._renderRow(item)}
           ItemSeparatorComponent={ManageStudents._renderSeparator}
         />
-      </View>
+      </MessageView>
     );
   }
 }

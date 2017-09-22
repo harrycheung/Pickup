@@ -10,6 +10,7 @@ import { HeaderBackButton } from 'react-navigation';
 import { gstyles } from '../../../../config/styles';
 import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import PickupMessages from '../../../../components/PickupMessages';
+import MessageView from '../../../../components/MessageView';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 
 class PickupRequest extends React.Component {
@@ -46,13 +47,15 @@ class PickupRequest extends React.Component {
 
   render() {
     return (
-      <KeyboardAwareView style={gstyles.flex1}>
-        <PickupMessages
-          user={this.props.user}
-          pickup={this.props.pickup}
-          postMessage={this.props.postMessage}
-        />
-      </KeyboardAwareView>
+      <MessageView style={gstyles.flex1}>
+        <KeyboardAwareView style={gstyles.flex1}>
+          <PickupMessages
+            user={this.props.user}
+            pickup={this.props.pickup}
+            postMessage={this.props.postMessage}
+          />
+        </KeyboardAwareView>
+      </MessageView>
     );
   }
 }

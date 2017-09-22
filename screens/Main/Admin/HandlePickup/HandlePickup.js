@@ -10,6 +10,7 @@ import { gstyles } from '../../../../config/styles';
 import { truncate } from '../../../../helpers';
 import PickupMessages from '../../../../components/PickupMessages';
 import KeyboardAwareView from '../../../../components/KeyboardAwareView';
+import MessageView from '../../../../components/MessageView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as AdminActions } from '../../../../actions/Admin';
@@ -43,17 +44,19 @@ class HandlePickup extends React.Component {
 
   render() {
     return (
-      <KeyboardAwareView style={gstyles.flex1}>
-        <PickupMessages
-          user={this.props.user}
-          pickup={this.props.pickup}
-          postMessage={this.props.postMessage}
-          escortStudent={this.props.escortStudent}
-          cancelEscort={this.props.cancelEscort}
-          releaseStudent={this.props.releaseStudent}
-          hideRequest
-        />
-      </KeyboardAwareView>
+      <MessageView style={gstyles.flex1}>
+        <KeyboardAwareView style={gstyles.flex1}>
+          <PickupMessages
+            user={this.props.user}
+            pickup={this.props.pickup}
+            postMessage={this.props.postMessage}
+            escortStudent={this.props.escortStudent}
+            cancelEscort={this.props.cancelEscort}
+            releaseStudent={this.props.releaseStudent}
+            hideRequest
+          />
+        </KeyboardAwareView>
+      </MessageView>
     );
   }
 }
