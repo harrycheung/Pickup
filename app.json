@@ -2,7 +2,7 @@
   "expo": {
     "sdkVersion": "20.0.0",
     "name": "SynPickup",
-    "icon": "./images/app-icon.png",
+    "icon": "./images/synapse512.png",
     "version": "1",
     "slug": "harrycheung-synapse-pickup",
     "orientation": "portrait",
@@ -20,7 +20,7 @@
       "backgroundColor": "#027fbf"
     },
     "loading": {
-      "icon": "./images/app-icon.png",
+      "icon": "./images/synapse1024.png",
       "backgroundColor": "#ffffff"
     }
   }
