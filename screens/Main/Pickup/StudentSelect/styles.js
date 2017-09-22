@@ -1,8 +1,10 @@
 
 // @flow
 
-import { StyleSheet } from 'react-native';
-import { colors } from '../../../../config/styles';
+import { Dimensions, StyleSheet } from 'react-native';
+import { colors, gstyles } from '../../../../config/styles';
+
+const wide = Dimensions.get('window').width > 400;
 
 export default StyleSheet.create({
   students: {
@@ -12,32 +14,27 @@ export default StyleSheet.create({
     paddingBottom: 15,
   },
   student: {
-    marginHorizontal: 10,
     marginTop: 15,
-    padding: 5,
+    padding: 10,
     flexDirection: 'column',
     alignItems: 'center',
-    borderWidth: 3,
+    borderWidth: wide ? 3 : 2,
     borderColor: 'transparent',
     borderRadius: 5,
-    maxWidth: 140,
+    maxWidth: wide ? 140 : 120,
+  },
+  studentImage: StyleSheet.flatten(wide ? gstyles.profilePic100 : gstyles.profilePic80),
+  studentName: {
+    fontSize: wide ? 18 : 14,
   },
   dialog: {
     borderWidth: 3,
     borderColor: colors.buttonBackground,
     borderRadius: 5,
     margin: 15,
+    padding: 15,
     backgroundColor: 'white',
     flexDirection: 'column',
-    alignItems: 'center',
-  },
-  configureModal: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    justifyContent: 'center',
     alignItems: 'center',
   },
 });

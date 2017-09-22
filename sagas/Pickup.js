@@ -60,7 +60,7 @@ const createPickup = function* createPickup(action) {
       action.vehicle,
     );
     yield put(PickupActions.createdPickup(pickup));
-    yield put(NavActions.navigate('PickupRequest'));
+    yield put(NavActions.navigate('PickupRequest', { key: action.navKey }));
   } catch (error) {
     console.log('createPickup failed', error);
     // Do nothing?

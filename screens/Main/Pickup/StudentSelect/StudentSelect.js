@@ -5,32 +5,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Keyboard,
   ScrollView,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { BlurView } from 'expo';
-import Icon from 'react-native-vector-icons/Ionicons';
 
-import * as C from '../../../../config/constants';
 import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import MyButton from '../../../../components/Button';
 import MessageView from '../../../../components/MessageView';
-import Picker from '../../../../components/Picker';
-import LinedTextInput from '../../../../components/LinedTextInput';
-import KeyboardAwareView from '../../../../components/KeyboardAwareView';
 import CachedImage from '../../../../components/CachedImage';
-import { Actions as PickupActions } from '../../../../actions/Pickup';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as StudentActions } from '../../../../actions/Student';
 import { Actions as UserActions } from '../../../../actions/User';
+import { Actions as PickupActions } from '../../../../actions/Pickup';
 
 class StudentSelect extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -51,35 +43,18 @@ class StudentSelect extends React.Component {
     this.state = {
       existingPickup: props.pickup,
       students: [],
-      configurePickup: false,
-      showVehicle: false,
-      addVehicleText: '',
-      location: '',
-      vehicle: '',
       disabled: true,
-      disabledAddVehicle: true,
     };
 
     this._selectStudent = this._selectStudent.bind(this);
-    this._configure = this._configure.bind(this);
-    this._pickup = this._pickup.bind(this);
     this._cancelPickup = this._cancelPickup.bind(this);
-    this._addVehicle = this._addVehicle.bind(this);
-    this._clearConfigurePickup = this._clearConfigurePickup.bind(this);
-    this._setLocation = this._setLocation.bind(this);
-    this._changeAddVehicleText = this._changeAddVehicleText.bind(this);
+    this._configure = this._configure.bind(this);
   }
 
   state: {
     existingPickup: Object,
     students: Object[],
-    configurePickup: boolean,
-    showVehicle: boolean,
-    addVehicleText: string,
-    location: string,
-    vehicle: string,
     disabled: boolean,
-    disabledAddVehicle: boolean,
   }
 
   componentWillMount() {
@@ -97,9 +72,6 @@ class StudentSelect extends React.Component {
     this.props.unlistenStudents();
   }
 
-  vehiclePicker: Object
-  vehicleInput: Object
-
   _selectStudent(selectedStudent) {
     if (this.state.students.includes(selectedStudent)) {
       this.setState({
@@ -112,116 +84,48 @@ class StudentSelect extends React.Component {
     }
   }
 
-  _configure() {
-    this.setState({ configurePickup: true });
-  }
-
-  _pickup() {
-    this.props.createPickup(
-      this.props.user,
-      this.state.students,
-      this.state.location,
-      this.state.vehicle,
-    );
-    this._clearConfigurePickup();
-  }
-
   _cancelPickup() {
     this.setState({ existingPickup: null });
     this.props.cancelPickup(this.props.pickup);
   }
 
-  _addVehicle() {
-    const vehicle = this.state.addVehicleText;
-    this.props.addVehicle(vehicle);
-    this.setState({
-      vehicle,
-      addVehicleText: '',
-      disabledAddVehicle: true,
-      disabled: false,
-    });
-    Keyboard.dismiss();
-  }
-
-  _clearConfigurePickup() {
-    this.setState({
-      students: [],
-      configurePickup: false,
-      showVehicle: false,
-      addVehicleText: '',
-      location: '',
-      vehicle: '',
-      disabled: true,
-    });
-  }
-
-  _setLocation(location) {
-    this.setState({
-      location,
-      showVehicle: location !== 'Playground',
-      disabled: location !== 'Playground' && this.state.vehicle === '',
-      vehicle: location === 'Playground' ? '' : this.state.vehicle,
-      disabledAddVehicle: location === 'Playground' ? true : this.state.disabledAddVehicle,
-      addVehicleText: location === 'Playground' ? '' : this.state.addVehicleText,
-    });
-  }
-
-  _changeAddVehicleText(text) {
-    this.setState({
-      addVehicleText: text,
-      disabledAddVehicle: text.length < 6 || this.props.user.vehicles.indexOf(text) > -1,
-    });
+  _configure() {
+    this.props.navigate('ConfigurePickup', { students: this.state.students });
+    this.setState({ students: [], disabled: true });
   }
 
   render() {
     if (this.state.existingPickup) {
       return (
-        <View style={[gstyles.flex1, gstyles.flexStart]}>
-          <View style={gstyles.flexRow}>
-            <View style={gstyles.flex1} />
-            <View style={styles.dialog}>
-              <Text style={gstyles.font18}>Continue your previous pickup?</Text>
-              <View style={[gstyles.marginTop10, gstyles.flexRow, { alignItems: 'center' }]}>
-                <View style={gstyles.flex1}>
-                  <Button
-                    onPress={this._cancelPickup}
-                    title="Cancel"
-                    color="red"
-                  />
-                </View>
-                <View style={{ width: 10 }} />
-                <View style={gstyles.flex1}>
-                  <Button
-                    onPress={() => {
-                      this.setState({ existingPickup: null });
-                      this.props.resumePickup(this.props.pickup);
-                    }}
-                    title="Continue"
-                  />
-                </View>
+        <View style={[gstyles.flex1, gstyles.flexCenter]}>
+          <View style={styles.dialog}>
+            <Text style={gstyles.font18}>Continue your previous pickup?</Text>
+            <View style={[gstyles.marginTop10, gstyles.flexRow, { alignItems: 'center' }]}>
+              <View style={gstyles.flex1}>
+                <Button
+                  onPress={this._cancelPickup}
+                  title="Cancel"
+                  color="red"
+                />
+              </View>
+              <View style={{ width: 10 }} />
+              <View style={gstyles.flex1}>
+                <Button
+                  onPress={() => {
+                    this.setState({ existingPickup: null });
+                    this.props.resumePickup(this.props.pickup);
+                  }}
+                  title="Continue"
+                />
               </View>
             </View>
-            <View style={gstyles.flex1} />
           </View>
         </View>
       );
     }
 
     let studentViews = null;
-    if (this.props.students.length === 0) {
-      studentViews = (
-        <View style={gstyles.flexCenter}>
-          <Text style={gstyles.font18}>
-            {"Let's add your student"}
-          </Text>
-          <Button
-            style={gstyles.marginTop10}
-            onPress={() => this.props.navigate('AddStudent')}
-            title="Add student"
-          />
-        </View>
-      );
-    } else {
+    if (this.props.students.length > 0) {
       studentViews = this.props.students.map((student) => {
         if (typeof student === 'object') {
           const selected = this.state.students.includes(student);
@@ -232,10 +136,10 @@ class StudentSelect extends React.Component {
               onPress={() => this._selectStudent(student)}
             >
               <CachedImage
-                style={gstyles.profilePic100}
+                style={styles.studentImage}
                 source={{ uri: student.image }}
               />
-              <Text style={[gstyles.font18, gstyles.marginTop10]}>
+              <Text style={[styles.studentName, gstyles.marginTop10]}>
                 {student.firstName} {student.lastInitial} ({student.grade})
               </Text>
             </TouchableOpacity>
@@ -248,130 +152,25 @@ class StudentSelect extends React.Component {
 
     return (
       <MessageView style={[gstyles.flex1, gstyles.flexStart]}>
-        <View style={gstyles.flex1}>
-          <ScrollView contentContainerStyle={[gstyles.marginH15, styles.students]}>
-            {studentViews}
-          </ScrollView>
-          <MyButton
-            style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}
-            disabled={this.state.students.length < 1}
-            onPress={this._configure}
-            content="Pickup"
-            round
-          />
-        </View>
-        {this.state.configurePickup &&
-          <View style={styles.configureModal}>
-            <View
-              style={[gstyles.flex1, gstyles.flexStretch, gstyles.flexCenter]}
-              centerOnInput
-            >
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <BlurView style={styles.configureModal} tint="light" intensity={75} />
-              </TouchableWithoutFeedback>
-              <KeyboardAwareView
-                style={[styles.dialog, gstyles.flexStart, gstyles.flexStretch]}
-                centerOnInput
-              >
-                <View
-                  style={[{ height: 44, backgroundColor: colors.buttonBackground, paddingHorizontal: 15, alignItems: 'center' }, gstyles.flexRow, gstyles.flexStretch]}
-                >
-                  <Text
-                    style={[gstyles.font18, gstyles.flex1, { color: 'white' }]}
-                  >
-                    Configure Pickup
-                  </Text>
-                  <Icon.Button
-                    name="md-close"
-                    onPress={this._clearConfigurePickup}
-                    style={{ paddingVertical: 0 }}
-                    iconStyle={{ marginRight: 0 }}
-                    color="white"
-                    backgroundColor={colors.buttonBackground}
-                  />
-                </View>
-                <View
-                  style={[{ paddingHorizontal: 15, paddingVertical: 10 }, gstyles.flexStretch]}
-                >
-                  <Text style={[gstyles.flexStretch, gstyles.font18, gstyles.marginTop10]}>
-                    Pickup Location:
-                  </Text>
-                  <Picker
-                    style={[gstyles.flexStretch, gstyles.marginTop10]}
-                    values={Object.keys(C.Locations)}
-                    onChange={this._setLocation}
-                    columns={2}
-                    value={this.state.location}
-                  />
-                  {this.state.showVehicle &&
-                    <View style={gstyles.marginTop10}>
-                      <Text style={gstyles.font18}>Your Vehicle:</Text>
-                      {this.props.user.vehicles.length > 0 &&
-                        <Picker
-                          ref={(picker) => { this.vehiclePicker = picker; }}
-                          style={[gstyles.flexStretch, gstyles.marginTop10]}
-                          columns={2}
-                          values={this.props.user.vehicles}
-                          onChange={(vehicle) => {
-                            this.setState({ vehicle, disabled: false });
-                            this.vehicleInput.blur();
-                          }}
-                          value={this.state.vehicle}
-                        />
-                      }
-                      <View
-                        style={[
-                          gstyles.flexStretch,
-                          gstyles.flexRow,
-                          {
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                          },
-                        ]}
-                      >
-                        <LinedTextInput
-                          ref={(input) => { this.vehicleInput = input; }}
-                          style={{ flex: 1, marginRight: 5 }}
-                          placeholder="Describe vehicle"
-                          autoCapitalize="words"
-                          clearButtonMode="while-editing"
-                          borderBottomColor={'darkgray'}
-                          onChangeText={this._changeAddVehicleText}
-                          value={this.state.addVehicleText}
-                          onSubmitEditing={Keyboard.dismiss}
-                          onFocus={() => {
-                            this.setState({ vehicle: '', disabled: true });
-                          }}
-                          blurOnSubmit
-                          keyboardAwareInput
-                        />
-                        <Button
-                          title="Add"
-                          disabled={this.state.disabledAddVehicle}
-                          onPress={this._addVehicle}
-                        />
-                      </View>
-                    </View>
-                  }
-                  <View
-                    style={[
-                      {
-                        marginTop: 20,
-                        justifyContent: 'center',
-                      },
-                      gstyles.flexStretch,
-                    ]}
-                  >
-                    <Button
-                      disabled={this.state.disabled}
-                      onPress={this._pickup}
-                      title="Request Pickup"
-                      color={colors.buttonBackground}
-                    />
-                  </View>
-                </View>
-              </KeyboardAwareView>
-            </View>
+        {this.props.students.length === 0 ?
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <Button
+              onPress={() => this.props.navigate('AddStudent')}
+              title="Add your student"
+            />
+          </View>
+          :
+          <View style={gstyles.flex1}>
+            <ScrollView contentContainerStyle={[gstyles.marginH15, styles.students]}>
+              {studentViews}
+            </ScrollView>
+            <MyButton
+              style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}
+              disabled={this.state.students.length < 1}
+              onPress={this._configure}
+              content="Pickup"
+              round
+            />
           </View>
         }
       </MessageView>
@@ -382,14 +181,12 @@ class StudentSelect extends React.Component {
 StudentSelect.propTypes = {
   user: PropTypes.object.isRequired,
   students: PropTypes.array.isRequired,
-  createPickup: PropTypes.func.isRequired,
   pickup: PropTypes.object,
   navigate: PropTypes.func.isRequired,
   resumePickup: PropTypes.func.isRequired,
   cancelPickup: PropTypes.func.isRequired,
   listenStudents: PropTypes.func.isRequired,
   unlistenStudents: PropTypes.func.isRequired,
-  addVehicle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -399,10 +196,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  ...bindActionCreators(PickupActions, dispatch),
   ...bindActionCreators(NavActions, dispatch),
   ...bindActionCreators(StudentActions, dispatch),
   ...bindActionCreators(UserActions, dispatch),
+  ...bindActionCreators(PickupActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentSelect);

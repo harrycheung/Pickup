@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { HeaderBackButton } from 'react-navigation';
 
 import { gstyles } from '../../../../config/styles';
 import KeyboardAwareView from '../../../../components/KeyboardAwareView';
@@ -12,9 +13,16 @@ import PickupMessages from '../../../../components/PickupMessages';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
 
 class PickupRequest extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation, navigationOptions }) => ({
     title: 'Pickup Request',
-  };
+    headerLeft: (
+      <HeaderBackButton
+        onPress={() => navigation.goBack(navigation.state.params.key)}
+        title="Cancel"
+        tintColor={navigationOptions.headerTintColor}
+      />
+    ),
+  });
 
   componentWillMount() {
     this.props.listenPickup(this.props.pickup);
