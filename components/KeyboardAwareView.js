@@ -40,12 +40,14 @@ class KeyboardAwareView extends React.Component {
     style: ViewPropTypes.style,
     children: PropTypes.node,
     centerOnInput: PropTypes.bool,
+    aboveFoldInput: PropTypes.bool,
   };
 
   static defaultProps = {
     style: {},
     children: null,
     centerOnInput: false,
+    aboveFoldInput: false,
   };
 
   constructor(props: Object) {
@@ -97,7 +99,7 @@ class KeyboardAwareView extends React.Component {
       LayoutAnimation.configureNext(animationConfig);
     }
 
-    if (!this.props.centerOnInput) {
+    if (!this.props.centerOnInput && !this.props.aboveFoldInput) {
       const screenHeight = Dimensions.get('window').height;
       // const screenHeight = Dimensions.get('window').height;
       // when external physical keyboard is connected
@@ -110,7 +112,14 @@ class KeyboardAwareView extends React.Component {
       });
     } else if (this._focusedInput) {
       this._focusedInput.measure((x, y, w, h, px, py) => {
-        const offset = this.state.offset - (py - ((event.endCoordinates.screenY - h) / 2));
+        let offset = 0;
+        if (this.props.centerOnInput) {
+          offset = -(py - ((event.endCoordinates.screenY - h) / 2));
+        } else if (this.props.aboveFoldInput) {
+          if ((py + h) > event.endCoordinates.screenY) {
+            offset = -((py + h) - event.endCoordinates.screenY);
+          }
+        }
         this.setState({
           offset,
           isKeyboardOpened: true,

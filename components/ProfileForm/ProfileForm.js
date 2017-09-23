@@ -137,7 +137,7 @@ class ProfileForm extends React.Component {
         <ScrollView>
           <KeyboardAwareView
             style={[gstyles.flex1, gstyles.marginH15]}
-            centerOnInput
+            aboveFoldInput
           >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={[gstyles.flexCenter, { paddingTop: 15 }]}>
