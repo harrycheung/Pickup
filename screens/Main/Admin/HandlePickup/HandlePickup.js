@@ -23,6 +23,7 @@ class HandlePickup extends React.Component {
 
   componentWillMount() {
     this.props.listenPickup(this.props.pickup);
+    this.props.listenCoordinates(this.props.pickup);
   }
 
   componentDidMount() {
@@ -39,6 +40,7 @@ class HandlePickup extends React.Component {
 
   componentWillUnmount() {
     this.props.unlistenPickup();
+    this.props.unlistenCoordinates();
     this.props.clearPickup();
   }
 
@@ -73,6 +75,8 @@ HandlePickup.propTypes = {
   escortStudent: PropTypes.func.isRequired,
   cancelEscort: PropTypes.func.isRequired,
   releaseStudent: PropTypes.func.isRequired,
+  listenCoordinates: PropTypes.func.isRequired,
+  unlistenCoordinates: PropTypes.func.isRequired,
 };
 
 HandlePickup.defaultProps = {

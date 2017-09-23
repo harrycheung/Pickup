@@ -10,7 +10,10 @@
     "scheme": "synapsepickup",
     "ios": {
       "bundleIdentifier": "harrycheung.synapse.pickup.ios",
-      "buildNumber": "2"
+      "buildNumber": "3",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need location tracking"
+      }
     },
     "android": {
       "package": "harrycheung.synapse.pickup.android",

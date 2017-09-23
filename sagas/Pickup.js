@@ -1,7 +1,9 @@
 
 // @flow
 
+import { channel } from 'redux-saga';
 import { all, call, fork, put, take, takeEvery } from 'redux-saga/effects';
+import { Location, Permissions } from 'expo';
 
 import { FBref } from '../helpers/firebase';
 import { firebaseChannel } from './helpers';
@@ -33,6 +35,7 @@ const createPickupAsync = (requestor, students, location, vehicle) => {
     location,
     vehicle,
     createdAt: Date.now(),
+    coordinates: { latitude: 37.78825, longitude: -122.4324 },
   };
   return FBref('/pickups').push(pickup).then(pickupRef => (
     pickupRef.child('messages').push({
@@ -67,11 +70,11 @@ const createPickup = function* createPickup(action) {
   } finally {
     yield put(MessageActions.clearMessage());
   }
-}
+};
 
 const watchCreatePickup = function* watchCreatePickup() {
   yield takeEvery(Types.CREATE, createPickup);
-}
+};
 
 const cancelPickupAsync = (pickupKey) => {
   FBref(`/pickups/${pickupKey}`).remove();
@@ -84,11 +87,11 @@ const cancelPickup = function* cancelPickup(action) {
     console.log('cancelPickup failed', error);
     // Do nothing?
   }
-}
+};
 
 const watchCancelPickup = function* watchCancelPickup() {
   yield takeEvery(Types.CANCEL, cancelPickup);
-}
+};
 
 const resumePickup = function* resumePickup() {
   try {
@@ -96,11 +99,11 @@ const resumePickup = function* resumePickup() {
   } catch (error) {
     console.log('resumePickup failed', error);
   }
-}
+};
 
 const watchResumePickup = function* watchResumePickup() {
   yield takeEvery(Types.RESUME, resumePickup);
-}
+};
 
 const handlePickup = function* handlePickup() {
   try {
@@ -108,11 +111,11 @@ const handlePickup = function* handlePickup() {
   } catch (error) {
     console.log('handlePickup error', error);
   }
-}
+};
 
 const watchHandlePickup = function* watchHandlePickup() {
   yield takeEvery(Types.HANDLE, handlePickup);
-}
+};
 
 const postMessage = function* postMessage(action) {
   try {
@@ -127,11 +130,11 @@ const postMessage = function* postMessage(action) {
   } catch (error) {
     console.log('postMessage failed', error);
   }
-}
+};
 
 const watchPostMessage = function* watchPostMessage() {
   yield takeEvery(Types.POST_MESSAGE, postMessage);
-}
+};
 
 const listenPickup = function* listenPickup() {
   while (true) {
@@ -193,17 +196,18 @@ const listenPickup = function* listenPickup() {
 
       yield take(Types.UNLISTEN);
       pickupCancelChannel.close();
+      pickupCompleteChannel.close();
       pickupStudentsChannel.close();
       pickupMessagesChannel.close();
     } catch (error) {
       console.log('listenPickup error', error);
     }
   }
-}
+};
 
 const watchListenPickup = function* watchListenPickup() {
   yield fork(listenPickup);
-}
+};
 
 const updatePickupStudent = (pickupKey, studentKey, state) => {
   FBref(`/pickups/${pickupKey}/students/${studentKey}`).update(state);
@@ -269,19 +273,108 @@ const updateStudent = function* updateStudent(type, action) {
   } catch (error) {
     console.log('escortStudent error', error);
   }
-}
+};
 
 const watchEscortStudent = function* watchEscortStudent() {
   yield takeEvery(Types.ESCORT_STUDENT, updateStudent, 'escort');
-}
+};
 
 const watchCancelEscort = function* watchCancelEscort() {
   yield takeEvery(Types.CANCEL_ESCORT, updateStudent, 'cancel');
-}
+};
 
 const watchReleaseStudent = function* watchReleaseStudent() {
   yield takeEvery(Types.RELEASE_STUDENT, updateStudent, 'release');
-}
+};
+
+const updateLocation = function* updateLocation(action) {
+  try {
+    const { latitude, longitude } = action.coordinates;
+    FBref(`/pickups/${action.pickup.key}/coordinates`).set({
+      latitude, longitude,
+    });
+  } catch (error) {
+    console.log('updateLocation failed', error);
+  }
+};
+
+const watchUpdateLocation = function* watchUpdateLocation() {
+  yield takeEvery(Types.UPDATE_LOCATION, updateLocation);
+};
+
+const watchLocation = (pickup, channel) => (
+  Permissions.askAsync(Permissions.LOCATION)
+    .then(({ status }) => {
+      if (status === 'granted') {
+        return Location.watchPositionAsync({
+          enableHighAccuracy: true,
+          timeInterval: 1000,
+        }, ({ coords }) => {
+          channel.put(PickupActions.updateLocation(pickup, coords));
+        });
+      }
+      return null;
+    })
+);
+
+const listenLocation = function* listenLocation() {
+  while (true) {
+    try {
+      const { pickup } = yield take(Types.LISTEN_LOCATION);
+
+      const locationChannel = channel();
+      const locationListener = function* (channel) {
+        while (true) {
+          yield put(yield take(channel));
+        }
+      };
+
+      const locationWatcher = yield call(watchLocation, pickup, locationChannel);
+      if (locationWatcher !== null) {
+        yield fork(locationListener, locationChannel);
+
+        yield take(Types.UNLISTEN_LOCATION);
+        locationChannel.close();
+        locationWatcher.remove();
+      }
+    } catch (error) {
+      console.log('listenLocation failed', error);
+    }
+  }
+};
+
+const watchListenLocation = function* watchListenLocation() {
+  yield fork(listenLocation);
+};
+
+const listenCoordinates = function* listenCoordinates() {
+  while (true) {
+    try {
+      const { pickup } = yield take(Types.LISTEN_COORDINATES);
+
+      const coordinatesChannel = firebaseChannel(`/pickups/${pickup.key}/coordinates`, 'value');
+      const coordinatesListener = function* (channel) {
+        while (true) {
+          const snapshot = yield take(channel);
+          if (snapshot.val()) {
+            yield put(PickupActions.updateCoordinates(pickup, snapshot.val()));
+          }
+        }
+      };
+
+      yield fork(coordinatesListener, coordinatesChannel);
+
+      yield take(Types.UNLISTEN_COORDINATES);
+      coordinatesChannel.close();
+    } catch (error) {
+      console.log('listenLocation failed', error);
+    }
+  }
+};
+
+const watchListenCoordinates = function* watchListenCoordinates() {
+  yield fork(listenCoordinates);
+};
 
 const pickupSaga = function* pickupSaga() {
   yield all([
@@ -294,6 +387,9 @@ const pickupSaga = function* pickupSaga() {
     watchEscortStudent(),
     watchCancelEscort(),
     watchReleaseStudent(),
+    watchUpdateLocation(),
+    watchListenLocation(),
+    watchListenCoordinates(),
   ]);
 };
 

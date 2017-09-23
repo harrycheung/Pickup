@@ -115,7 +115,7 @@ class ConfigurePickup extends React.Component {
       <MessageView style={[gstyles.flex1, gstyles.flexStart]}>
         <KeyboardAwareView
           style={[{ paddingHorizontal: 15, paddingVertical: 10 }, gstyles.flexStretch]}
-          centerOnInput
+          aboveFoldInput
         >
           <Text style={[gstyles.flexStretch, gstyles.font18, gstyles.marginTop10]}>
             Pickup Location:

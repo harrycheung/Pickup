@@ -18,7 +18,9 @@ class PickupRequest extends React.Component {
     title: 'Pickup Request',
     headerLeft: (
       <HeaderBackButton
-        onPress={() => navigation.goBack(navigation.state.params.key)}
+        onPress={() => {
+          navigation.goBack(navigation.state.params && navigation.state.params.key);
+        }}
         title="Cancel"
         tintColor={navigationOptions.headerTintColor}
       />
@@ -27,6 +29,7 @@ class PickupRequest extends React.Component {
 
   componentWillMount() {
     this.props.listenPickup(this.props.pickup);
+    this.props.listenLocation(this.props.pickup);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -35,6 +38,7 @@ class PickupRequest extends React.Component {
 
   componentWillUnmount() {
     this.props.unlistenPickup();
+    this.props.unlistenLocation();
 
     // Cleaning up the pickup. If the requestor initiates the 'Cancel', we need
     // to cancel the pickup ourselves. If the escorter releases the last student,
@@ -67,6 +71,8 @@ PickupRequest.propTypes = {
   postMessage: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
+  listenLocation: PropTypes.func.isRequired,
+  unlistenLocation: PropTypes.func.isRequired,
 };
 
 PickupRequest.defaultProps = {

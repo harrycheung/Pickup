@@ -22,13 +22,20 @@ export default (state: Object = initialState, action: Object) => {
       if (state.pickup) {
         return { pickup: { ...state.pickup, messages: action.messages } };
       }
-      return initialState;
+      return state;
 
     case Types.UPDATE_STUDENTS:
       if (state.pickup) {
         return { pickup: { ...state.pickup, students: action.students } };
       }
-      return initialState;
+      return state;
+
+    case Types.UPDATE_LOCATION:
+    case Types.UPDATE_COORDINATES:
+      if (state.pickup) {
+        return { pickup: { ...state.pickup, coordinates: action.coordinates } };
+      }
+      return state;
 
     default:
       return state;

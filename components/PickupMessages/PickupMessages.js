@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { MapView } from 'expo';
 import moment from 'moment';
 
 import styles from './styles';
@@ -225,24 +226,65 @@ class PickupMessages extends React.Component {
     });
 
     const messages = [];
-    Object.keys(this.props.pickup.messages || {}).forEach((key) => {
-      const message = this.props.pickup.messages[key];
+    Object.keys(pickup.messages || {}).forEach((key) => {
+      const message = pickup.messages[key];
       message.key = key;
       messages.push(this._renderMessage(message));
     });
 
     return (
       <View style={gstyles.flex1}>
-        <View style={{ flex: 1, paddingHorizontal: 15, paddingVertical: 10, justifyContent: 'flex-start' }}>
-          <View style={styles.students}>
-            {students}
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text>
-              {moment(this.props.pickup.createdAt).format('LT')} - {this.props.pickup.requestor.name} at {this.props.pickup.location} in {this.props.pickup.vehicle}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderBottomWidth: 1,
+            borderBottomColor: 'lightgray',
+            padding: 15,
+          }}
+        >
+          <CachedImage
+            style={gstyles.profilePic80}
+            source={{ uri: pickup.requestor.image }}
+          />
+          <View style={[gstyles.flex1, { marginLeft: 10 }]}>
+            <Text
+              style={{
+                alignSelf: 'flex-end',
+              }}
+            >
+              {moment(pickup.createdAt).format('LT')} ({moment(pickup.createdAt).fromNow()})
+            </Text>
+            <View style={gstyles.flex1} />
+            <Text style={gstyles.font16}>
+              {pickup.requestor.name} at {pickup.location}
+              {pickup.location !== 'Playground' &&
+                `in ${pickup.vehicle}`
+              }
             </Text>
           </View>
         </View>
+        <View style={styles.students}>
+          {students}
+        </View>
+        <MapView
+          style={{ flex: 1 }}
+          mapType="hybrid"
+          region={{
+            latitude: pickup.coordinates.latitude,
+            longitude: pickup.coordinates.longitude,
+            latitudeDelta: 0.0001,
+            longitudeDelta: 0.00005,
+          }}
+        >
+          <MapView.Marker
+            coordinate={{
+              latitude: pickup.coordinates.latitude,
+              longitude: pickup.coordinates.longitude,
+            }}
+          />
+        </MapView>
       </View>
     );
     //     <AutoScrollView contentContainerStyle={styles.messagesContainer}>

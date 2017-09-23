@@ -17,6 +17,12 @@ export const Types = {
   ESCORT_STUDENT: 'Pickup/ESCORT_STUDENT',
   CANCEL_ESCORT: 'Pickup/CANCEL_ESCORT',
   RELEASE_STUDENT: 'Pickup/RELEASE_STUDENT',
+  UPDATE_LOCATION: 'Pickup/UPDATE_LOCATION',
+  UPDATE_COORDINATES: 'Pickup/UPDATE_COORDINATES',
+  LISTEN_LOCATION: 'Pickup/LISTEN_LOCATION',
+  UNLISTEN_LOCATION: 'Pickup/UNLISTEN_LOCATION',
+  LISTEN_COORDINATES: 'Pickup/LISTEN_COORDINATES',
+  UNLISTEN_COORDINATES: 'Pickup/UNLISTEN_COORDINATES',
 };
 
 export const Actions = {
@@ -54,4 +60,14 @@ export const Actions = {
   updateStudents: (students: Array<Object>) => ({
     type: Types.UPDATE_STUDENTS, students,
   }),
+  updateLocation: (pickup: Object, coordinates: Object) => ({
+    type: Types.UPDATE_LOCATION, pickup, coordinates,
+  }),
+  updateCoordinates: (pickup: Object, coordinates: Object) => ({
+    type: Types.UPDATE_COORDINATES, pickup, coordinates,
+  }),
+  listenLocation: (pickup: Object) => ({ type: Types.LISTEN_LOCATION, pickup }),
+  unlistenLocation: (pickup: Object) => ({ type: Types.UNLISTEN_LOCATION, pickup }),
+  listenCoordinates: (pickup: Object) => ({ type: Types.LISTEN_COORDINATES, pickup }),
+  unlistenCoordinates: (pickup: Object) => ({ type: Types.UNLISTEN_COORDINATES, pickup }),
 };

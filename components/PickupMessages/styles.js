@@ -58,6 +58,8 @@ export default StyleSheet.create({
   students: {
     flexDirection: 'column',
     marginBottom: 5,
+    marginHorizontal: 15,
+    marginVertical: 10,
   },
   studentRequest: {
     flexDirection: 'row',
