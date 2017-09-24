@@ -17,6 +17,11 @@
     },
     "android": {
       "package": "harrycheung.synapse.pickup.android",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAepaK0uZCORsxrDIfuH1qkriD6y0Ed_8g"
+        }
+      }
     },
     "androidStatusBar": {
       "barStyle": "light-content",
