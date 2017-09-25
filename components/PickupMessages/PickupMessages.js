@@ -23,10 +23,19 @@ class PickupMessages extends React.Component {
 
     this.state = {
       message: '',
+      fromNow: moment(props.pickup.createdAt).fromNow(),
     };
 
     this._postMessage = this._postMessage.bind(this);
     this._release = this._release.bind(this);
+
+    this.timer = setInterval(
+      () => {
+        console.log('setState');
+        this.setState({ fromNow: moment(props.pickup.createdAt).fromNow() });
+      },
+      10000,
+    );
   }
 
   state: {
@@ -36,6 +45,12 @@ class PickupMessages extends React.Component {
   shouldComponentUpdate(nextProps) {
     return nextProps.pickup !== null;
   }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  timer: number;
 
   _renderMessage(message: Object) {
     const containerStyle = [styles.messageContainer];
@@ -260,7 +275,7 @@ class PickupMessages extends React.Component {
                 alignSelf: 'flex-end',
               }}
             >
-              {moment(pickup.createdAt).format('LT')} ({moment(pickup.createdAt).fromNow()})
+              {moment(pickup.createdAt).format('LT')} ({this.state.fromNow})
             </Text>
             <View style={gstyles.flex1} />
             <Text style={gstyles.font16}>
