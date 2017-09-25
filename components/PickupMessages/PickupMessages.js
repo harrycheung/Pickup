@@ -84,7 +84,7 @@ class PickupMessages extends React.Component {
             <Text style={styles.messageText}>
               {message.sender.name} at {this.props.pickup.location}
               {this.props.pickup.location !== 'Playground' &&
-                `in ${this.props.pickup.vehicle}`
+                ` in ${this.props.pickup.vehicle}`
               }
             </Text>
           </View>
@@ -198,8 +198,14 @@ class PickupMessages extends React.Component {
         actions = [<Text key="waiting" style={gstyles.font14}>waiting</Text>];
       } else {
         actions = [(
-          <Text key="escort" style={gstyles.font14}>
-            escorted by {student.escort.name}
+          <CachedImage
+            key="image"
+            style={[gstyles.profilePic50, { marginHorizontal: 5 }]}
+            source={{ uri: student.escort.image }}
+          />
+        ),(
+          <Text key="name" style={gstyles.font16}>
+            {student.escort.name}
           </Text>
         )];
       }
@@ -260,8 +266,16 @@ class PickupMessages extends React.Component {
             <Text style={gstyles.font16}>
               {pickup.requestor.name} at {pickup.location}
               {pickup.location !== 'Playground' &&
-                `in ${pickup.vehicle}`
+                ` in ${pickup.vehicle}`
               }
+            </Text>
+          </View>
+        </View>
+        <View style={[gstyles.flexRow, gstyles.marginTop10]}>
+          <View style={gstyles.flex1} />
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <Text style={styles.font14}>
+              escorted by
             </Text>
           </View>
         </View>
@@ -271,6 +285,11 @@ class PickupMessages extends React.Component {
         <MapView
           style={{ flex: 1 }}
           mapType="hybrid"
+          rotateEnabled={false}
+          scrollEnabled={false}
+          pitchEnabled={false}
+          cacheEnabled
+          loadingEnabled
           region={{
             latitude: pickup.coordinates.latitude,
             longitude: pickup.coordinates.longitude,
