@@ -23,7 +23,7 @@ class AddStudent extends React.Component {
 
   render() {
     return (
-      <MessageView style={[gstyles.flex1, gstyles.statusBarMargin]}>
+      <MessageView style={gstyles.flex1}>
         <StudentForm onSubmit={this.props.addStudent} />
       </MessageView>
     );

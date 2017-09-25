@@ -21,9 +21,6 @@ export const colors = {
 };
 
 export const gstyles = StyleSheet.create({
-  statusBarMargin: {
-    marginTop: Expo.Constants.statusBarHeight,
-  },
   flex1: {
     flex: 1,
   },
