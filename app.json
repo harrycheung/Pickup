@@ -17,6 +17,7 @@
     },
     "android": {
       "package": "harrycheung.synapse.pickup.android",
+      "icon": "./images/android512.png",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAepaK0uZCORsxrDIfuH1qkriD6y0Ed_8g"
