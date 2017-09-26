@@ -2,6 +2,7 @@
 // @flow
 
 import { all, call, fork, put, select, take, takeLatest } from 'redux-saga/effects';
+import { Platform } from 'react-native';
 import CryptoJS from 'crypto-js';
 
 import { FBauth, FBref, FBfunctions } from '../helpers/firebase';
@@ -12,7 +13,10 @@ import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as MessageActions } from '../actions/Message';
 
 const requestLoginAsync = (phoneNumber) => {
-  const body = JSON.stringify({ phoneNumber });
+  const body = JSON.stringify({
+    phoneNumber,
+    android: Platform.OS === 'android',
+  });
   const hmac = CryptoJS.HmacSHA1(body, 'secret').toString(CryptoJS.enc.Hex);
 
   return fetch(`https://${FBfunctions}/requestLogin`, {
@@ -22,7 +26,7 @@ const requestLoginAsync = (phoneNumber) => {
       'Content-Type': 'application/json',
       'x-signature': hmac,
     },
-    body: JSON.stringify({ phoneNumber }),
+    body,
   })
     .then((response) => {
       if (response.status === 200) {
