@@ -31,10 +31,9 @@ class PickupMessages extends React.Component {
 
     this.timer = setInterval(
       () => {
-        console.log('setState');
         this.setState({ fromNow: moment(props.pickup.createdAt).fromNow() });
       },
-      10000,
+      30000,
     );
   }
 
