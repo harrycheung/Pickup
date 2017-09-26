@@ -10,7 +10,7 @@
     "scheme": "synapsepickup",
     "ios": {
       "bundleIdentifier": "harrycheung.synapse.pickup.ios",
-      "buildNumber": "4",
+      "buildNumber": "5",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need location tracking"
       }
