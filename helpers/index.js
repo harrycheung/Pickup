@@ -1,6 +1,8 @@
 
 // @flow
 
+const Buffer = require('buffer').Buffer;
+
 export const validPhoneNumber = (phoneNumber: string) => (
   phoneNumber.length === 10 && !isNaN(phoneNumber) && Number(phoneNumber) < 10000000000
 );
@@ -19,28 +21,8 @@ export const chunkArray = (array: Array<any>, size: number) => {
   return arrays;
 };
 
-const atob = (input) => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-  const str = input.replace(/=+$/, '');
-  let output = '';
-
-  if (str.length % 4 === 1) {
-    throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
-  }
-
-  for (let bc = 0, bs = 0, buffer, i = 0;
-    buffer = str.charAt(i++);
-    ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
-  ) {
-    buffer = chars.indexOf(buffer);
-  }
-
-  return output;
-};
-
 export const convertToByteArray = (input) => {
-  const binaryString = atob(input);
+  const binaryString = new Buffer(input, 'base64').toString('binary');
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i += 1) {
     bytes[i] = binaryString.charCodeAt(i);
