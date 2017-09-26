@@ -43,6 +43,11 @@ class Login extends React.Component {
 
   componentDidMount() {
     Linking.addEventListener('url', this._login);
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        this._login({ url });
+      }
+    }).catch(err => console.error('An error occurred', err));
   }
 
   componentWillUnmount() {
