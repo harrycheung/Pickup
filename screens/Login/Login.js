@@ -44,8 +44,7 @@ class Login extends React.Component {
   componentDidMount() {
     Linking.addEventListener('url', this._login);
     Linking.getInitialURL().then((url) => {
-      console.log('initialURL', url);
-      if (url && !url.includes('exp')) {
+      if (url && !url.includes('exp') && url !== 'synapsepickup://') {
         this._login({ url });
       }
     }).catch(err => console.error('An error occurred', err));
