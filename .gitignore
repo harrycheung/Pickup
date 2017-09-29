@@ -1,7 +1,6 @@
 node_modules/
 .expo/
 npm-debug.*
-images/
 *.log
 *.apk
 *.ipa
