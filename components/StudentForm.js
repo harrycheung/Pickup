@@ -21,7 +21,7 @@ import { validPhoneNumber } from '../helpers';
 import ProfileForm from './ProfileForm';
 import Picker from './Picker';
 import IconButton from './IconButton';
-import LinedTextInput from './LinedTextInput';
+import PhoneInput from './PhoneInput';
 import CachedImage from './CachedImage';
 
 const styles = StyleSheet.create({
@@ -258,15 +258,16 @@ class StudentForm extends React.Component {
                   <View style={gstyles.flex1} />
                   <IconButton icon="md-close" onPress={this._closeModal} />
                 </View>
-                <LinedTextInput
+                <PhoneInput
+                  style={{
+                    width: '100%',
+                    borderWidth: 1,
+                    borderColor: 'darkgray',
+                    borderRadius: 5,
+                    marginTop: 10,
+                  }}
                   ref={(input) => { this.phoneInput = input; }}
-                  style={gstyles.marginTop10}
-                  placeholder="Phone number"
-                  maxLength={10}
-                  clearButtonMode="while-editing"
-                  borderBottomColor={colors.darkGrey}
-                  keyboardType="phone-pad"
-                  onChangeText={this._addRelationshipPhone}
+                  onEntered={this._addRelationshipPhone}
                 />
                 <View style={gstyles.marginTop10}>
                   <Text style={styles.pickerLabel}>

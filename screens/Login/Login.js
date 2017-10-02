@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { colors, gstyles } from '../../config/styles';
 import { validPhoneNumber } from '../../helpers';
 import { Actions as AuthActions } from '../../actions/Auth';
-import LinedTextInput from '../../components/LinedTextInput';
+import PhoneInput from '../../components/PhoneInput';
 import MessageView from '../../components/MessageView';
 import KeyboardAwareView from '../../components/KeyboardAwareView';
 
@@ -30,7 +30,7 @@ class Login extends React.Component {
       requested: false,
     };
 
-    this._changeText = this._changeText.bind(this);
+    this._gotPhone = this._gotPhone.bind(this);
     this._getLink = this._getLink.bind(this);
     this._login = this._login.bind(this);
   }
@@ -58,7 +58,7 @@ class Login extends React.Component {
     this.props.login(url.split('+').pop());
   }
 
-  _changeText(phoneNumber) {
+  _gotPhone(phoneNumber) {
     const disabled = !validPhoneNumber(phoneNumber);
     this.setState({ disabled, phoneNumber });
   }
@@ -80,16 +80,16 @@ class Login extends React.Component {
           <Text style={gstyles.font18}>to get a magic link</Text>
           <View style={gstyles.flexRow}>
             <View style={gstyles.flex1} />
-            <LinedTextInput
-              style={{ width: '75%', alignItems: 'center', alignSelf: 'center' }}
-              placeholder="Phone number"
-              maxLength={10}
-              clearButtonMode="while-editing"
-              keyboardType="phone-pad"
-              onChangeText={this._changeText}
-              onBlur={Keyboard.dismiss}
+            <PhoneInput
+              style={{
+                width: '75%',
+                borderWidth: 1,
+                borderColor: 'darkgray',
+                borderRadius: 5,
+              }}
               keyboardAwareInput
-              textAlign="center"
+              onEntered={this._gotPhone}
+              onBlur={Keyboard.dismiss}
             />
             <View style={gstyles.flex1} />
           </View>
