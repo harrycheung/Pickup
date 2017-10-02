@@ -82,6 +82,7 @@ class PhoneInput extends React.Component {
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
             onChangeText={this._changeText}
+            underlineColorAndroid="transparent"
           />
         </View>
       </View>

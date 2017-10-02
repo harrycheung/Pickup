@@ -86,6 +86,7 @@ class Login extends React.Component {
                 borderWidth: 1,
                 borderColor: 'darkgray',
                 borderRadius: 5,
+                marginVertical: 10,
               }}
               keyboardAwareInput
               onEntered={this._gotPhone}
