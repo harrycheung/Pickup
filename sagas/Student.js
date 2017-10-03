@@ -86,6 +86,7 @@ const addStudentAsync = (user, firstName, lastInitial, image, grade) => (
 
 const addStudent = function* addStudent(action) {
   try {
+    yield put(MessageActions.showMessage('Adding student', 0));
     const { firstName, lastInitial, image, grade } = action;
     const state = yield select();
     yield call(
@@ -100,6 +101,8 @@ const addStudent = function* addStudent(action) {
   } catch (error) {
     console.log('addStudent failed', error);
     // Do nothing?
+  } finally {
+    yield put(MessageActions.clearMessage());
   }
 }
 
@@ -122,6 +125,7 @@ const editStudentAsync = (uid, student) => {
 
 const editStudent = function* editStudent(action) {
   try {
+    yield put(MessageActions.showMessage('Saving student', 0));
     const state = yield select();
     yield call(editStudentAsync, state.auth.user.uid, action.student);
     yield put(StudentActions.editStudentSucceeded(action.student));
@@ -129,6 +133,8 @@ const editStudent = function* editStudent(action) {
   } catch (error) {
     console.log('editStudent failed', error);
     // Do nothing?
+  } finally {
+    yield put(MessageActions.clearMessage());
   }
 }
 
@@ -145,12 +151,15 @@ const deleteStudentAsync = (uid, key) => {
 
 const deleteStudent = function* deleteStudent(action) {
   try {
+    yield put(MessageActions.showMessage('Deleting', 0));
     const state = yield select();
     yield call(deleteStudentAsync, state.auth.user.uid, action.studentKey);
     yield put(NavActions.back());
   } catch (error) {
     console.log('deleteStudent failed', error);
     // Do nothing?
+  } finally {
+    yield put(MessageActions.clearMessage());
   }
 }
 
@@ -179,6 +188,7 @@ const addRelationshipAsync = (studentKey, uid, relationship) => (
 
 const addRelationship = function* addRelationship(action) {
   try {
+    yield put(MessageActions.showMessage('Adding', 0));
     const { studentKey, uid, relationship } = action;
     const result = yield call(addRelationshipAsync, studentKey, uid, relationship);
     if (result) {
@@ -186,10 +196,12 @@ const addRelationship = function* addRelationship(action) {
         ...result,
         role: relationship,
       }));
+      yield put(MessageActions.clearMessage());
     } else {
       yield put(MessageActions.showMessage('Phone number has\'t signed up', 3000));
     }
   } catch (error) {
+    yield put(MessageActions.clearMessage());
     console.log('addRelationship failed', error);
   }
 }
@@ -207,10 +219,13 @@ const removeRelationshipAsync = (studentKey, uid) => {
 
 const removeRelationship = function* removeRelationship(action) {
   try {
+    yield put(MessageActions.showMessage('Removing', 0));
     const { studentKey, uid } = action;
     yield call(removeRelationshipAsync, studentKey, uid);
     yield put(StudentActions.updateRelationship(studentKey, uid, null));
+    yield put(MessageActions.clearMessage());
   } catch (error) {
+    yield put(MessageActions.clearMessage());
     console.log('removeRelationship failed', error);
   }
 }
