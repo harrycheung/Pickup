@@ -89,7 +89,7 @@ class Login extends React.Component {
                 marginVertical: 10,
               }}
               keyboardAwareInput
-              onEntered={this._gotPhone}
+              onChangePhone={this._gotPhone}
               onBlur={Keyboard.dismiss}
             />
             <View style={gstyles.flex1} />

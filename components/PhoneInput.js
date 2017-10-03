@@ -59,10 +59,7 @@ class PhoneInput extends React.Component {
       value = `(${newValue.slice(0, 3)}) ${newValue.slice(3, 6)}-${newValue.slice(6)}`;
     }
     this.setState({ value });
-
-    if (newValue.length === 10) {
-      this.props.onEntered(newValue);
-    }
+    this.props.onChangePhone(newValue);
   }
 
   render() {
@@ -75,7 +72,7 @@ class PhoneInput extends React.Component {
             clearButtonMode="while-editing"
             keyboardType="phone-pad"
             textAlign="left"
-            placeholder="Phone number"
+            placeholder="(xxx) xxx-xxxx"
             maxLength={14}
             keyboardAwareInput={this.props.keyboardAwareInput}
             value={this.state.value}
@@ -94,7 +91,7 @@ PhoneInput.propTypes = {
   style: ViewPropTypes.style,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
-  onEntered: PropTypes.func.isRequired,
+  onChangePhone: PropTypes.func.isRequired,
   keyboardAwareInput: PropTypes.bool,
 };
 

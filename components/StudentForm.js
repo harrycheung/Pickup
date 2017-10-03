@@ -267,7 +267,7 @@ class StudentForm extends React.Component {
                     marginTop: 10,
                   }}
                   ref={(input) => { this.phoneInput = input; }}
-                  onEntered={this._addRelationshipPhone}
+                  onChangePhone={this._addRelationshipPhone}
                 />
                 <View style={gstyles.marginTop10}>
                   <Text style={styles.pickerLabel}>
