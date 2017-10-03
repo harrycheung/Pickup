@@ -144,7 +144,7 @@ class ProfileForm extends React.Component {
                 {imageJSX}
                 <View style={gstyles.marginTop10}>
                   <Button
-                    title={this.props.imageURL === '' ? "Upload photo" : "Change photo"}
+                    title={this.props.imageURL === '' ? "Take photo" : "Change photo"}
                     onPress={this._takePhoto}
                   />
                 </View>
