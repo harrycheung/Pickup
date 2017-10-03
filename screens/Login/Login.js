@@ -3,7 +3,15 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dimensions, Keyboard, Linking, Text, View } from 'react-native';
+import {
+  Button,
+  Dimensions,
+  Keyboard,
+  Linking,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -72,36 +80,40 @@ class Login extends React.Component {
   render() {
     return (
       <MessageView style={gstyles.flex1}>
-        <KeyboardAwareView
-          style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}
-          centerOnInput
-        >
-          <Text style={gstyles.font18}>Enter your phone number</Text>
-          <Text style={gstyles.font18}>to get a magic link</Text>
-          <View style={gstyles.flexRow}>
-            <View style={gstyles.flex1} />
-            <PhoneInput
-              style={{
-                width: Dimensions.get('window').width < 321 ? '100%' : '75%',
-                borderWidth: 1,
-                borderColor: 'darkgray',
-                borderRadius: 5,
-                marginVertical: 10,
-              }}
-              keyboardAwareInput
-              onChangePhone={this._gotPhone}
-              onBlur={Keyboard.dismiss}
-            />
-            <View style={gstyles.flex1} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={gstyles.flex1}>
+            <KeyboardAwareView
+              style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}
+              centerOnInput
+            >
+              <Text style={gstyles.font18}>Enter your phone number</Text>
+              <Text style={gstyles.font18}>to get a magic link</Text>
+              <View style={gstyles.flexRow}>
+                <View style={gstyles.flex1} />
+                <PhoneInput
+                  style={{
+                    width: Dimensions.get('window').width < 321 ? '100%' : '75%',
+                    borderWidth: 1,
+                    borderColor: 'darkgray',
+                    borderRadius: 5,
+                    marginVertical: 10,
+                  }}
+                  keyboardAwareInput
+                  onChangePhone={this._gotPhone}
+                  onBlur={Keyboard.dismiss}
+                />
+                <View style={gstyles.flex1} />
+              </View>
+              <Button
+                onPress={this._getLink}
+                style={gstyles.marginTop10}
+                disabled={this.state.disabled}
+                title="Get magic link"
+                color={colors.buttonBackground}
+              />
+            </KeyboardAwareView>
           </View>
-          <Button
-            onPress={this._getLink}
-            style={gstyles.marginTop10}
-            disabled={this.state.disabled}
-            title="Get magic link"
-            color={colors.buttonBackground}
-          />
-        </KeyboardAwareView>
+        </TouchableWithoutFeedback>
       </MessageView>
     );
   }
