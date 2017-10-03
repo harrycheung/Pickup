@@ -112,7 +112,7 @@ class KeyboardAwareView extends React.Component {
       });
     } else if (this._focusedInput) {
       this._focusedInput.measure((x, y, w, h, px, py) => {
-        let offset = 0;
+        let offset = this.state.offset;
         if (this.props.centerOnInput) {
           offset = -(py - ((event.endCoordinates.screenY - h) / 2));
         } else if (this.props.aboveFoldInput) {
