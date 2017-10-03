@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Keyboard, Linking, Text, View } from 'react-native';
+import { Button, Dimensions, Keyboard, Linking, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -82,7 +82,7 @@ class Login extends React.Component {
             <View style={gstyles.flex1} />
             <PhoneInput
               style={{
-                width: '75%',
+                width: Dimensions.get('window').width < 321 ? '100%' : '75%',
                 borderWidth: 1,
                 borderColor: 'darkgray',
                 borderRadius: 5,
