@@ -199,7 +199,7 @@ class PickupMessages extends React.Component {
             title="Release"
           />
         )];
-      } else if (user.admin && student.escort.uid === '') {
+      } else if (pickup.requestor.uid !== user.uid && user.admin && student.escort.uid === '') {
         actions = [(
           <Button
             key="escort"
@@ -208,7 +208,7 @@ class PickupMessages extends React.Component {
             title="Escort"
           />
         )];
-      } else if (!user.admin && student.escort.uid === '') {
+      } else if (student.escort.uid === '') {
         actions = [<Text key="waiting" style={gstyles.font14}>waiting</Text>];
       } else {
         actions = [(
