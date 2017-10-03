@@ -41,6 +41,11 @@ class PhoneInput extends React.Component {
   state: {
     value: string,
   }
+  textInput: Object
+
+  blur() {
+    this.textInput.blur();
+  }
 
   _changeText(text) {
     let newValue = text.replace(/[()\s-]/g, '');
@@ -68,6 +73,7 @@ class PhoneInput extends React.Component {
         <View style={styles.inputContainer}>
           <Text style={styles.country}>+1</Text>
           <TextInput
+            ref={(input) => { this.textInput = input; }}
             style={[gstyles.flex1, gstyles.textInput]}
             clearButtonMode="while-editing"
             keyboardType="phone-pad"
