@@ -261,13 +261,12 @@ class StudentForm extends React.Component {
                 <PhoneInput
                   style={{
                     width: '100%',
-                    borderWidth: 1,
-                    borderColor: 'darkgray',
-                    borderRadius: 5,
                     marginTop: 10,
                   }}
                   ref={(input) => { this.phoneInput = input; }}
                   onChangePhone={this._addRelationshipPhone}
+                  borderColor="darkgray"
+                  focusBorderColor={colors.buttonBackground}
                 />
                 <View style={gstyles.marginTop10}>
                   <Text style={styles.pickerLabel}>

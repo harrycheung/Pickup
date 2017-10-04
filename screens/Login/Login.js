@@ -93,14 +93,13 @@ class Login extends React.Component {
                 <PhoneInput
                   style={{
                     width: Dimensions.get('window').width < 321 ? '100%' : '75%',
-                    borderWidth: 1,
-                    borderColor: 'darkgray',
-                    borderRadius: 5,
                     marginVertical: 10,
                   }}
                   keyboardAwareInput
                   onChangePhone={this._gotPhone}
                   onBlur={Keyboard.dismiss}
+                  borderColor="darkgray"
+                  focusBorderColor={colors.buttonBackground}
                 />
                 <View style={gstyles.flex1} />
               </View>

@@ -24,6 +24,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginRight: 10,
+  },
+  box: {
+    borderWidth: 1,
+    borderRadius: 5,
   }
 });
 
@@ -33,6 +37,9 @@ class PhoneInput extends React.Component {
 
     this.state = {
       value: '',
+      boxStyle: {
+        borderColor: props.borderColor,
+      },
     };
 
     this._changeText = this._changeText.bind(this);
@@ -40,6 +47,7 @@ class PhoneInput extends React.Component {
 
   state: {
     value: string,
+    boxStyle: Object,
   }
   textInput: Object
 
@@ -69,7 +77,7 @@ class PhoneInput extends React.Component {
 
   render() {
     return (
-      <View style={this.props.style}>
+      <View style={[this.props.style, styles.box, this.state.boxStyle]}>
         <View style={styles.inputContainer}>
           <Text style={styles.country}>+1</Text>
           <TextInput
@@ -82,8 +90,22 @@ class PhoneInput extends React.Component {
             maxLength={14}
             keyboardAwareInput={this.props.keyboardAwareInput}
             value={this.state.value}
-            onFocus={this.props.onFocus}
-            onBlur={this.props.onBlur}
+            onFocus={(event) => {
+              this.setState({
+                boxStyle: {
+                  borderColor: this.props.focusBorderColor,
+                },
+              });
+              this.props.onFocus(event);
+            }}
+            onBlur={(event) => {
+              this.setState({
+                boxStyle: {
+                  borderColor: this.props.borderColor,
+                },
+              });
+              this.props.onBlur(event);
+            }}
             onChangeText={this._changeText}
             underlineColorAndroid="transparent"
           />
@@ -99,6 +121,8 @@ PhoneInput.propTypes = {
   onBlur: PropTypes.func,
   onChangePhone: PropTypes.func.isRequired,
   keyboardAwareInput: PropTypes.bool,
+  borderColor: PropTypes.string,
+  focusBorderColor: PropTypes.string,
 };
 
 PhoneInput.defaultProps = {
@@ -106,6 +130,8 @@ PhoneInput.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   keyboardAwareInput: false,
+  borderColor: 'darkgray',
+  focusBorderColor: 'blue',
 };
 
 export default PhoneInput;
