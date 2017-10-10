@@ -3,12 +3,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import * as C from '../../../../config/constants';
-import { gstyles } from '../../../../config/styles';
+import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
 import Button from '../../../../components/Button';
 import MessageView from '../../../../components/MessageView';
@@ -27,35 +28,66 @@ class Home extends React.Component {
     super(props);
 
     this.state = {
-      grades: C.Levels,
+      grades: C.Levels.map(level => ({ key: level })),
+      locations: Object.keys(C.Locations).map(location => ({ key: location })),
     };
-
-    this._selectLevel = this._selectLevel.bind(this);
   }
 
   state: {
     grades: string[],
+    locations: string[],
   };
 
-  _selectLevel(grade) {
-    this.props.navigate('PickupSelect', { grade });
-  }
-
   render() {
-    const { grades } = this.state;
-    const gradeButtons = grades.map(grade => (
-      <Button
-        key={grade}
-        style={{ marginHorizontal: 15, marginTop: 15 }}
-        onPress={() => this._selectLevel(grade)}
-        content={grade}
-        round
-      />
-    ));
-
     return (
       <MessageView style={gstyles.flex1}>
-        {gradeButtons}
+        <SectionList
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              key={item.key}
+              onPress={() => this.props.navigate('PickupSelect', { title: item.key })}
+            >
+              <View
+                style={[
+                  gstyles.flexRow,
+                  gstyles.flexCenter,
+                  gstyles.marginH15,
+                  { height: 64 },
+                ]}
+              >
+                <Text style={gstyles.font18}>{item.key}</Text>
+                <View style={gstyles.flex1} />
+                <Icon name="ios-arrow-forward" size={30} color={colors.buttonBackground} />
+              </View>
+            </TouchableOpacity>
+          )}
+          renderSectionHeader={({ section }) => (
+            <View
+              style={{
+                backgroundColor: colors.buttonBackground,
+                paddingVertical: 2,
+              }}
+            >
+              <Text style={[gstyles.marginH15, { color: 'white' }]}>
+                {section.title}
+              </Text>
+            </View>
+          )}
+          sections={[
+            { data: this.state.grades, title: 'Levels' },
+            { data: this.state.locations, title: 'Locations' },
+          ]}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                marginHorizontal: 60,
+                borderWidth: 0.5,
+                borderColor: colors.lightGrey,
+              }}
+            />
+          )}
+        />
       </MessageView>
     );
   }

@@ -17,7 +17,7 @@ import { Actions as AdminActions } from '../../../../actions/Admin';
 
 class PickupSelect extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.grade,
+    title: navigation.state.params.title,
   });
 
   static _renderSeparator() {
@@ -41,7 +41,8 @@ class PickupSelect extends React.Component {
   }
 
   componentDidMount() {
-    this.props.listenPickups(this.props.navigation.state.params.grade);
+    const { grade, location } = this.props.navigation.state.params;
+    this.props.listenPickups(grade, location);
   }
 
   componentWillReceiveProps(nextProps) {

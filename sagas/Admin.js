@@ -10,8 +10,10 @@ import { Types, Actions } from '../actions/Admin';
 const listenPickups = function* listenPickups() {
   while (true) {
     try {
-      const { grade } = yield take(Types.LISTEN_PICKUPS);
-      const ref = FBref('/pickups').orderByChild(`grades/${grade}`).equalTo(true);
+      const { grade, location } = yield take(Types.LISTEN_PICKUPS);
+      const ref = location === '' ?
+        FBref('/pickups').orderByChild(`grades/${grade}`).equalTo(true) :
+        FBref('/pickups').orderByChild('location').equalTo(location);
 
       const pickupsChannel = firebaseChannel(ref, 'value');
       const pickupsListener = function* (channel) {

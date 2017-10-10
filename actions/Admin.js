@@ -9,6 +9,6 @@ export const Types = {
 
 export const Actions = {
   loadPickups: (pickups: Array<Object>) => ({ type: Types.LOAD_PICKUPS, pickups }),
-  listenPickups: (grade: string) => ({ type: Types.LISTEN_PICKUPS, grade }),
+  listenPickups: (grade: string, location: string) => ({ type: Types.LISTEN_PICKUPS, grade, location }),
   unlistenPickups: () => ({ type: Types.UNLISTEN_PICKUPS }),
 };
