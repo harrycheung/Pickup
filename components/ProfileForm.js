@@ -130,7 +130,6 @@ class ProfileForm extends React.Component {
     if (this.props.imageURL === '') {
       imageJSX = <Image style={gstyles.profilePic200} source={{ uri: C.NoProfile }} />;
     } else {
-      console.log('image', this.props.imageURL);
       imageJSX = (
         <CachedImage
           style={[gstyles.profilePic200, { backgroundColor: 'transparent' }]}
