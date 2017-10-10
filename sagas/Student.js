@@ -25,10 +25,14 @@ let studentsChannel = null;
 
 const studentsListener = function* (channel) {
   while (true) {
-    const snapshot = yield take(channel);
-    const relationships = snapshot.val() === null ? {} : snapshot.val();
-    const students = yield call(loadStudentsAsync, relationships);
-    yield put(StudentActions.setStudents(students));
+    try {
+      const snapshot = yield take(channel);
+      const relationships = snapshot.val() === null ? {} : snapshot.val();
+      const students = yield call(loadStudentsAsync, relationships);
+      yield put(StudentActions.setStudents(students));
+    } catch (error) {
+      console.log('studentsListener', error);
+    }
   }
 };
 
@@ -144,10 +148,14 @@ const watchEditStudent = function* watchEditStudent() {
   yield takeEvery(Types.EDIT_STUDENT, editStudent);
 }
 
-const deleteStudentAsync = (uid, key) => {
+const deleteStudentAsync = (key, students) => {
+  const relationshipKeys = Object.keys(
+    students.filter(student => key === student.key)[0].relationships);
   const studentUpdate = {};
   studentUpdate[`students/${key}`] = null;
-  studentUpdate[`users/${uid}/students/${key}`] = null;
+  relationshipKeys.forEach((relationshipKey) => {
+    studentUpdate[`users/${relationshipKey}/students/${key}`] = null;
+  });
   return FBref('/').update(studentUpdate);
 };
 
@@ -155,7 +163,7 @@ const deleteStudent = function* deleteStudent(action) {
   try {
     yield put(MessageActions.showMessage('Deleting', 0));
     const state = yield select();
-    yield call(deleteStudentAsync, state.auth.user.uid, action.studentKey);
+    yield call(deleteStudentAsync, action.studentKey, state.student.students);
     yield put(NavActions.back());
   } catch (error) {
     console.log('deleteStudent failed', error);
