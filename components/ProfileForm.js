@@ -6,9 +6,10 @@ import PropTypes from 'prop-types';
 import {
   ActivityIndicator,
   Button,
+  Image,
   Keyboard,
   ScrollView,
-  TouchableOpacity,
+  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -38,6 +39,7 @@ class ProfileForm extends React.Component {
     };
 
     this._takePhoto = this._takePhoto.bind(this);
+    this._pickPhoto = this._pickPhoto.bind(this);
     this._submit = this._submit.bind(this);
     this._updateState = this._updateState.bind(this);
   }
@@ -82,6 +84,23 @@ class ProfileForm extends React.Component {
       base64: true,
       exif: true,
       quality: 0.4,
+      allowsEditing: true,
+    });
+
+    if (!pickerResult.cancelled) {
+      this.props.uploadImage(pickerResult.base64);
+    }
+  }
+
+  async _pickPhoto() {
+    Keyboard.dismiss();
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      aspect: [1, 1],
+      base64: true,
+      exif: true,
+      quality: 0.4,
+      allowsEditing: true,
     });
 
     if (!pickerResult.cancelled) {
@@ -109,17 +128,9 @@ class ProfileForm extends React.Component {
   render() {
     let imageJSX = null;
     if (this.props.imageURL === '') {
-      imageJSX = (
-        <TouchableOpacity
-          style={gstyles.profilePic200}
-          onPress={this._takePhoto}
-        >
-          <View style={[gstyles.flex1, gstyles.flexCenter]}>
-            <Icon name="plus" size={90} color="#ffffff" />
-          </View>
-        </TouchableOpacity>
-      );
+      imageJSX = <Image style={gstyles.profilePic200} source={{ uri: C.NoProfile }} />;
     } else {
+      console.log('image', this.props.imageURL);
       imageJSX = (
         <CachedImage
           style={[gstyles.profilePic200, { backgroundColor: 'transparent' }]}
@@ -147,14 +158,24 @@ class ProfileForm extends React.Component {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={[gstyles.flexCenter, { paddingTop: 15 }]}>
                 {imageJSX}
-                <View style={gstyles.marginTop10}>
-                  <Button
-                    title={this.props.imageURL === '' ? "Take photo" : "Change photo"}
-                    onPress={this._takePhoto}
-                  />
+                <View style={[gstyles.marginTop10, gstyles.flexRow]}>
+                  <View style={gstyles.flex1}>
+                    <Button
+                      title={'Use camera'}
+                      onPress={this._takePhoto}
+                    />
+                  </View>
+                  <View style={[gstyles.flex1, { borderLeftWidth: 1, borderColor: 'lightgray' }]}>
+                    <Button
+                      style={gstyles.flex1}
+                      title={'Pick from library'}
+                      onPress={this._pickPhoto}
+                    />
+                  </View>
                 </View>
               </View>
             </TouchableWithoutFeedback>
+            <Text style={ gstyles.marginTop10 }>Name</Text>
             <View style={{ flexDirection: 'row' }}>
               <LinedTextInput
                 style={{ flex: 1, marginRight: 10 }}

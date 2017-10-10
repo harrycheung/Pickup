@@ -24,21 +24,30 @@ class CachedImage extends React.Component {
   }
 
   async componentWillMount() {
-    const filename = this.props.source.uri === C.NoProfile ? 'noprofile' :
-      extractFilename(this.props.source.uri);
+    this._downloadImage(this.props.source.uri);
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    this._downloadImage(nextProps.source.uri);
+  }
+
+  async _downloadImage(uri) {
+    const filename = uri === C.NoProfile ? 'noprofile' : extractFilename(uri);
     // NOTE: For some reason cacheDirectory is a url escaped path.
     const localUri = `${FileSystem.cacheDirectory}Image-${filename}.png`;
-    const { exists } = await FileSystem.getInfoAsync(localUri);
-    if (exists) {
-      this.setState({ localUri });
-    } else {
-      await FileSystem.downloadAsync(this.props.source.uri, localUri)
-        .then(() => {
-          this.setState({ localUri });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    if (this.state.localUri !== localUri) {
+      const { exists } = await FileSystem.getInfoAsync(localUri);
+      if (exists) {
+        this.setState({ localUri });
+      } else {
+        await FileSystem.downloadAsync(this.props.source.uri, localUri)
+          .then(() => {
+            this.setState({ localUri });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     }
   }
 
