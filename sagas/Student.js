@@ -111,7 +111,7 @@ const watchAddStudent = function* watchAddStudent() {
 }
 
 const editStudentAsync = (uid, student) => {
-  const { key, firstName, lastInitial, image, grade } = student;
+  const { key, firstName, lastInitial, image, grade, relationships } = student;
   const studentUpdate = {};
   studentUpdate[`students/${key}`] = {
     firstName,
@@ -119,6 +119,7 @@ const editStudentAsync = (uid, student) => {
     name: `${firstName} ${lastInitial}`,
     image,
     grade,
+    relationships,
   };
   return FBref('/').update(studentUpdate);
 };
