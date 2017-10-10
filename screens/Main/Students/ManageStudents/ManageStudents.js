@@ -59,9 +59,9 @@ class ManageStudents extends React.Component {
   _renderRow(student) {
     if (typeof student === 'object') {
       const relationship = student.relationships[this.props.uid];
-      const parent = relationship.role === 'Parent' || relationship.role === 'Admin';
+      const touchable = relationship.role === 'Parent' || relationship.role === 'Admin';
       let RowElement = View;
-      if (parent) {
+      if (touchable) {
         RowElement = TouchableOpacity;
       }
 
@@ -83,13 +83,13 @@ class ManageStudents extends React.Component {
             </Text>
           </View>
           <View style={gstyles.flex1} />
-          {parent &&
+          {touchable &&
             <Icon name="ios-arrow-forward" size={30} color={colors.buttonBackground} />
           }
         </RowElement>
       );
     }
-    return <View />
+    return <View />;
   }
 
   render() {
