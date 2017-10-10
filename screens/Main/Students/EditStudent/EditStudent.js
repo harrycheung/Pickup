@@ -28,7 +28,7 @@ class EditStudent extends React.Component {
               [
                 { text: 'Cancel', onPress: null, style: 'cancel' },
                 { text: 'OK',
-                  onPress: () => deleteStudent(student.key),
+                  onPress: () => deleteStudent(student),
                 },
               ],
               { cancelable: false },

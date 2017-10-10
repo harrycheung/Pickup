@@ -148,13 +148,11 @@ const watchEditStudent = function* watchEditStudent() {
   yield takeEvery(Types.EDIT_STUDENT, editStudent);
 }
 
-const deleteStudentAsync = (key, students) => {
-  const relationshipKeys = Object.keys(
-    students.filter(student => key === student.key)[0].relationships);
+const deleteStudentAsync = (student) => {
   const studentUpdate = {};
-  studentUpdate[`students/${key}`] = null;
-  relationshipKeys.forEach((relationshipKey) => {
-    studentUpdate[`users/${relationshipKey}/students/${key}`] = null;
+  studentUpdate[`students/${student.key}`] = null;
+  Object.keys(student.relationships).forEach((relationshipKey) => {
+    studentUpdate[`users/${relationshipKey}/students/${student.key}`] = null;
   });
   return FBref('/').update(studentUpdate);
 };
@@ -162,8 +160,7 @@ const deleteStudentAsync = (key, students) => {
 const deleteStudent = function* deleteStudent(action) {
   try {
     yield put(MessageActions.showMessage('Deleting', 0));
-    const state = yield select();
-    yield call(deleteStudentAsync, action.studentKey, state.student.students);
+    yield call(deleteStudentAsync, action.student);
     yield put(NavActions.back());
   } catch (error) {
     console.log('deleteStudent failed', error);

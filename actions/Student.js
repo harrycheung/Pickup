@@ -25,8 +25,8 @@ export const Actions = {
   editStudentSucceeded: (student: Object) => ({
     type: Types.EDIT_STUDENT_SUCCEEDED, student,
   }),
-  deleteStudent: (studentKey: string) => ({
-    type: Types.DELETE_STUDENT, studentKey,
+  deleteStudent: (student: Object) => ({
+    type: Types.DELETE_STUDENT, student,
   }),
   addRelationship: (studentKey: string, uid: string, relationship: string) => ({
     type: Types.ADD_RELATIONSHIP, studentKey, uid, relationship,
