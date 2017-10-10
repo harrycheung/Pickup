@@ -161,7 +161,7 @@ class StudentForm extends React.Component {
             values={C.Levels}
             onChange={value => this._updateState({ grade: value })}
             value={this.state.grade}
-            columns={4}
+            columns={3}
           />
         </View>
       );
