@@ -61,11 +61,11 @@ const watchlistenStudents = function* watchlistenStudents() {
   yield takeEvery(Types.UNLISTEN_STUDENTS, unlistenStudents);
 };
 
-const addStudentAsync = (user, firstName, lastInitial, image, grade) => (
+const addStudentAsync = (user, firstName, lastInitial, image, grade, admin) => (
   FBref('/students').push().then((studentRef) => {
     const relationships = {};
     relationships[user.uid] = {
-      role: 'Parent',
+      role: admin ? 'Admin' : 'Parent',
       name: user.name,
       image: user.image,
     };
@@ -87,7 +87,7 @@ const addStudentAsync = (user, firstName, lastInitial, image, grade) => (
 const addStudent = function* addStudent(action) {
   try {
     yield put(MessageActions.showMessage('Adding student', 0));
-    const { firstName, lastInitial, image, grade } = action;
+    const { firstName, lastInitial, image, grade, admin } = action;
     const state = yield select();
     yield call(
       addStudentAsync,
@@ -96,6 +96,7 @@ const addStudent = function* addStudent(action) {
       lastInitial,
       image,
       grade,
+      admin,
     );
     yield put(NavActions.back());
   } catch (error) {

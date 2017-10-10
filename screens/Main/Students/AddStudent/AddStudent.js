@@ -24,20 +24,25 @@ class AddStudent extends React.Component {
   render() {
     return (
       <MessageView style={gstyles.flex1}>
-        <StudentForm onSubmit={this.props.addStudent} />
+        <StudentForm onSubmit={this.props.addStudent} admin={this.props.admin} />
       </MessageView>
     );
   }
 }
 
 AddStudent.propTypes = {
+  admin: PropTypes.bool.isRequired,
   addStudent: PropTypes.func.isRequired,
   setImage: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  admin: state.user.admin,
+});
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(StudentActions, dispatch),
   ...bindActionCreators(ImageActions, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(AddStudent);
+export default connect(mapStateToProps, mapDispatchToProps)(AddStudent);

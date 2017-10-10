@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import { Image, View } from 'react-native';
 import { FileSystem } from 'expo';
 
+import * as C from '../config/constants';
+
 const extractFilename = uri => uri.split('images%2F')[1].split('?alt')[0];
 
 class CachedImage extends React.Component {
@@ -22,7 +24,8 @@ class CachedImage extends React.Component {
   }
 
   async componentWillMount() {
-    const filename = extractFilename(this.props.source.uri);
+    const filename = this.props.source.uri === C.NoProfile ? 'noprofile' :
+      extractFilename(this.props.source.uri);
     // NOTE: For some reason cacheDirectory is a url escaped path.
     const localUri = `${FileSystem.cacheDirectory}Image-${filename}.png`;
     const { exists } = await FileSystem.getInfoAsync(localUri);

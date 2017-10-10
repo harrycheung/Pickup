@@ -10,3 +10,4 @@ export const Locations = {
   'Bldg 2 loop': true,
   'Bldg 3 loop': true,
 };
+export const NoProfile = 'https://synpickup.com/noprofile.png';

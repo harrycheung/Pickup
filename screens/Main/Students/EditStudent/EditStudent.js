@@ -100,6 +100,7 @@ class EditStudent extends React.Component {
     return (
       <MessageView style={gstyles.flex1}>
         <StudentForm
+          admin={this.props.admin}
           uid={this.props.uid}
           mode="edit"
           {...this.state.student}
@@ -117,6 +118,7 @@ class EditStudent extends React.Component {
 }
 
 EditStudent.propTypes = {
+  admin: PropTypes.bool.isRequired,
   uid: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
   navigation: PropTypes.object.isRequired,
@@ -128,6 +130,7 @@ EditStudent.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  admin: state.user.admin,
   uid: state.user.uid,
   students: state.student.students,
 });

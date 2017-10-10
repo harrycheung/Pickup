@@ -70,11 +70,12 @@ class StudentForm extends React.Component {
 
     this.state = {
       grade: this.props.grade,
-      data: this._loadRelationships(this.props.relationships),
+      relationships: this._loadRelationships(this.props.relationships),
       showAddModal: false,
       addRelPhone: '',
       addRelRelationship: 'Parent',
       addRelDisabled: true,
+      admin: false,
     };
 
     this._disabled = this._disabled.bind(this);
@@ -86,11 +87,12 @@ class StudentForm extends React.Component {
 
   state: {
     grade: string,
-    data: Array<Object>,
+    relationships: Array<Object>,
     showAddModal: boolean,
     addRelPhone: string,
     addRelRelationship: string,
     addRelDisabled: boolean,
+    admin: boolean,
   }
 
   componentDidMount() {
@@ -100,7 +102,7 @@ class StudentForm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.relationships !== nextProps.relationships) {
       this.setState({
-        data: this._loadRelationships(nextProps.relationships),
+        relationships: this._loadRelationships(nextProps.relationships),
       });
     }
   }
@@ -134,7 +136,7 @@ class StudentForm extends React.Component {
   }
 
   _submit(firstName, lastInitial, imageURL) {
-    this.props.onSubmit(firstName, lastInitial, imageURL, this.state.grade);
+    this.props.onSubmit(firstName, lastInitial, imageURL, this.state.grade, this.state.admin);
   }
 
   _addRelationshipPhone(phoneNumber) {
@@ -148,6 +150,7 @@ class StudentForm extends React.Component {
       addRelPhone: '',
       addRelRelationship: 'Parent',
       addRelDisabled: true,
+      admin: false,
     });
   }
 
@@ -155,14 +158,27 @@ class StudentForm extends React.Component {
     let content = null;
     if (this.props.mode === 'add') {
       content = (
-        <View style={gstyles.marginTop10}>
-          <Text style={styles.pickerLabel}>Level</Text>
-          <Picker
-            values={C.Levels}
-            onChange={value => this._updateState({ grade: value })}
-            value={this.state.grade}
-            columns={3}
-          />
+        <View>
+          <View style={gstyles.marginTop10}>
+            <Text style={styles.pickerLabel}>Level</Text>
+            <Picker
+              values={C.Levels}
+              onChange={value => this._updateState({ grade: value })}
+              value={this.state.grade}
+              columns={3}
+            />
+          </View>
+          {this.props.admin &&
+            <View style={gstyles.marginTop10}>
+              <Text style={styles.pickerLabel}>Admin</Text>
+              <Picker
+                values={['Add as Parent', 'Add as Admin']}
+                onChange={value => this._updateState({ admin: value === 'Add as Admin' })}
+                value={this.state.admin ? 'Add as Admin' : 'Add as Parent'}
+                columns={2}
+              />
+            </View>
+          }
         </View>
       );
     } else if (this.props.mode === 'edit') {
@@ -171,62 +187,64 @@ class StudentForm extends React.Component {
           <Text style={[styles.pickerLabel, gstyles.marginTop10]}>
             Level: {this.props.grade}
           </Text>
-          <View style={gstyles.flex1}>
-            <View style={styles.relationshipsHeader}>
-              <Text style={[gstyles.font18, { marginRight: 15 }]}>
-                Other relationships:
-              </Text>
-              <IconButton
-                icon="md-add"
-                onPress={() => {
-                  Keyboard.dismiss();
-                  this.setState({ showAddModal: true });
-                }}
-              />
-            </View>
+          {this.props.relationships[this.props.uid].role !== 'Admin' &&
             <View style={gstyles.flex1}>
-              <FlatList
-                style={gstyles.flex1}
-                data={this.state.data}
-                scrollEnabled={false}
-                renderItem={({ item }) => (
-                  <View
-                    style={[
-                      {
-                        paddingVertical: 5,
-                        alignItems: 'center',
-                      },
-                      gstyles.flexRow,
-                    ]}
-                  >
-                    <CachedImage
-                      style={[gstyles.profilePic40, { marginRight: 10 }]}
-                      source={{ uri: item.image }}
-                    />
-                    <Text style={[gstyles.font18, { marginRight: 10 }]}>
-                      {item.name} ({item.role})
-                    </Text>
-                    <IconButton
-                      icon="md-trash"
-                      onPress={() => {
-                        Alert.alert(
-                          'Remove relationship?',
-                          null,
-                          [
-                            { text: 'Cancel', onPress: null, style: 'cancel' },
-                            { text: 'OK',
-                              onPress: () => this.props.removeRelationship(item.key),
-                            },
-                          ],
-                          { cancelable: false },
-                        );
-                      }}
-                    />
-                  </View>
-                )}
-              />
+              <View style={styles.relationshipsHeader}>
+                <Text style={[gstyles.font18, { marginRight: 15 }]}>
+                  Other relationships:
+                </Text>
+                <IconButton
+                  icon="md-add"
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    this.setState({ showAddModal: true });
+                  }}
+                />
+              </View>
+              <View style={gstyles.flex1}>
+                <FlatList
+                  style={gstyles.flex1}
+                  data={this.state.relationships}
+                  scrollEnabled={false}
+                  renderItem={({ item }) => (
+                    <View
+                      style={[
+                        {
+                          paddingVertical: 5,
+                          alignItems: 'center',
+                        },
+                        gstyles.flexRow,
+                      ]}
+                    >
+                      <CachedImage
+                        style={[gstyles.profilePic40, { marginRight: 10 }]}
+                        source={{ uri: item.image }}
+                      />
+                      <Text style={[gstyles.font18, { marginRight: 10 }]}>
+                        {item.name} ({item.role})
+                      </Text>
+                      <IconButton
+                        icon="md-trash"
+                        onPress={() => {
+                          Alert.alert(
+                            'Remove relationship?',
+                            null,
+                            [
+                              { text: 'Cancel', onPress: null, style: 'cancel' },
+                              { text: 'OK',
+                                onPress: () => this.props.removeRelationship(item.key),
+                              },
+                            ],
+                            { cancelable: false },
+                          );
+                        }}
+                      />
+                    </View>
+                  )}
+                />
+              </View>
             </View>
-          </View>
+          }
         </View>
       );
     }
@@ -235,6 +253,7 @@ class StudentForm extends React.Component {
       <View style={gstyles.flex1}>
         <ProfileForm
           ref={(form) => { this.profileForm = form; }}
+          admin={this.props.admin}
           firstName={this.props.firstName}
           lastInitial={this.props.lastInitial}
           isDisabled={this._disabled}
@@ -306,6 +325,7 @@ class StudentForm extends React.Component {
 }
 
 StudentForm.propTypes = {
+  admin: PropTypes.bool,
   uid: PropTypes.string,
   mode: PropTypes.string,
   firstName: PropTypes.string,
@@ -319,6 +339,7 @@ StudentForm.propTypes = {
 };
 
 StudentForm.defaultProps = {
+  admin: false,
   uid: '',
   mode: 'add',
   firstName: '',

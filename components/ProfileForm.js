@@ -17,13 +17,14 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImagePicker } from 'expo';
 
-import { gstyles } from '../../config/styles';
-import LinedTextInput from '../LinedTextInput';
-import KeyboardAwareView from '../KeyboardAwareView';
-import CustomButton from '../Button';
-import CachedImage from '../CachedImage';
-import { Actions as ImageActions } from '../../actions/Image';
-import { Actions as MessageActions } from '../../actions/Message';
+import * as C from '../config/constants';
+import { gstyles } from '../config/styles';
+import LinedTextInput from './LinedTextInput';
+import KeyboardAwareView from './KeyboardAwareView';
+import CustomButton from './Button';
+import CachedImage from './CachedImage';
+import { Actions as ImageActions } from '../actions/Image';
+import { Actions as MessageActions } from '../actions/Message';
 
 class ProfileForm extends React.Component {
   constructor(props: Object) {
@@ -60,7 +61,7 @@ class ProfileForm extends React.Component {
     const disabled = (
       state.firstName.length < 1 ||
       state.lastInitial.length < 1 ||
-      props.imageURL.length < 1 ||
+      (props.imageURL.length < 1 && !props.admin) ||
       invalid || (
         state.firstName === props.firstName &&
         state.lastInitial === props.lastInitial &&
@@ -97,7 +98,11 @@ class ProfileForm extends React.Component {
   _submit() {
     this.setState({ disabled: true }, () => {
       const { firstName, lastInitial } = this.state;
-      this.props.onSubmit(firstName, lastInitial, this.props.imageURL);
+      if (this.props.imageURL.length < 1 && this.props.admin) {
+        this.props.onSubmit(firstName, lastInitial, C.NoProfile);
+      } else {
+        this.props.onSubmit(firstName, lastInitial, this.props.imageURL);
+      }
     });
   }
 
@@ -195,6 +200,7 @@ class ProfileForm extends React.Component {
 }
 
 ProfileForm.propTypes = {
+  admin: PropTypes.bool,
   firstName: PropTypes.string,
   lastInitial: PropTypes.string,
   imageURL: PropTypes.string,
@@ -208,6 +214,7 @@ ProfileForm.propTypes = {
 };
 
 ProfileForm.defaultProps = {
+  admin: false,
   firstName: '',
   lastInitial: '',
   imageURL: '',

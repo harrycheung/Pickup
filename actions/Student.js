@@ -16,8 +16,8 @@ export const Types = {
 
 export const Actions = {
   setStudents: (students: Object[]) => ({ type: Types.SET, students }),
-  addStudent: (firstName: string, lastInitial: string, imageURL: string, grade: string) => ({
-    type: Types.ADD_STUDENT, firstName, lastInitial, image: imageURL, grade,
+  addStudent: (firstName: string, lastInitial: string, imageURL: string, grade: string, admin: bool) => ({
+    type: Types.ADD_STUDENT, firstName, lastInitial, image: imageURL, grade, admin,
   }),
   editStudent: (student: Object) => ({
     type: Types.EDIT_STUDENT, student,
