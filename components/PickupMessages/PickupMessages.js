@@ -72,8 +72,7 @@ class PickupMessages extends React.Component {
           return <View key="hiddenRequest" />;
         }
 
-        const studentsJSX = [];
-        Object.keys(this.props.pickup.students).forEach((key) => {
+        const studentsJSX = Object.keys(this.props.pickup.students).map((key) => {
           const student = this.props.pickup.students[key];
           let studentStyle = {};
           if (student.released) {
@@ -81,7 +80,7 @@ class PickupMessages extends React.Component {
           } else if (student.escort.uid !== '') {
             studentStyle = styles.escort;
           }
-          studentsJSX.push((
+          return (
             <View key={key} style={styles.student}>
               <CachedImage
                 style={[gstyles.profilePic50, studentStyle]}
@@ -91,7 +90,7 @@ class PickupMessages extends React.Component {
                 {student.name}
               </Text>
             </View>
-          ));
+          );
         });
         messageJSX = (
           <View style={styles.request}>
@@ -245,11 +244,10 @@ class PickupMessages extends React.Component {
       ));
     });
 
-    const messages = [];
-    Object.keys(pickup.messages || {}).forEach((key) => {
+    const messages = Object.keys(pickup.messages || {}).map((key) => {
       const message = pickup.messages[key];
       message.key = key;
-      messages.push(this._renderMessage(message));
+      return this._renderMessage(message);
     });
 
     return (

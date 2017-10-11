@@ -17,11 +17,12 @@ import StudentsScreen from './Students';
 import LogoutScreen from './Logout';
 import ProfileScreen from './Profile';
 import AdminScreen from './Admin';
+import AllStudentsScreen from './AllStudents';
 import { Actions as NavActions } from '../../actions/Navigation';
 
 const Drawer = (props) => {
   const drawerProps = update(props, { items: { $set:
-    props.items.filter(route => !route.key.includes('Admin')),
+    props.items.filter(route => !(route.key.includes('Admin') || route.key.includes('AllStudents'))),
   } });
   return (
     <View style={gstyles.flex1}>
@@ -44,12 +45,20 @@ const Drawer = (props) => {
         />
       </View>
       {props.admin &&
-        <Button
-          style={{ margin: 15 }}
-          content="Admin"
-          round
-          onPress={() => props.navigate('Admin')}
-        />
+        <View>
+          <Button
+            style={{ margin: 15 }}
+            content="Admin"
+            round
+            onPress={() => props.navigate('Admin')}
+          />
+          <Button
+            style={{ marginHorizontal: 15, marginBottom: 15 }}
+            content="All Students"
+            round
+            onPress={() => props.navigate('AllStudents')}
+          />
+        </View>
       }
     </View>
   );
@@ -76,9 +85,10 @@ export default DrawerNavigator({
   Profile: { screen: ProfileScreen },
   Logout: { screen: LogoutScreen },
   Admin: { screen: AdminScreen },
+  AllStudents: { screen: AllStudentsScreen },
 }, {
   drawerWidth: 200,
-  order: ['Pickup', 'Students', 'Profile', 'Logout', 'Admin'],
+  order: ['Pickup', 'Students', 'Profile', 'Logout', 'Admin', 'AllStudents'],
   contentComponent: connect(mapStateToProps, mapDispatchToProps)(Drawer),
   headerMode: 'none',
 });

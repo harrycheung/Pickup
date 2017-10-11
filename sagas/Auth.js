@@ -79,11 +79,9 @@ const getActivePickup = uid => FBref('/pickups')
       pickup = pickupSnapshot.val();
       pickup.key = pickupSnapshot.key;
       if (!('completedAt' in pickup)) {
-        const students = [];
-        Object.keys(pickup.students).forEach((key) => {
-          students.push(Object.assign(pickup.students[key], { key }));
-        });
-        pickup.students = students;
+        pickup.students = Object.keys(pickup.students).map(key => (
+          Object.assign({}, pickup.students[key], { key })
+        ));
         // Returning true breaks the forEach loop
         return true;
       }

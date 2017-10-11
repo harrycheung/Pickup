@@ -174,7 +174,7 @@ class ProfileForm extends React.Component {
                 </View>
               </View>
             </TouchableWithoutFeedback>
-            <Text style={ gstyles.marginTop10 }>Name</Text>
+            <Text style={gstyles.marginTop10}>Name</Text>
             <View style={{ flexDirection: 'row' }}>
               <LinedTextInput
                 style={{ flex: 1, marginRight: 10 }}

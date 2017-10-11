@@ -1,11 +1,12 @@
 
 // @flow
 
-import { all, fork, put, take } from 'redux-saga/effects';
+import { all, call, fork, put, take } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
 import { firebaseChannel } from './helpers';
 import { Types, Actions } from '../actions/Admin';
+import { Actions as MessageActions } from '../actions/Message';
 
 const listenPickups = function* listenPickups() {
   while (true) {
@@ -37,9 +38,35 @@ const watchListenPickups = function* watchListenPickups() {
   yield fork(listenPickups);
 }
 
+const searchStudentsAsync = (name) => (
+  FBref('/students').orderByChild('name').startAt(name).endAt(name + '\uf8ff').once('value')
+    .then((snapshot) => {
+      const students = snapshot.val();
+      return Object.keys(students).map(studentKey => (
+        Object.assign({}, students[studentKey], { key: studentKey })
+      ));
+    })
+);
+
+const watchSearchStudents = function* watchSearchStudents() {
+  while (true) {
+    try {
+      const { name } = yield take(Types.SEARCH_STUDENTS);
+      yield put(MessageActions.showMessage('Searching', 0));
+      const students = yield call(searchStudentsAsync, name);
+      yield put(Actions.setStudents(students));
+    } catch (error) {
+      console.log('searchStudents failed', error);
+    } finally {
+      yield put(MessageActions.clearMessage());
+    }
+  }
+}
+
 const adminSaga = function* adminSaga() {
   yield all([
     watchListenPickups(),
+    watchSearchStudents(),
   ]);
 };
 

@@ -46,10 +46,9 @@ class PickupSelect extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let pickups = [];
-    Object.keys(nextProps.pickups).forEach((key) => {
-      pickups.push(Object.assign({}, nextProps.pickups[key], { key }));
-    });
+    let pickups = Object.keys(nextProps.pickups).map(key => (
+      Object.assign({}, nextProps.pickups[key], { key })
+    ));
     pickups = pickups.sort((a, b) => b.createdAt - a.createdAt);
     this.setState({
       live: pickups.filter(item => !('completedAt' in item)),
@@ -62,8 +61,7 @@ class PickupSelect extends React.Component {
   }
 
   _renderRow(pickup) {
-    const students = [];
-    Object.keys(pickup.students).forEach((key) => {
+    const students = Object.keys(pickup.students).map((key) => {
       const student = pickup.students[key];
 
       let studentStyle = styles.unescort;
@@ -73,13 +71,13 @@ class PickupSelect extends React.Component {
         studentStyle = styles.escort;
       }
 
-      students.push((
+      return (
         <CachedImage
           key={student.key}
           style={[gstyles.profilePic50, styles.studentImage, studentStyle]}
           source={{ uri: student.image }}
         />
-      ));
+      );
     });
 
     return (
