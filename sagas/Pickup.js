@@ -2,7 +2,7 @@
 // @flow
 
 import { channel } from 'redux-saga';
-import { all, call, fork, put, take, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, put, select, take, takeEvery } from 'redux-saga/effects';
 import { Location, Permissions } from 'expo';
 
 import { FBref } from '../helpers/firebase';
@@ -142,7 +142,12 @@ const listenPickup = function* listenPickup() {
       const { pickup } = yield take(Types.LISTEN);
 
       const back = function* (message) {
-        yield put(NavActions.back());
+        const state = yield select();
+        if (pickup.requestor.uid === state.user.uid) {
+          yield put(NavActions.resetNavigation('Main'));
+        } else {
+          yield put(NavActions.back());
+        }
         yield put(MessageActions.showMessage(message, 1500));
         yield put(PickupActions.clearPickup());
       };
