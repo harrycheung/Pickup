@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as C from '../../../../config/constants';
 import { colors, gstyles } from '../../../../config/styles';
 import drawerHeader from '../../../../components/DrawerHeader';
-import Button from '../../../../components/Button';
 import MessageView from '../../../../components/MessageView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
@@ -42,10 +41,16 @@ class Home extends React.Component {
     return (
       <MessageView style={gstyles.flex1}>
         <SectionList
-          renderItem={({ item }) => (
+          renderItem={({ item, section }) => (
             <TouchableOpacity
               key={item.key}
-              onPress={() => this.props.navigate('PickupSelect', { title: item.key })}
+              onPress={() => {
+                this.props.navigate('PickupSelect',
+                  section.title === 'Levels' ?
+                    { grade: item.key, location: '', title: item.key } :
+                    { grade: '', location: item.key, title: item.key },
+                );
+              }}
             >
               <View
                 style={[
