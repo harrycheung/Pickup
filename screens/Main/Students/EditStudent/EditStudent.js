@@ -75,15 +75,14 @@ class EditStudent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({
-      deleteStudent: this.props.deleteStudent,
-    });
+    this.props.navigation.setParams({ deleteStudent: this.props.deleteStudent });
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      student: EditStudent.loadStudent(nextProps.students, this.state.key),
-    });
+    const student = EditStudent.loadStudent(nextProps.students, this.state.key);
+    if (student) {
+      this.setState({ student });
+    }
   }
 
   _edit(firstName, lastInitial, imageURL, grade) {
