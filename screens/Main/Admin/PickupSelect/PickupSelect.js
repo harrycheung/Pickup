@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
+import { objectArray } from '../../../../helpers';
 import MessageView from '../../../../components/MessageView';
 import CachedImage from '../../../../components/CachedImage';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
@@ -46,9 +47,7 @@ class PickupSelect extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let pickups = Object.keys(nextProps.pickups).map(key => (
-      Object.assign({}, nextProps.pickups[key], { key })
-    ));
+    let pickups = objectArray(nextProps.pickups);
     pickups = pickups.sort((a, b) => b.createdAt - a.createdAt);
     this.setState({
       live: pickups.filter(item => !('completedAt' in item)),

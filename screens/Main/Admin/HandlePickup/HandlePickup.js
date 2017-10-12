@@ -21,41 +21,39 @@ class HandlePickup extends React.Component {
     return { title: params ? params.title : '' };
   };
 
-  componentWillMount() {
-    this.props.listenPickup(this.props.pickup);
-    this.props.listenCoordinates(this.props.pickup);
-  }
-
   componentDidMount() {
+    // console.log('HandlePickup.componentDidMount');
     const names = Object.keys(this.props.pickup.students).map(key => (
       this.props.pickup.students[key].name
     ));
     this.props.navigation.setParams({ title: truncate(names.join(', '), 20) });
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.pickup !== null;
-  }
-
   componentWillUnmount() {
+    // Need to unlisten to cleanup
     this.props.unlistenPickup();
     this.props.unlistenCoordinates();
-    this.props.clearPickup();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return nextProps.pickup !== null;
   }
 
   render() {
     return (
       <MessageView style={gstyles.flex1}>
         <KeyboardAwareView style={gstyles.flex1}>
-          <PickupMessages
-            user={this.props.user}
-            pickup={this.props.pickup}
-            postMessage={this.props.postMessage}
-            escortStudent={this.props.escortStudent}
-            cancelEscort={this.props.cancelEscort}
-            releaseStudent={this.props.releaseStudent}
-            hideRequest
-          />
+          {this.props.pickup != null &&
+            <PickupMessages
+              user={this.props.user}
+              pickup={this.props.pickup}
+              postMessage={this.props.postMessage}
+              escortStudent={this.props.escortStudent}
+              cancelEscort={this.props.cancelEscort}
+              releaseStudent={this.props.releaseStudent}
+              hideRequest
+            />
+          }
         </KeyboardAwareView>
       </MessageView>
     );

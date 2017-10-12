@@ -37,3 +37,7 @@ export const guid = () => {
 
   return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
+
+export const objectArray = (obj: Object) => (
+  Object.keys(obj).map(key => Object.assign({}, obj[key], { key }))
+);

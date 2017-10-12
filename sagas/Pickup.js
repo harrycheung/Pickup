@@ -63,6 +63,8 @@ const createPickup = function* createPickup(action) {
       action.vehicle,
     );
     yield put(PickupActions.createdPickup(pickup));
+    yield put(PickupActions.listenPickup(pickup));
+    yield put(PickupActions.listenLocation(pickup));
     yield put(NavActions.navigate('PickupRequest', { key: action.navKey }));
   } catch (error) {
     console.log('createPickup failed', error);
@@ -77,6 +79,7 @@ const watchCreatePickup = function* watchCreatePickup() {
 };
 
 const cancelPickupAsync = (pickupKey) => {
+  console.log('cancelPickupAsync');
   FBref(`/pickups/${pickupKey}`).remove();
 };
 
@@ -105,8 +108,10 @@ const watchResumePickup = function* watchResumePickup() {
   yield takeEvery(Types.RESUME, resumePickup);
 };
 
-const handlePickup = function* handlePickup() {
+const handlePickup = function* handlePickup(action) {
   try {
+    yield put(PickupActions.listenPickup(action.pickup));
+    yield put(PickupActions.listenCoordinates(action.pickup));
     yield put(NavActions.navigate('HandlePickup'));
   } catch (error) {
     console.log('handlePickup error', error);
@@ -167,6 +172,10 @@ const listenPickup = function* listenPickup() {
         while (true) {
           const snapshot = yield take(channel);
           if (snapshot.val()) {
+            // Aggressively stop listening to the pickup to stop any other db updates
+            yield put(PickupActions.unlistenPickup());
+            yield put(PickupActions.unlistenCoordinates());
+            yield put(PickupActions.clearPickup());
             yield call(back, 'Pickup completed');
           }
         }
@@ -214,12 +223,15 @@ const watchListenPickup = function* watchListenPickup() {
   yield fork(listenPickup);
 };
 
-const updatePickupStudent = (pickupKey, studentKey, state) => {
-  FBref(`/pickups/${pickupKey}/students/${studentKey}`).update(state);
-};
-
-const completePickup = (pickupKey) => {
-  FBref(`/pickups/${pickupKey}`).update({ completedAt: Date.now() });
+const updatePickupStudent = (pickupKey, studentKey, state, completed) => {
+  const update = {};
+  Object.keys(state).forEach((key) => {
+    update[`/pickups/${pickupKey}/students/${studentKey}/${key}`] = state[key];
+  });
+  if (completed) {
+    update[`/pickups/${pickupKey}/completedAt`] = Date.now();
+  }
+  FBref('/').update(update);
 };
 
 const updateStudent = function* updateStudent(type, action) {
@@ -240,7 +252,6 @@ const updateStudent = function* updateStudent(type, action) {
         break;
       }
       case 'release': {
-        yield call(updatePickupStudent, pickup.key, student.key, { released: true });
         let completed = true;
         Object.keys(pickup.students).forEach((key) => {
           const otherStudent = pickup.students[key];
@@ -248,9 +259,7 @@ const updateStudent = function* updateStudent(type, action) {
             completed = false;
           }
         });
-        if (completed) {
-          yield call(completePickup, pickup.key);
-        }
+        yield call(updatePickupStudent, pickup.key, student.key, { released: true }, completed);
         break;
       }
 
