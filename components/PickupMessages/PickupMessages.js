@@ -7,6 +7,7 @@ import {
   Alert,
   Button,
   Keyboard,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -305,8 +306,8 @@ class PickupMessages extends React.Component {
           region={{
             latitude: pickup.coordinates.latitude,
             longitude: pickup.coordinates.longitude,
-            latitudeDelta: 0.0001,
-            longitudeDelta: 0.00005,
+            latitudeDelta: Platform.OS === 'ios' ? 0.0001 : 0.0007,
+            longitudeDelta: Platform.OS === 'ios' ? 0.00005 : 0.00004,
           }}
         >
           <MapView.Marker
