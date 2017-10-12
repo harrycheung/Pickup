@@ -29,7 +29,7 @@ class PickupSelect extends React.Component {
     super(props);
 
     this.state = {
-      live: [],
+      active: [],
       completed: [],
     };
 
@@ -37,7 +37,7 @@ class PickupSelect extends React.Component {
   }
 
   state: {
-    live: Array<Object>,
+    active: Array<Object>,
     completed: Array<Object>,
   }
 
@@ -50,7 +50,7 @@ class PickupSelect extends React.Component {
     let pickups = objectArray(nextProps.pickups);
     pickups = pickups.sort((a, b) => b.createdAt - a.createdAt);
     this.setState({
-      live: pickups.filter(item => !('completedAt' in item)),
+      active: pickups.filter(item => !('completedAt' in item)),
       completed: pickups.filter(item => 'completedAt' in item),
     });
   }
@@ -96,25 +96,20 @@ class PickupSelect extends React.Component {
       <MessageView style={gstyles.flex1}>
         <SectionList
           renderItem={({ item }) => this._renderRow(item)}
-          renderSectionHeader={({ section }) => {
-            if (section.key === 'Completed') {
-              return (
-                <View
-                  style={{
-                    backgroundColor: colors.buttonBackground,
-                    paddingVertical: 2,
-                  }}
-                >
-                  <Text style={[gstyles.marginH15, { color: 'white' }]}>
-                    {section.key}
-                  </Text>
-                </View>
-              );
-            }
-            return null;
-          }}
+          renderSectionHeader={({ section }) => (
+            <View
+              style={{
+                backgroundColor: colors.buttonBackground,
+                paddingVertical: 2,
+              }}
+            >
+              <Text style={[gstyles.marginH15, { color: 'white' }]}>
+                {section.key}
+              </Text>
+            </View>
+          )}
           sections={[
-            { data: this.state.live, key: 'Live' },
+            { data: this.state.active, key: 'Active' },
             { data: this.state.completed, key: 'Completed' },
           ]}
           ItemSeparatorComponent={PickupSelect._renderSeparator}
