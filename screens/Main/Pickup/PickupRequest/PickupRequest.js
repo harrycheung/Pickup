@@ -28,8 +28,8 @@ class PickupRequest extends React.Component {
   });
 
   componentWillMount() {
-    // this.props.listenPickup(this.props.pickup);
-    // this.props.listenLocation(this.props.pickup);
+    this.props.listenPickup(this.props.pickup);
+    this.props.listenLocation(this.props.pickup);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -37,8 +37,8 @@ class PickupRequest extends React.Component {
   }
 
   componentWillUnmount() {
-    // this.props.unlistenPickup();
-    // this.props.unlistenLocation();
+    this.props.unlistenPickup();
+    this.props.unlistenLocation();
 
     // Cleaning up the pickup. If the requestor initiates the 'Cancel', we need
     // to cancel the pickup ourselves. If the escorter releases the last student,

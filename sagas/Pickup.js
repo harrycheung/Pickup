@@ -65,8 +65,6 @@ const createPickup = function* createPickup(action) {
       action.vehicle,
     );
     yield put(PickupActions.createdPickup(pickup));
-    yield put(PickupActions.listenPickup(pickup));
-    yield put(PickupActions.listenLocation(pickup));
     yield put(NavActions.navigate('PickupRequest', { key: action.navKey }));
   } catch (error) {
     console.log('createPickup failed', error);
@@ -81,7 +79,6 @@ const watchCreatePickup = function* watchCreatePickup() {
 };
 
 const cancelPickupAsync = (pickupKey) => {
-  console.log('cancelPickupAsync');
   FBref(`/pickups/${todayStr()}/${pickupKey}`).remove();
 };
 
