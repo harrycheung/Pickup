@@ -49,7 +49,7 @@ class PickupRequest extends React.Component {
       // Take this out because of race condition between the requestor and admin.
       // If the requestor gets to this too quick, the admin saga is still listening
       // to the pickup and will crash when it gets deleted
-      // this.props.cancelPickup(this.props.pickup);
+      this.props.cancelPickup(this.props.pickup);
     }
   }
 

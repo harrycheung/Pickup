@@ -4,11 +4,6 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  request: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 5,
-  },
   studentImage: {
     marginRight: 5,
     borderWidth: 2,
@@ -28,5 +23,8 @@ export default StyleSheet.create({
     marginHorizontal: 60,
     borderWidth: 0.5,
     borderColor: 'lightgray',
+  },
+  timestamp: {
+    fontSize: 10,
   },
 });

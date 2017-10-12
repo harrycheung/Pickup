@@ -7,10 +7,11 @@ import { SectionList, TouchableOpacity, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
 
 import styles from './styles';
 import { colors, gstyles } from '../../../../config/styles';
-import { objectArray } from '../../../../helpers';
+import { objectArray, distanceFromSchool } from '../../../../helpers';
 import MessageView from '../../../../components/MessageView';
 import CachedImage from '../../../../components/CachedImage';
 import { Actions as PickupActions } from '../../../../actions/Pickup';
@@ -81,12 +82,25 @@ class PickupSelect extends React.Component {
 
     return (
       <TouchableOpacity
-        style={[styles.request, gstyles.marginH15]}
+        style={[gstyles.marginH15, { paddingVertical: 5 }]}
         onPress={() => this.props.handlePickup(pickup)}
       >
-        {students}
-        <View style={gstyles.flex1} />
-        <Icon name="ios-arrow-forward" size={30} color={colors.buttonBackground} />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {students}
+          <View style={gstyles.flex1} />
+          <Icon name="ios-arrow-forward" size={30} color={colors.buttonBackground} />
+        </View>
+        {pickup.completedAt === undefined &&
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
+            <Text style={{ fontSize: 10 }}>
+              {distanceFromSchool(pickup.coordinates.latitude, pickup.coordinates.longitude)} miles away
+            </Text>
+            <View style={gstyles.flex1} />
+            <Text style={{ fontSize: 10 }}>
+              {moment(pickup.createdAt).format('LT')}
+            </Text>
+          </View>
+        }
       </TouchableOpacity>
     );
   }
