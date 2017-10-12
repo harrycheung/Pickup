@@ -6,6 +6,7 @@ import { Platform } from 'react-native';
 import CryptoJS from 'crypto-js';
 
 import { FBauth, FBref, FBfunctions } from '../helpers/firebase';
+import { todayStr } from '../helpers';
 import { Actions as AuthActions, Types as AuthTypes } from '../actions/Auth';
 import { Actions as UserActions, Types as UserTypes } from '../actions/User';
 import { Actions as PickupActions } from '../actions/Pickup';
@@ -71,7 +72,7 @@ const loginAsync = (shortToken) => {
     });
 };
 
-const getActivePickup = uid => FBref('/pickups')
+const getActivePickup = uid => FBref(`/pickups/${todayStr()}`)
   .orderByChild('requestor/uid').equalTo(uid).once('value')
   .then((snapshot) => {
     let pickup = null;

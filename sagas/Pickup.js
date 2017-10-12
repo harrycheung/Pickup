@@ -6,10 +6,12 @@ import { all, call, fork, put, select, take, takeEvery } from 'redux-saga/effect
 import { Location, Permissions } from 'expo';
 
 import { FBref } from '../helpers/firebase';
+import { todayStr } from '../helpers';
 import { firebaseChannel } from './helpers';
 import { Types, Actions as PickupActions } from '../actions/Pickup';
 import { Actions as NavActions } from '../actions/Navigation';
 import { Actions as MessageActions } from '../actions/Message';
+
 
 const createPickupAsync = (requestor, students, location, vehicle) => {
   const pickupStudents = students.reduce((acc, student) => {
@@ -37,7 +39,7 @@ const createPickupAsync = (requestor, students, location, vehicle) => {
     createdAt: Date.now(),
     coordinates: { latitude: 37.78825, longitude: -122.4324 },
   };
-  return FBref('/pickups').push(pickup).then(pickupRef => (
+  return FBref(`/pickups/${todayStr()}`).push(pickup).then(pickupRef => (
     pickupRef.child('messages').push({
       type: 'request',
       sender: cleanRequestor,
@@ -80,7 +82,7 @@ const watchCreatePickup = function* watchCreatePickup() {
 
 const cancelPickupAsync = (pickupKey) => {
   console.log('cancelPickupAsync');
-  FBref(`/pickups/${pickupKey}`).remove();
+  FBref(`/pickups/${todayStr()}/${pickupKey}`).remove();
 };
 
 const cancelPickup = function* cancelPickup(action) {
@@ -131,7 +133,7 @@ const postMessage = function* postMessage(action) {
       ...action.message,
     };
 
-    FBref(`/pickups/${action.pickup.key}/messages`).push(messageData);
+    FBref(`/pickups/${todayStr()}/${action.pickup.key}/messages`).push(messageData);
   } catch (error) {
     console.log('postMessage failed', error);
   }
@@ -157,7 +159,7 @@ const listenPickup = function* listenPickup() {
         yield put(PickupActions.clearPickup());
       };
 
-      const pickupCancelChannel = firebaseChannel(`/pickups/${pickup.key}`, 'value');
+      const pickupCancelChannel = firebaseChannel(`/pickups/${todayStr()}/${pickup.key}`, 'value');
       const pickupCancelListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);
@@ -167,7 +169,7 @@ const listenPickup = function* listenPickup() {
         }
       };
 
-      const pickupCompleteChannel = firebaseChannel(`/pickups/${pickup.key}/completedAt`, 'value');
+      const pickupCompleteChannel = firebaseChannel(`/pickups/${todayStr()}/${pickup.key}/completedAt`, 'value');
       const pickupCompleteListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);
@@ -181,7 +183,7 @@ const listenPickup = function* listenPickup() {
         }
       };
 
-      const pickupStudentsChannel = firebaseChannel(`/pickups/${pickup.key}/students`, 'value');
+      const pickupStudentsChannel = firebaseChannel(`/pickups/${todayStr()}/${pickup.key}/students`, 'value');
       const pickupStudentsListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);
@@ -192,7 +194,7 @@ const listenPickup = function* listenPickup() {
         }
       };
 
-      const pickupMessagesChannel = firebaseChannel(`/pickups/${pickup.key}/messages`, 'value');
+      const pickupMessagesChannel = firebaseChannel(`/pickups/${todayStr()}/${pickup.key}/messages`, 'value');
       const pickupMessagesListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);
@@ -226,10 +228,10 @@ const watchListenPickup = function* watchListenPickup() {
 const updatePickupStudent = (pickupKey, studentKey, state, completed) => {
   const update = {};
   Object.keys(state).forEach((key) => {
-    update[`/pickups/${pickupKey}/students/${studentKey}/${key}`] = state[key];
+    update[`/pickups/${todayStr()}/${pickupKey}/students/${studentKey}/${key}`] = state[key];
   });
   if (completed) {
-    update[`/pickups/${pickupKey}/completedAt`] = Date.now();
+    update[`/pickups/${todayStr()}/${pickupKey}/completedAt`] = Date.now();
   }
   FBref('/').update(update);
 };
@@ -304,7 +306,7 @@ const watchReleaseStudent = function* watchReleaseStudent() {
 const updateLocation = function* updateLocation(action) {
   try {
     const { latitude, longitude } = action.coordinates;
-    FBref(`/pickups/${action.pickup.key}/coordinates`).set({
+    FBref(`/pickups/${todayStr()}/${action.pickup.key}/coordinates`).set({
       latitude, longitude,
     });
   } catch (error) {
@@ -366,7 +368,7 @@ const listenCoordinates = function* listenCoordinates() {
     try {
       const { pickup } = yield take(Types.LISTEN_COORDINATES);
 
-      const coordinatesChannel = firebaseChannel(`/pickups/${pickup.key}/coordinates`, 'value');
+      const coordinatesChannel = firebaseChannel(`/pickups/${todayStr()}/${pickup.key}/coordinates`, 'value');
       const coordinatesListener = function* (channel) {
         while (true) {
           const snapshot = yield take(channel);

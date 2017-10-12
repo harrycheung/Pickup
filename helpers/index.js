@@ -1,6 +1,8 @@
 
 // @flow
 
+import moment from 'moment';
+
 const Buffer = require('buffer').Buffer;
 
 export const validPhoneNumber = (phoneNumber: string) => (
@@ -41,3 +43,5 @@ export const guid = () => {
 export const objectArray = (obj: Object) => (
   Object.keys(obj).map(key => Object.assign({}, obj[key], { key }))
 );
+
+export const todayStr = () => moment().format('YYYYMMDD');

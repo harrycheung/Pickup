@@ -4,6 +4,7 @@
 import { all, call, fork, put, take } from 'redux-saga/effects';
 
 import { FBref } from '../helpers/firebase';
+import { todayStr } from '../helpers';
 import { firebaseChannel } from './helpers';
 import { Types, Actions } from '../actions/Admin';
 import { Actions as MessageActions } from '../actions/Message';
@@ -13,8 +14,8 @@ const listenPickups = function* listenPickups() {
     try {
       const { grade, location } = yield take(Types.LISTEN_PICKUPS);
       const ref = location === '' ?
-        FBref('/pickups').orderByChild(`grades/${grade}`).equalTo(true) :
-        FBref('/pickups').orderByChild('location').equalTo(location);
+        FBref(`/pickups/${todayStr()}`).orderByChild(`grades/${grade}`).equalTo(true) :
+        FBref(`/pickups/${todayStr()}`).orderByChild('location').equalTo(location);
 
       const pickupsChannel = firebaseChannel(ref, 'value');
       const pickupsListener = function* (channel) {
