@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,6 +15,12 @@ import CachedImage from '../../../../components/CachedImage';
 import MessageView from '../../../../components/MessageView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 import { Actions as StudentActions } from '../../../../actions/Student';
+
+const filterStudents = (students, relationships) => (
+  students.filter(student => (
+    typeof student === 'object' && relationships.includes(student.relationship)
+  ))
+);
 
 class ManageStudents extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
@@ -45,21 +51,40 @@ class ManageStudents extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      mine: filterStudents(props.students, ['Parent']),
+      others: filterStudents(props.students, ['Caregiver', 'Family', 'Friend']),
+      admin: filterStudents(props.students, ['Admin']),
+    };
+
     this._renderRow = this._renderRow.bind(this);
+  }
+
+  state: {
+    mine: Array<Object>,
+    others: Array<Object>,
+    admin: Array<Object>,
   }
 
   componentWillMount() {
     this.props.listenStudents(this.props.uid);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      mine: filterStudents(nextProps.students, ['Parent']),
+      others: filterStudents(nextProps.students, ['Caregiver', 'Family', 'Friend']),
+      admin: filterStudents(nextProps.students, ['Admin']),
+    });
+  }
+
   componentWillUnmount() {
     this.props.unlistenStudents();
   }
 
-  _renderRow(student) {
+  _renderRow(student, section) {
     if (typeof student === 'object') {
-      const relationship = student.relationships[this.props.uid];
-      const touchable = relationship.role === 'Parent' || relationship.role === 'Admin';
+      const touchable = section.title === 'Your students' || section.title === 'Admin students';
       let RowElement = View;
       if (touchable) {
         RowElement = TouchableOpacity;
@@ -67,7 +92,7 @@ class ManageStudents extends React.Component {
 
       return (
         <RowElement
-          style={[styles.student, gstyles.flexCenter]}
+          style={[styles.student, gstyles.flexCenter, gstyles.marginH15]}
           onPress={() => this.props.navigate('EditStudent', { student })}
         >
           <CachedImage
@@ -79,7 +104,7 @@ class ManageStudents extends React.Component {
               {student.firstName} {student.lastInitial} ({student.grade})
             </Text>
             <Text style={gstyles.font14}>
-              {typeof relationship === 'object' ? relationship.role : relationship }
+              { student.relationship }
             </Text>
           </View>
           <View style={gstyles.flex1} />
@@ -93,11 +118,31 @@ class ManageStudents extends React.Component {
   }
 
   render() {
+    const sections = [
+      { data: this.state.mine, title: 'Your students' },
+      { data: this.state.others, title: 'Other students' },
+    ];
+    if (this.props.admin) {
+      sections.push({ data: this.state.admin, title: 'Admin students' });
+    }
+
     return (
-      <MessageView style={[gstyles.marginH15, gstyles.flex1]}>
-        <FlatList
-          data={this.props.students}
-          renderItem={({ item }) => this._renderRow(item)}
+      <MessageView style={gstyles.flex1}>
+        <SectionList
+          renderItem={({ item, section }) => this._renderRow(item, section)}
+          renderSectionHeader={({ section }) => (
+            <View
+              style={{
+                backgroundColor: colors.buttonBackground,
+                paddingVertical: 2,
+              }}
+            >
+              <Text style={[gstyles.marginH15, { color: 'white' }]}>
+                {section.title}
+              </Text>
+            </View>
+          )}
+          sections={sections}
           ItemSeparatorComponent={ManageStudents._renderSeparator}
         />
       </MessageView>
@@ -107,6 +152,7 @@ class ManageStudents extends React.Component {
 
 ManageStudents.propTypes = {
   uid: PropTypes.string.isRequired,
+  admin: PropTypes.bool.isRequired,
   students: PropTypes.array.isRequired,
   navigate: PropTypes.func.isRequired,
   listenStudents: PropTypes.func.isRequired,
@@ -115,6 +161,7 @@ ManageStudents.propTypes = {
 
 const mapStateToProps = state => ({
   uid: state.user.uid,
+  admin: state.user.admin,
   students: state.student.students,
 });
 
