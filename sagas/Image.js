@@ -11,14 +11,15 @@ import { Actions as MessageActions } from '../actions/Message';
 
 const uploadImageAsync = (imageData: string) => {
   const bytes = convertToByteArray(imageData);
-  const photoRef = FBstorageRef().child(`images/${guid()}`);
+  const filename = guid();
+  const photoRef = FBstorageRef(`images/${filename}`);
   const uploadTask = photoRef.put(bytes, { contentType: 'image/jpeg' });
 
   // uploadTask.on('state_changed', (snapshot) => {
   //   const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
   // });
 
-  return uploadTask.then(snapshot => snapshot.downloadURL, (error) => {
+  return uploadTask.then(() => filename, (error) => {
     throw error;
   });
 };
@@ -28,9 +29,9 @@ const uploadImage = function* uploadImage() {
     try {
       const { imageData } = yield take(Types.UPLOAD);
       yield put(MessageActions.showMessage('Uploading...', 0));
-      const imageURL = yield call(uploadImageAsync, imageData);
+      const image = yield call(uploadImageAsync, imageData);
       yield put(MessageActions.showMessage('Finished', 1000));
-      yield put(Actions.setImage(imageURL));
+      yield put(Actions.setImage(image));
     } catch (error) {
       console.log('uploadImage error', error);
       yield put(MessageActions.showMessage('Error uploading. Please try again', 5000));

@@ -7,8 +7,7 @@ import { Image, View } from 'react-native';
 import { FileSystem } from 'expo';
 
 import * as C from '../config/constants';
-
-const extractFilename = uri => uri.split('images%2F')[1].split('?alt')[0];
+import { FBstorageRef } from '../helpers/firebase';
 
 class CachedImage extends React.Component {
   constructor(props) {
@@ -31,8 +30,8 @@ class CachedImage extends React.Component {
     this._downloadImage(nextProps.source.uri);
   }
 
-  async _downloadImage(uri) {
-    const filename = uri === C.NoProfile ? 'noprofile' : extractFilename(uri);
+  async _downloadImage(image) {
+    const filename = image === C.NoProfile ? 'noprofile' : image;
     // NOTE: For some reason cacheDirectory is a url escaped path.
     const localUri = `${FileSystem.cacheDirectory}Image-${filename}.png`;
     if (this.state.localUri !== localUri) {
@@ -40,7 +39,14 @@ class CachedImage extends React.Component {
       if (exists) {
         this.setState({ localUri });
       } else {
-        await FileSystem.downloadAsync(this.props.source.uri, localUri)
+        let uri = C.NoProfile;
+        if (filename !== 'noprofile') {
+          await FBstorageRef(`images/${image}`).getDownloadURL()
+            .then((remoteUri) => {
+              uri = remoteUri;
+            });
+        }
+        await FileSystem.downloadAsync(uri, localUri)
           .then(() => {
             this.setState({ localUri });
           })
