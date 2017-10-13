@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -22,7 +22,7 @@ import { Actions as NavActions } from '../../actions/Navigation';
 
 const Drawer = (props) => {
   const drawerProps = update(props, { items: { $set:
-    props.items.filter(route => !(route.key.includes('Admin') || route.key.includes('AllStudents'))),
+    props.items.filter(route => !(route.key.includes('Logout')))
   } });
   return (
     <View style={gstyles.flex1}>
@@ -30,10 +30,14 @@ const Drawer = (props) => {
         style={{
           backgroundColor: colors.buttonBackground,
           padding: 20,
-          paddingTop: 40,
+          paddingTop: 10,
           alignItems: 'center',
         }}
       >
+        <Image
+          style={{ width: 150, height: 75, marginBottom: 10 }}
+          source={require('../../images/logo.png')}
+        />
         <CachedImage
           style={[gstyles.profilePic100, { backgroundColor: 'transparent' }]}
           source={{ uri: props.image }}
@@ -44,22 +48,14 @@ const Drawer = (props) => {
           {...drawerProps}
         />
       </View>
-      {props.admin &&
-        <View>
-          <Button
-            style={{ margin: 15 }}
-            content="Admin"
-            round
-            onPress={() => props.navigate('Admin')}
-          />
-          <Button
-            style={{ marginHorizontal: 15, marginBottom: 15 }}
-            content="All Students"
-            round
-            onPress={() => props.navigate('AllStudents')}
-          />
-        </View>
-      }
+      <View>
+        <Button
+          style={{ margin: 15 }}
+          content="Logout"
+          round
+          onPress={() => props.navigate('Logout')}
+        />
+      </View>
     </View>
   );
 };

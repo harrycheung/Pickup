@@ -28,7 +28,7 @@ class AllStudents extends React.Component {
     drawerHeader(navigation, screenProps, {
       title: 'Search Students',
       headerBackTitle: 'Cancel',
-      drawerLabel: 'AllStudents',
+      drawerLabel: 'Admin: Students',
     })
   );
 

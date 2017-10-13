@@ -18,7 +18,7 @@ class Home extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Admin',
-      drawerLabel: 'Admin',
+      drawerLabel: 'Admin: Pickups',
       headerBackTitle: '',
     })
   );
