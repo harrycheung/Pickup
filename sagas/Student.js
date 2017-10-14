@@ -83,7 +83,7 @@ const addStudentAsync = (user, firstName, lastInitial, image, grade, admin) => (
     };
     const studentUpdate = {};
     studentUpdate[`students/${studentRef.key}`] = student;
-    studentUpdate[`users/${user.uid}/students/${studentRef.key}`] = 'Parent';
+    studentUpdate[`users/${user.uid}/students/${studentRef.key}`] = admin ? 'Admin' : 'Parent';
     return FBref('/').update(studentUpdate);
   })
 );
