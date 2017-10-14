@@ -22,7 +22,10 @@ import { Actions as NavActions } from '../../actions/Navigation';
 
 const Drawer = (props) => {
   const drawerProps = update(props, { items: { $set:
-    props.items.filter(route => !(route.key.includes('Logout')))
+    props.items.filter(route =>
+      !['Logout', 'Admin', 'AllStudents'].includes(route.key) ||
+      (props.admin && !['Logout'].includes(route.key)),
+    ),
   } });
   return (
     <View style={gstyles.flex1}>
