@@ -64,6 +64,7 @@ const updateUserWithNav = function* updateUserWithNav(action, navAction) {
       state.auth.user.uid,
       firstName, lastInitial, image,
       state.student.students);
+    yield call(loadUser, { uid: state.auth.user.uid });
     yield put(navAction);
   } catch (error) {
     console.log('updateUser failed', error);
