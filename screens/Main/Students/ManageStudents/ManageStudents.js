@@ -118,11 +118,14 @@ class ManageStudents extends React.Component {
   }
 
   render() {
-    const sections = [
-      { data: this.state.mine, title: 'Your students' },
-      { data: this.state.others, title: 'Other students' },
-    ];
-    if (this.props.admin) {
+    const sections = [];
+    if (this.state.mine.length > 0) {
+      sections.push({ data: this.state.mine, title: 'Your students' });
+    }
+    if (this.state.others.length > 0) {
+      sections.push({ data: this.state.others, title: 'Other students' });
+    }
+    if (this.props.admin && this.state.admin.length > 0) {
       sections.push({ data: this.state.admin, title: 'Admin students' });
     }
 
