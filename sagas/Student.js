@@ -205,7 +205,7 @@ const addRelationship = function* addRelationship(action) {
       }));
       yield put(MessageActions.clearMessage());
     } else {
-      yield put(MessageActions.showMessage('Phone number has\'t signed up', 3000));
+      yield put(MessageActions.showMessage('Phone number has\'nt signed up', 3000));
     }
   } catch (error) {
     yield put(MessageActions.clearMessage());
