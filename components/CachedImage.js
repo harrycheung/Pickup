@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, View } from 'react-native';
+import { connect } from 'react-redux';
 import { FileSystem } from 'expo';
 
 import * as C from '../config/constants';
@@ -37,10 +38,14 @@ class CachedImage extends React.Component {
     if (this.state.localUri !== localUri) {
       const { exists } = await FileSystem.getInfoAsync(localUri);
       if (exists) {
-        this.setState({ localUri });
+        // If logged in
+        if (this.props.user !== null) {
+          this.setState({ localUri });
+        }
       } else {
         let uri = C.NoProfile;
-        if (filename !== 'noprofile') {
+        // If logged in
+        if (this.props.user !== null && filename !== 'noprofile') {
           await FBstorageRef(`images/${image}`).getDownloadURL()
             .then((remoteUri) => {
               uri = remoteUri;
@@ -48,7 +53,10 @@ class CachedImage extends React.Component {
         }
         await FileSystem.downloadAsync(uri, localUri)
           .then(() => {
-            this.setState({ localUri });
+            if (this.props.user !== null) {
+              // If logged in
+              this.setState({ localUri });
+            }
           })
           .catch((error) => {
             console.error(error);
@@ -66,7 +74,12 @@ class CachedImage extends React.Component {
 }
 
 CachedImage.propTypes = {
+  user: PropTypes.object.isRequired,
   source: PropTypes.object.isRequired,
 };
 
-export default CachedImage;
+const mapStateToProps = state => ({
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(CachedImage);

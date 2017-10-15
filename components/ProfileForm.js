@@ -8,6 +8,7 @@ import {
   Button,
   Image,
   Keyboard,
+  Platform,
   ScrollView,
   Text,
   TouchableWithoutFeedback,
@@ -156,15 +157,26 @@ class ProfileForm extends React.Component {
           >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={[gstyles.flexCenter, { paddingTop: 15 }]}>
+                <Text style={{ alignSelf: 'flex-start' }}>Photo</Text>
                 {imageJSX}
                 <View style={[gstyles.marginTop10, gstyles.flexRow]}>
-                  <View style={gstyles.flex1}>
+                  <View
+                    style={[gstyles.flex1, {
+                      padding: Platform.OS === 'ios' ? 0 : 5,
+                    }]}
+                  >
                     <Button
                       title={'Use camera'}
                       onPress={this._takePhoto}
                     />
                   </View>
-                  <View style={[gstyles.flex1, { borderLeftWidth: 1, borderColor: 'lightgray' }]}>
+                  <View
+                    style={[gstyles.flex1, {
+                      borderLeftWidth: Platform.OS === 'ios' ? 1 : 0,
+                      borderColor: 'lightgray',
+                      padding: Platform.OS === 'ios' ? 0 :5,
+                    }]}
+                  >
                     <Button
                       style={gstyles.flex1}
                       title={'Pick from library'}
@@ -174,7 +186,9 @@ class ProfileForm extends React.Component {
                 </View>
               </View>
             </TouchableWithoutFeedback>
-            <Text style={gstyles.marginTop10}>Name</Text>
+            <Text style={gstyles.marginTop10}>
+              {this.props.user ? 'Your Name' : 'Name'}
+            </Text>
             <View style={{ flexDirection: 'row' }}>
               <LinedTextInput
                 style={{ flex: 1, marginRight: 10 }}
@@ -231,6 +245,7 @@ ProfileForm.propTypes = {
   spinning: PropTypes.bool,
   children: PropTypes.node,
   usePadding: PropTypes.bool,
+  user: PropTypes.bool,
 };
 
 ProfileForm.defaultProps = {
@@ -245,6 +260,7 @@ ProfileForm.defaultProps = {
   spinning: false,
   children: null,
   usePadding: false,
+  user: false,
 };
 
 const mapStateToProps = state => ({

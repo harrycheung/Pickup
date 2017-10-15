@@ -3,6 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -23,7 +24,12 @@ class CreateProfile extends React.Component {
           submitButtonText="Create"
           onSubmit={this.props.createUser}
           usePadding
-        />
+          user
+        >
+          <Text style={{ marginTop: 40 }}>
+            Note: A photo is required to verify identity.
+          </Text>
+        </ProfileForm>
       </MessageView>
     );
   }

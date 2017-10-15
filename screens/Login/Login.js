@@ -86,8 +86,14 @@ class Login extends React.Component {
               style={[gstyles.flex1, gstyles.flexCenter, gstyles.marginH15]}
               centerOnInput
             >
-              <Text style={gstyles.font18}>Enter your phone number</Text>
-              <Text style={gstyles.font18}>to get a magic link</Text>
+              <Text
+                style={[gstyles.font18, {
+                  marginHorizontal: 30,
+                  textAlign: 'center',
+                }]}
+              >
+                Enter your phone number to get a magic link
+              </Text>
               <View style={gstyles.flexRow}>
                 <View style={gstyles.flex1} />
                 <PhoneInput

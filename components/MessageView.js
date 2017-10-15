@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   dialog: {
     borderRadius: 5,
     padding: 10,
+    maxWidth: '50%',
     backgroundColor: 'darkgray',
     alignItems: 'center',
     justifyContent: 'center',
@@ -104,20 +105,18 @@ class MessageView extends React.Component {
         }
         {this.state.message !== '' &&
           <View style={styles.container}>
-            {this.state.duration === 0 && (
-              (Platform.OS === 'ios' &&
-                <BlurView style={styles.container} tint="light" intensity={70} />
-              ) ||
-              (Platform.OS === 'android' &&
-                <View style={[styles.container, styles.background]} />
-              ))
+            {Platform.OS === 'ios' &&
+              <BlurView style={styles.container} tint="light" intensity={70} />
+            }
+            {Platform.OS === 'android' &&
+              <View style={[styles.container, styles.background]} />
             }
             <Animated.View
               style={[styles.container, { opacity: this.state.fadeAnimationValue }]}
               pointerEvents="none"
             >
               <View style={styles.dialog}>
-                <Text style={[{ color: 'white' }, gstyles.font18]}>
+                <Text style={[{ color: 'white', textAlign: 'center' }, gstyles.font18]}>
                   {this.state.message}
                 </Text>
                 {this.state.duration === 0 &&

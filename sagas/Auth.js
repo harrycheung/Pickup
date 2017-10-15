@@ -43,14 +43,15 @@ const requestLogin = function* requestLogin(action) {
     const { phoneNumber } = action;
     const response = yield call(requestLoginAsync, phoneNumber);
     yield put(MessageActions.clearMessage());
-    yield put(AuthActions.requestLoginSucceeded());
+    yield put(MessageActions.showMessage('Check your texts for your magic link', 4000));
     // TODO: remove this call
     if (phoneNumber.includes('111111111')) {
+      yield put(MessageActions.clearMessage());
       yield put(AuthActions.login(response));
     }
   } catch (error) {
     console.log('requestLogin failed', error);
-    yield put(MessageActions.showMessage('Request failed', 2000));
+    yield put(MessageActions.showMessage('Magic link request failed', 2000));
   }
 }
 
@@ -122,13 +123,12 @@ const login = function* login() {
     }
     yield take(AuthTypes.LOGOUT);
     try {
+      yield put(AuthActions.clear());
+      yield put(NavActions.resetNavigation('Login'));
       yield call(logoutAsync);
     } catch (error) {
       // Do nothing
       console.log('Authentication failed', error);
-    } finally {
-      yield put(AuthActions.clear());
-      yield put(NavActions.resetNavigation('Login'));
     }
   }
 }
