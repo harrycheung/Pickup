@@ -38,7 +38,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-vector-icons": "^4.2.0",
-    "react-navigation": "^1.0.0-beta.13",
+    "react-navigation": "^1.0.0-beta.16",
     "react-redux": "^5.0.5",
     "redux": "^3.7.2",
     "redux-saga": "^0.15.6"

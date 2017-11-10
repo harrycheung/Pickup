@@ -1,7 +1,10 @@
 
 // @flow
 
+import { Dimensions, Platform } from 'react-native';
+
 import moment from 'moment';
+import { colors } from '../config/styles';
 
 const Buffer = require('buffer').Buffer;
 
@@ -60,3 +63,17 @@ const distance = (lat1, lon1, lat2, lon2) => {
 };
 
 export const distanceFromSchool = (lat, lon) => (distance(37.476539, -122.200109, lat, lon) * 0.6).toFixed(2)
+
+export const navigationOptions = {
+  headerStyle: {
+    backgroundColor: colors.buttonBackground,
+    marginTop: -44,
+    paddingTop: 44,
+    height: 88,
+  },
+  headerTintColor: 'white',
+};
+
+export const isIPhoneX = () => (
+  Platform.OS === 'ios' && Dimensions.get('window').height === 812
+);

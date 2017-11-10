@@ -3,7 +3,7 @@
 
 import { StackNavigator } from 'react-navigation';
 
-import { colors } from '../../config/styles';
+import { navigationOptions } from '../../helpers';
 import LoginScreen from './Login';
 import CreateProfileScreen from './CreateProfile';
 
@@ -12,8 +12,5 @@ export default StackNavigator({
   CreateProfile: { screen: CreateProfileScreen },
 }, {
   initialRouteName: 'Login',
-  navigationOptions: {
-    headerStyle: { backgroundColor: colors.buttonBackground },
-    headerTintColor: 'white',
-  },
+  navigationOptions,
 });

@@ -3,14 +3,14 @@
     "sdkVersion": "20.0.0",
     "name": "Pickup",
     "icon": "./images/synapse-512.png",
-    "version": "1.3",
+    "version": "1.4",
     "slug": "harrycheung-synapse-pickup",
     "orientation": "portrait",
     "primaryColor": "#027fbf",
     "scheme": "synapsepickup",
     "ios": {
       "bundleIdentifier": "harrycheung.synapse.pickup.ios",
-      "buildNumber": "12",
+      "buildNumber": "13",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need location tracking"
       }

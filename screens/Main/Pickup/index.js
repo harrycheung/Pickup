@@ -3,7 +3,7 @@
 
 import { StackNavigator } from 'react-navigation';
 
-import { colors } from '../../../config/styles';
+import { navigationOptions } from '../../../helpers';
 import SelectScreen from './StudentSelect';
 import ConfigurePickupScreen from './ConfigurePickup';
 import RequestScreen from './PickupRequest';
@@ -15,8 +15,5 @@ export default StackNavigator({
 }, {
   initialRouteName: 'StudentSelect',
   order: ['StudentSelect', 'ConfigurePickup', 'PickupRequest'],
-  navigationOptions: {
-    headerStyle: { backgroundColor: colors.buttonBackground },
-    headerTintColor: 'white',
-  },
+  navigationOptions,
 });

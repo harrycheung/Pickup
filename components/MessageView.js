@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { BlurView } from 'expo';
 
 import { colors, gstyles } from '../config/styles';
+import IPhoneXSpacer from './IPhoneXSpacer';
 import { Actions as MessageActions } from '../actions/Message';
 
 const styles = StyleSheet.create({
@@ -131,6 +132,7 @@ class MessageView extends React.Component {
             </Animated.View>
           </View>
         }
+        <IPhoneXSpacer />
       </View>
     );
   }

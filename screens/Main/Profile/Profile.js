@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { colors, gstyles } from '../../../config/styles';
+import { navigationOptions } from '../../../helpers';
 import drawerHeader from '../../../components/DrawerHeader';
 import ProfileForm from '../../../components/ProfileForm';
 import MessageView from '../../../components/MessageView';
@@ -20,10 +21,12 @@ import { Actions as ImageActions } from '../../../actions/Image';
 
 class Profile extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
-    drawerHeader(navigation, screenProps, {
-      title: 'Profile',
-      drawerLabel: 'Profile',
-    })
+    drawerHeader(navigation, screenProps,
+      Object.assign({}, navigationOptions, {
+        title: 'Profile',
+        drawerLabel: 'Profile',
+      }),
+    )
   );
 
   constructor(props) {

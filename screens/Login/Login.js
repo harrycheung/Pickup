@@ -23,11 +23,7 @@ import MessageView from '../../components/MessageView';
 import KeyboardAwareView from '../../components/KeyboardAwareView';
 
 class Login extends React.Component {
-  static navigationOptions = () => ({
-    title: 'Synapse Pickup',
-    headerStyle: { backgroundColor: colors.buttonBackground },
-    headerTintColor: 'white',
-  });
+  static navigationOptions = { title: 'Synapse Pickup' };
 
   constructor(props) {
     super(props);

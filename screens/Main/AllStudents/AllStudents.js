@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 import { colors, gstyles } from '../../../config/styles';
+import { navigationOptions } from '../../../helpers';
 import drawerHeader from '../../../components/DrawerHeader';
 import MyButton from '../../../components/Button';
 import MessageView from '../../../components/MessageView';
@@ -25,11 +26,13 @@ import { Actions as AdminActions } from '../../../actions/Admin';
 
 class AllStudents extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
-    drawerHeader(navigation, screenProps, {
-      title: 'Search Students',
-      headerBackTitle: 'Cancel',
-      drawerLabel: 'Admin: Students',
-    })
+    drawerHeader(navigation, screenProps,
+      Object.assign({}, navigationOptions, {
+        title: 'Search Students',
+        headerBackTitle: 'Cancel',
+        drawerLabel: 'Admin: Students',
+      }),
+    )
   );
 
   static defaultProps = {
@@ -123,16 +126,18 @@ class AllStudents extends React.Component {
             disabled={this.state.searchText.length < 1}
           />
         </View>
-        <ScrollView contentContainerStyle={[gstyles.marginH15, styles.students]}>
-          {studentViews}
-        </ScrollView>
-        <MyButton
-          style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}
-          disabled={this.state.students.length < 1}
-          onPress={this._configure}
-          content="Pickup"
-          round
-        />
+        <View style={gstyles.flex1}>
+          <ScrollView contentContainerStyle={[gstyles.marginH15, styles.students]}>
+            {studentViews}
+          </ScrollView>
+          <MyButton
+            style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}
+            disabled={this.state.students.length < 1}
+            onPress={this._configure}
+            content="Pickup"
+            round
+          />
+        </View>
       </MessageView>
     );
   }

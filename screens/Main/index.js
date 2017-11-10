@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import update from 'react-addons-update';
 
 import { colors, gstyles } from '../../config/styles';
+import { isIPhoneX } from '../../helpers';
 import Button from '../../components/Button';
 import CachedImage from '../../components/CachedImage';
 import PickupScreen from './Pickup';
@@ -38,7 +39,12 @@ const Drawer = (props) => {
         }}
       >
         <Image
-          style={{ width: 150, height: 75, marginBottom: 10 }}
+          style={{
+            width: 150,
+            height: 75,
+            marginBottom: 10,
+            marginTop: isIPhoneX() ? 22 : 0,
+          }}
           source={require('../../images/logo.png')}
         />
         <CachedImage
@@ -53,7 +59,7 @@ const Drawer = (props) => {
       </View>
       <View>
         <Button
-          style={{ margin: 15 }}
+          style={{ margin: 15, marginBottom: 15 + (isIPhoneX() ? 25 : 0)  }}
           content="Logout"
           round
           onPress={() => props.navigate('Logout')}

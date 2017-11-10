@@ -14,7 +14,7 @@ import drawerHeader from '../../../../components/DrawerHeader';
 import MessageView from '../../../../components/MessageView';
 import { Actions as NavActions } from '../../../../actions/Navigation';
 
-class Home extends React.Component {
+class GradeSelect extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps, {
       title: 'Admin',
@@ -98,7 +98,7 @@ class Home extends React.Component {
   }
 }
 
-Home.propTypes = {
+GradeSelect.propTypes = {
   navigate: PropTypes.func.isRequired,
 };
 
@@ -106,4 +106,4 @@ const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(NavActions, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(Home);
+export default connect(null, mapDispatchToProps)(GradeSelect);

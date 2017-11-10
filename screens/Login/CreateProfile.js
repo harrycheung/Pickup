@@ -13,9 +13,7 @@ import MessageView from '../../components/MessageView';
 import { Actions as UserActions } from '../../actions/User';
 
 class CreateProfile extends React.Component {
-  static navigationOptions = () => ({
-    title: 'Create Profile',
-  });
+  static navigationOptions = { title: 'Create Profile' };
 
   render() {
     return (
