@@ -18,13 +18,13 @@ import StudentsScreen from './Students';
 import LogoutScreen from './Logout';
 import ProfileScreen from './Profile';
 import AdminScreen from './Admin';
-import AllStudentsScreen from './AllStudents';
+import SearchStudentsScreen from './SearchStudents';
 import { Actions as NavActions } from '../../actions/Navigation';
 
 const Drawer = (props) => {
   const drawerProps = update(props, { items: { $set:
     props.items.filter(route =>
-      !['Logout', 'Admin', 'AllStudents'].includes(route.key) ||
+      !['Logout', 'Admin', 'SearchStudents'].includes(route.key) ||
       (props.admin && !['Logout'].includes(route.key)),
     ),
   } });
@@ -90,10 +90,10 @@ export default DrawerNavigator({
   Profile: { screen: ProfileScreen },
   Logout: { screen: LogoutScreen },
   Admin: { screen: AdminScreen },
-  AllStudents: { screen: AllStudentsScreen },
+  SearchStudents: { screen: SearchStudentsScreen },
 }, {
   drawerWidth: 200,
-  order: ['Pickup', 'Students', 'Profile', 'Logout', 'Admin', 'AllStudents'],
+  order: ['Pickup', 'Students', 'Profile', 'Logout', 'Admin', 'SearchStudents'],
   contentComponent: connect(mapStateToProps, mapDispatchToProps)(Drawer),
   headerMode: 'none',
 });

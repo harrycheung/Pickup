@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import ReactNativeComponentTree from 'ReactNativeComponentTree';
 
+import { isIPhoneX } from '../helpers';
+
 const styles = StyleSheet.create({
   container: {
     left: 0,
@@ -100,8 +102,8 @@ class KeyboardAwareView extends React.Component {
     }
 
     if (!this.props.centerOnInput && !this.props.aboveFoldInput) {
+      // const screenHeight = Dimensions.get('window').height - isIPhoneX() ? 278 : 0;
       const screenHeight = Dimensions.get('window').height;
-      // const screenHeight = Dimensions.get('window').height;
       // when external physical keyboard is connected
       // event.endCoordinates.height still equals virtual keyboard height
       // however only the keyboard toolbar is showing if there should be one
@@ -114,7 +116,7 @@ class KeyboardAwareView extends React.Component {
       this._focusedInput.measure((x, y, w, h, px, py) => {
         let offset = this.state.offset;
         if (this.props.centerOnInput) {
-          offset = -(py - ((event.endCoordinates.screenY - h) / 2));
+          offset = -(py - (((event.endCoordinates.screenY + (isIPhoneX() ? 88 : 0)) - h) / 2));
         } else if (this.props.aboveFoldInput) {
           if ((py + h) > event.endCoordinates.screenY) {
             offset = -((py + h) - event.endCoordinates.screenY);

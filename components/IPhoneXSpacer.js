@@ -10,8 +10,6 @@ const IPhoneXSpacer = () => (
   <View
     style={{
       height: isIPhoneX() ? 25 : 0,
-      borderColor: 'red',
-      borderWidth: 1,
     }}
   />
 );

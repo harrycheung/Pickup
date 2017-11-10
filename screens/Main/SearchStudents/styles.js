@@ -11,7 +11,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
-    paddingBottom: 15,
+    paddingBottom: 44 + 10,
   },
   student: {
     marginTop: 15,

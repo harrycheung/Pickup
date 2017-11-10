@@ -24,7 +24,7 @@ import LinedTextInput from '../../../components/LinedTextInput';
 import { Actions as NavActions } from '../../../actions/Navigation';
 import { Actions as AdminActions } from '../../../actions/Admin';
 
-class AllStudents extends React.Component {
+class SearchStudents extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => (
     drawerHeader(navigation, screenProps,
       Object.assign({}, navigationOptions, {
@@ -81,6 +81,10 @@ class AllStudents extends React.Component {
     this.setState({ students: [], disabled: true });
   }
 
+  componentDidMount() {
+    this.props.searchStudents('');
+  }
+
   render() {
     let studentViews = null;
     if (this.props.students.length > 0) {
@@ -118,12 +122,15 @@ class AllStudents extends React.Component {
             style={gstyles.flex1}
             placeholder="name"
             clearButtonMode="while-editing"
-            onChangeText={text => this.setState({ searchText: text.trim() })}
+            onChangeText={(text) => {
+              this.setState({ searchText: text.trim() }, () => {
+                this.props.searchStudents(text.trim());
+              });
+            }}
           />
           <Button
             title="Search"
             onPress={this._search}
-            disabled={this.state.searchText.length < 1}
           />
         </View>
         <View style={gstyles.flex1}>
@@ -143,7 +150,7 @@ class AllStudents extends React.Component {
   }
 }
 
-AllStudents.propTypes = {
+SearchStudents.propTypes = {
   students: PropTypes.array.isRequired,
   navigate: PropTypes.func.isRequired,
   searchStudents: PropTypes.func.isRequired,
@@ -159,4 +166,4 @@ const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(AdminActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllStudents);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchStudents);
