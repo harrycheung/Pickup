@@ -10,7 +10,7 @@
     "scheme": "synapsepickup",
     "ios": {
       "bundleIdentifier": "harrycheung.synapse.pickup.ios",
-      "buildNumber": "13",
+      "buildNumber": "14",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need location tracking"
       }
@@ -18,7 +18,7 @@
     "android": {
       "package": "harrycheung.synapse.pickup.android",
       "icon": "./images/android-512.png",
-      "versionCode": 7,
+      "versionCode": 8,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAepaK0uZCORsxrDIfuH1qkriD6y0Ed_8g"
