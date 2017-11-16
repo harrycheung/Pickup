@@ -162,8 +162,8 @@ class StudentForm extends React.Component {
           <View style={gstyles.marginTop10}>
             <Text style={styles.pickerLabel}>Level</Text>
             <Picker
-              values={C.Levels}
-              onChange={value => this._updateState({ grade: value })}
+              values={C.Levels.map(level => level.replace('_', '/'))}
+              onChange={value => this._updateState({ grade: value.replace('/', '_') })}
               value={this.state.grade}
               columns={3}
             />
