@@ -101,7 +101,7 @@ class SearchStudents extends React.Component {
               source={{ uri: student.image }}
             />
             <Text style={[styles.studentName, gstyles.marginTop10]}>
-              {student.firstName} {student.lastInitial} ({student.grade})
+              {student.firstName} {student.lastInitial} ({student.grade.replace('_', '/')})
             </Text>
           </TouchableOpacity>
         );

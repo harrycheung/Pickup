@@ -101,7 +101,7 @@ class ManageStudents extends React.Component {
           />
           <View style={styles.studentInfo}>
             <Text style={gstyles.font18}>
-              {student.firstName} {student.lastInitial} ({student.grade})
+              {student.firstName} {student.lastInitial} ({student.grade.replace('_', '/')})
             </Text>
             <Text style={gstyles.font14}>
               { student.relationship }

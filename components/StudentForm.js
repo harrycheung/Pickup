@@ -69,7 +69,7 @@ class StudentForm extends React.Component {
     super(props);
 
     this.state = {
-      grade: this.props.grade,
+      grade: this.props.grade.replace('_', '/'),
       relationships: this._loadRelationships(this.props.relationships),
       showAddModal: false,
       addRelPhone: '',
@@ -136,7 +136,7 @@ class StudentForm extends React.Component {
   }
 
   _submit(firstName, lastInitial, imageURL) {
-    this.props.onSubmit(firstName, lastInitial, imageURL, this.state.grade, this.state.admin);
+    this.props.onSubmit(firstName, lastInitial, imageURL, this.state.grade.replace('/', '_'), this.state.admin);
   }
 
   _addRelationshipPhone(phoneNumber) {
@@ -185,7 +185,7 @@ class StudentForm extends React.Component {
       content = (
         <View style={[gstyles.flex1, gstyles.flexStretch]}>
           <Text style={[styles.pickerLabel, gstyles.marginTop10]}>
-            Level: {this.props.grade}
+            Level: {this.props.grade.replace('_', '/')}
           </Text>
           {this.props.relationships[this.props.uid].role !== 'Admin' &&
             <View style={gstyles.flex1}>
