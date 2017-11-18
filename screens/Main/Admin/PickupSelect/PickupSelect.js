@@ -110,7 +110,7 @@ class PickupSelect extends React.Component {
     this.props.releasePickups(this.state.selected.map((key) => {
       return Object.assign({}, this.props.pickups[key], { key });
     }));
-    this.setState({ selected: [] });
+    this.setState({ select: false, selected: [] });
   }
 
   _renderRow(pickup, section) {
