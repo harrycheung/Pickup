@@ -5,6 +5,7 @@ import { channel } from 'redux-saga';
 import { all, call, fork, put, select, take, takeEvery } from 'redux-saga/effects';
 import { Location, Permissions } from 'expo';
 
+import * as C from '../config/constants';
 import { FBref } from '../helpers/firebase';
 import { todayStr } from '../helpers';
 import { firebaseChannel } from './helpers';
@@ -20,12 +21,16 @@ const createPickupAsync = (requestor, students, location, vehicle) => {
       name: student.name,
       image: student.image,
       escort: { uid: '', name: '' },
-      released: false,
+      releaser: { uid: '', name: '' },
       grade: student.grade,
     };
     return acc;
   }, {});
+  let lowerSchool = false;
+  let middleSchool = false;
   const grades = students.reduce((acc, student) => {
+    lowerSchool = lowerSchool || C.LowerSchool.includes(student.grade);
+    middleSchool = middleSchool || C.MiddleSchool.includes(student.grade);
     acc[student.grade] = true;
     return acc;
   }, {});
@@ -38,6 +43,8 @@ const createPickupAsync = (requestor, students, location, vehicle) => {
     vehicle,
     createdAt: Date.now(),
     coordinates: { latitude: 37.78825, longitude: -122.4324 },
+    lowerSchool,
+    middleSchool,
   };
   return FBref(`/pickups/${todayStr()}`).push(pickup).then(pickupRef => (
     pickupRef.child('messages').push({
@@ -229,6 +236,8 @@ const updatePickupStudent = (pickupKey, studentKey, state, completed) => {
   });
   if (completed) {
     update[`/pickups/${todayStr()}/${pickupKey}/completedAt`] = Date.now();
+  } else {
+    update[`/pickups/${todayStr()}/${pickupKey}/completedAt`] = null;
   }
   FBref('/').update(update);
 };
@@ -254,11 +263,13 @@ const updateStudent = function* updateStudent(type, action) {
         let completed = true;
         Object.keys(pickup.students).forEach((key) => {
           const otherStudent = pickup.students[key];
-          if (student.key !== otherStudent.key && !otherStudent.released) {
+          if (student.key !== otherStudent.key && otherStudent.releaser.uid === '') {
             completed = false;
           }
         });
-        yield call(updatePickupStudent, pickup.key, student.key, { released: true }, completed);
+        yield call(updatePickupStudent, pickup.key, student.key, {
+          releaser: { uid: user.uid, name: user.name, image: user.image },
+        }, completed);
         break;
       }
 
@@ -298,6 +309,17 @@ const watchCancelEscort = function* watchCancelEscort() {
 
 const watchReleaseStudent = function* watchReleaseStudent() {
   yield takeEvery(Types.RELEASE_STUDENT, updateStudent, 'release');
+};
+
+const undoRelease = function* undoRelease(action) {
+  const { pickup, student } = action;
+  yield call(updatePickupStudent, pickup.key, student.key, {
+    releaser: { uid: '', name: '', image: '' },
+  }, false);
+};
+
+const watchUndoRelease = function* watchUndoRelease() {
+  yield takeEvery(Types.UNDO_RELEASE, undoRelease);
 };
 
 const updateLocation = function* updateLocation(action) {
@@ -400,6 +422,7 @@ const pickupSaga = function* pickupSaga() {
     watchEscortStudent(),
     watchCancelEscort(),
     watchReleaseStudent(),
+    watchUndoRelease(),
     watchUpdateLocation(),
     watchListenLocation(),
     watchListenCoordinates(),

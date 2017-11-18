@@ -17,6 +17,7 @@ export const Types = {
   ESCORT_STUDENT: 'Pickup/ESCORT_STUDENT',
   CANCEL_ESCORT: 'Pickup/CANCEL_ESCORT',
   RELEASE_STUDENT: 'Pickup/RELEASE_STUDENT',
+  UNDO_RELEASE: 'Pickup/UNDO_RELEASE',
   UPDATE_LOCATION: 'Pickup/UPDATE_LOCATION',
   UPDATE_COORDINATES: 'Pickup/UPDATE_COORDINATES',
   LISTEN_LOCATION: 'Pickup/LISTEN_LOCATION',
@@ -47,6 +48,9 @@ export const Actions = {
   }),
   releaseStudent: (pickup: Object, user: Object, student: Object) => ({
     type: Types.RELEASE_STUDENT, pickup, user, student,
+  }),
+  undoRelease: (pickup: Object, student: Object) => ({
+    type: Types.UNDO_RELEASE, pickup, student,
   }),
   postMessage: (pickup: Object, sender: Object, message: string) => ({
     type: Types.POST_MESSAGE, pickup, sender, message,

@@ -3,6 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Text, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { HeaderBackButton } from 'react-navigation';
@@ -16,20 +17,47 @@ import { Actions as PickupActions } from '../../../../actions/Pickup';
 class PickupRequest extends React.Component {
   static navigationOptions = ({ navigation, navigationOptions }) => ({
     title: 'Pickup Request',
-    headerLeft: (
+    headerLeft: navigation.state.params && navigation.state.params.admin ? (
       <HeaderBackButton
         onPress={() => {
+          navigation.state.params.clearPickup();
           navigation.goBack(navigation.state.params && navigation.state.params.key);
         }}
-        title="Cancel"
+        title="Back"
         tintColor={navigationOptions.headerTintColor}
       />
+    ) : null,
+    headerRight: (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.state.params.cancelPickup();
+          navigation.goBack(navigation.state.params && navigation.state.params.key);
+        }}
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 5,
+          marginHorizontal: 15,
+        }}
+      >
+        <Text style={[gstyles.font18, { color: 'white' }]}>
+          Cancel
+        </Text>
+      </TouchableOpacity>
     ),
   });
 
   componentWillMount() {
     this.props.listenPickup(this.props.pickup);
     this.props.listenLocation(this.props.pickup);
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({
+      admin: this.props.admin,
+      cancelPickup: this._cancelPickup.bind(this),
+      clearPickup: this.props.clearPickup,
+    });
   }
 
   shouldComponentUpdate(nextProps) {
@@ -39,18 +67,11 @@ class PickupRequest extends React.Component {
   componentWillUnmount() {
     this.props.unlistenPickup();
     this.props.unlistenLocation();
+  }
 
-    // Cleaning up the pickup. If the requestor initiates the 'Cancel', we need
-    // to cancel the pickup ourselves. If the escorter releases the last student,
-    // then the saga listener will cancel the pickup and it won't be in redux
-    // anymore.
-    if (this.props.pickup) {
-      // console.log('PickupRequest.Canceled? NO!!!!!!')
-      // Take this out because of race condition between the requestor and admin.
-      // If the requestor gets to this too quick, the admin saga is still listening
-      // to the pickup and will crash when it gets deleted
-      this.props.cancelPickup(this.props.pickup);
-    }
+  _cancelPickup() {
+    this.componentWillUnmount();
+    this.props.cancelPickup(this.props.pickup);
   }
 
   render() {
@@ -60,6 +81,7 @@ class PickupRequest extends React.Component {
           <PickupMessages
             user={this.props.user}
             pickup={this.props.pickup}
+            releaseStudent={this.props.releaseStudent}
             postMessage={this.props.postMessage}
           />
         </KeyboardAwareView>
@@ -70,8 +92,12 @@ class PickupRequest extends React.Component {
 
 PickupRequest.propTypes = {
   user: PropTypes.object.isRequired,
+  admin: PropTypes.bool.isRequired,
+  navigation: PropTypes.object.isRequired,
   pickup: PropTypes.object,
   cancelPickup: PropTypes.func.isRequired,
+  clearPickup: PropTypes.func.isRequired,
+  releaseStudent: PropTypes.func.isRequired,
   postMessage: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
@@ -85,6 +111,7 @@ PickupRequest.defaultProps = {
 
 const mapStateToProps = state => ({
   user: state.user,
+  admin: state.user.admin,
   pickup: state.pickup.pickup,
 });
 

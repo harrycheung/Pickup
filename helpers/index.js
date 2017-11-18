@@ -70,6 +70,7 @@ export const navigationOptions = {
     marginTop: -44,
     paddingTop: 44,
     height: 88,
+    borderBottomWidth: 0,
   },
   headerTintColor: 'white',
 };

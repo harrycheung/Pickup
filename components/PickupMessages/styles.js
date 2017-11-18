@@ -55,19 +55,9 @@ export default StyleSheet.create({
     fontSize: 10,
     color: 'white',
   },
-  students: {
-    flexDirection: 'column',
-    marginBottom: 5,
-    marginHorizontal: 15,
-    marginVertical: 10,
-  },
-  studentRequest: {
+  student: {
     flexDirection: 'row',
-    marginBottom: 10,
-  },
-  studentImage: {
-    borderWidth: 2,
-    marginRight: 5,
+    marginTop: 10,
   },
   unescort: {
     borderColor: 'yellow',

@@ -3,6 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Text, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -18,7 +19,27 @@ import { Actions as AdminActions } from '../../../../actions/Admin';
 class HandlePickup extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
-    return { title: params ? params.title : '' };
+    return {
+      title: params ? params.title : '',
+      headerRight: navigation.state.params && navigation.state.params.requestor ? (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.state.params.cancelPickup();
+            navigation.goBack();
+          }}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 5,
+            marginHorizontal: 15,
+          }}
+        >
+          <Text style={[gstyles.font18, { color: 'white' }]}>
+            Cancel
+          </Text>
+        </TouchableOpacity>
+      ) : null,
+    };
   };
 
   componentDidMount() {
@@ -26,7 +47,14 @@ class HandlePickup extends React.Component {
     const names = Object.keys(this.props.pickup.students).map(key => (
       this.props.pickup.students[key].name
     ));
-    this.props.navigation.setParams({ title: truncate(names.join(', '), 20) });
+    this.props.navigation.setParams({
+      title: truncate(names.join(', '), 20),
+      requestor: this.props.pickup.requestor.uid === this.props.user.uid,
+      cancelPickup: () => {
+        this.props.unlistenPickup();
+        this.props.cancelPickup(this.props.pickup);
+      },
+    });
   }
 
   componentWillUnmount() {
@@ -51,6 +79,7 @@ class HandlePickup extends React.Component {
               escortStudent={this.props.escortStudent}
               cancelEscort={this.props.cancelEscort}
               releaseStudent={this.props.releaseStudent}
+              undoRelease={this.props.undoRelease}
               hideRequest
             />
           }
@@ -66,13 +95,12 @@ HandlePickup.propTypes = {
   user: PropTypes.object.isRequired,
   pickup: PropTypes.object,
   postMessage: PropTypes.func.isRequired,
-  listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,
-  clearPickup: PropTypes.func.isRequired,
+  cancelPickup: PropTypes.func.isRequired,
   escortStudent: PropTypes.func.isRequired,
   cancelEscort: PropTypes.func.isRequired,
+  undoRelease: PropTypes.func.isRequired,
   releaseStudent: PropTypes.func.isRequired,
-  listenCoordinates: PropTypes.func.isRequired,
   unlistenCoordinates: PropTypes.func.isRequired,
 };
 

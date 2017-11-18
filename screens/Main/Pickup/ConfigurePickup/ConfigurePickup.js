@@ -122,7 +122,7 @@ class ConfigurePickup extends React.Component {
           </Text>
           <Picker
             style={[gstyles.flexStretch, gstyles.marginTop10]}
-            values={Object.keys(C.Locations)}
+            values={C.Locations}
             onChange={this._setLocation}
             columns={2}
             value={this.state.location}

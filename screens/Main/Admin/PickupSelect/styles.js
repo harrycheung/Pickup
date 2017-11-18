@@ -1,7 +1,7 @@
 
 // @flow
 
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   studentImage: {
@@ -26,5 +26,11 @@ export default StyleSheet.create({
   },
   timestamp: {
     fontSize: 10,
+  },
+  header: {
+    fontSize: Platform.OS === 'ios' ? 17 : 20,
+    fontWeight: Platform.OS === 'ios' ? '600' : '500',
+    color: 'white',
+    textAlign: 'center',
   },
 });

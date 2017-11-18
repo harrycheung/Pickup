@@ -9,10 +9,12 @@ import {
   Keyboard,
   Platform,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { MapView } from 'expo';
 import moment from 'moment';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
 import { gstyles } from '../../config/styles';
@@ -28,7 +30,6 @@ class PickupMessages extends React.Component {
     };
 
     this._postMessage = this._postMessage.bind(this);
-    this._release = this._release.bind(this);
 
     this.timer = setInterval(
       () => {
@@ -143,20 +144,6 @@ class PickupMessages extends React.Component {
     );
   }
 
-  _release(pickup, student) {
-    Alert.alert(
-      'Confirm release',
-      null,
-      [
-        { text: 'Cancel', onPress: null, style: 'cancel' },
-        { text: 'OK',
-          onPress: () => this.props.releaseStudent(pickup, this.props.user, student),
-        },
-      ],
-      { cancelable: false },
-    );
-  }
-
   _postMessage() {
     this.props.postMessage(
       this.props.pickup,
@@ -168,78 +155,113 @@ class PickupMessages extends React.Component {
   }
 
   render() {
+    const Profile = props => (
+      <View key={props.key} style={gstyles.flexCenter}>
+        <View style={{ width: 50, height: 50 }}>
+          <CachedImage
+            style={gstyles.profilePic50}
+            source={{ uri: props.image }}
+          />
+          {props.onCancel &&
+            <TouchableOpacity
+              onPress={props.onCancel}
+              style={{
+                position: 'absolute',
+                top: -5,
+                right: -15,
+              }}
+            >
+              <Icon
+                name="md-close-circle"
+                size={24}
+                color="red"
+                style={{
+                  backgroundColor: 'transparent',
+                }}
+              />
+            </TouchableOpacity>
+          }
+        </View>
+        <Text
+          style={[gstyles.font16, {
+            marginTop: 5,
+            alignSelf: 'center',
+          }]}
+        >
+          {props.name}
+        </Text>
+      </View>
+    );
+
     const { pickup, user } = this.props;
     const students = [];
     Object.keys(pickup.students).forEach((key) => {
       const student = pickup.students[key];
-      const escort = student.escort.uid === user.uid;
-      let actions = [];
-      if (student.released) {
-        actions = [(
-          <Text key="released" style={gstyles.font14}>
-            released by {escort ? 'You' : student.escort.name}
-          </Text>
-        )];
-      } else if (escort) {
-        actions = [(
-          <Button
-            key="cancel"
-            style={gstyles.flex1}
-            onPress={() => this.props.cancelEscort(pickup, user, student)}
-            title="Cancel"
-            color="darkgray"
+
+      const Escort = () => {
+        if (student.releaser.uid !== '') {
+          return <Text>N/A</Text>;
+        } else if (pickup.requestor.uid === user.uid && !user.admin) {
+          return <Text>Waiting</Text>;
+        } else if (student.escort.uid === '') {
+          return (
+            <Button
+              key="escort"
+              style={gstyles.flex1}
+              onPress={() => this.props.escortStudent(pickup, user, student)}
+              title="Escort"
+            />
+          );
+        }
+        const released = student.releaser.uid !== '';
+        return (
+          <Profile
+            image={student.escort.image}
+            name={student.escort.name}
+            onCancel={released ? null : () => this.props.cancelEscort(pickup, user, student)}
           />
-        ), (
-          <View key="spacer" style={gstyles.width10} />
-        ), (
-          <Button
-            key="release"
-            style={gstyles.flex1}
-            onPress={() => this._release(pickup, student)}
-            title="Release"
+        );
+      };
+
+      const Release = () => {
+        const authorized = user.admin || pickup.requestor.uid === user.uid;
+        if (student.releaser.uid === '') {
+          if (authorized) {
+            return (
+              <Button
+                key="release"
+                style={gstyles.flex1}
+                onPress={() => { console.log('reelase'); this.props.releaseStudent(pickup, user, student); }}
+                title="Release"
+              />
+            );
+          }
+        }
+        return (
+          <Profile
+            image={student.releaser.image}
+            name={student.releaser.name}
+            onCancel={authorized ? () => this.props.undoRelease(pickup, student) : null}
           />
-        )];
-      } else if (pickup.requestor.uid !== user.uid && user.admin && student.escort.uid === '') {
-        actions = [(
-          <Button
-            key="escort"
-            style={gstyles.flex1}
-            onPress={() => this.props.escortStudent(pickup, user, student)}
-            title="Escort"
-          />
-        )];
-      } else if (student.escort.uid === '') {
-        actions = [<Text key="waiting" style={gstyles.font14}>waiting</Text>];
-      } else {
-        actions = [(
-          <CachedImage
-            key="image"
-            style={[gstyles.profilePic50, { marginHorizontal: 5 }]}
-            source={{ uri: student.escort.image }}
-          />
-        ),(
-          <Text key="name" style={gstyles.font16}>
-            {student.escort.name}
-          </Text>
-        )];
-      }
+        );
+      };
 
       students.push((
         <View
           key={student.key}
-          style={[gstyles.flexCenter, styles.studentRequest]}
+          style={[gstyles.flexRow, gstyles.marginTop10]}
         >
-          <View style={[gstyles.flex1, gstyles.flexRow]}>
-            <CachedImage
-              style={gstyles.profilePic50}
-              source={{ uri: student.image }}
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <Profile
+              image={student.image}
+              name={`${student.name} (${student.grade.replace('_', '/')})`}
             />
-            <Text style={[gstyles.font16, { marginLeft: 5, alignSelf: 'center' }]}>
-              {student.name} ({student.grade})
-            </Text>
           </View>
-          <View style={[gstyles.flex1, styles.actionsContainer, gstyles.flexCenter]}>
-            {actions}
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <Escort />
+          </View>
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <Release />
           </View>
         </View>
       ));
@@ -285,38 +307,47 @@ class PickupMessages extends React.Component {
           </View>
         </View>
         <View style={[gstyles.flexRow, gstyles.marginTop10]}>
-          <View style={gstyles.flex1} />
           <View style={[gstyles.flex1, gstyles.flexCenter]}>
-            <Text style={styles.font14}>
-              escorted by
+            <Text style={gstyles.font14}>
+              Student
+            </Text>
+          </View>
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <Text style={gstyles.font14}>
+              Escort
+            </Text>
+          </View>
+          <View style={[gstyles.flex1, gstyles.flexCenter]}>
+            <Text style={gstyles.font14}>
+              Release
             </Text>
           </View>
         </View>
-        <View style={styles.students}>
-          {students}
-        </View>
-        <MapView
-          style={{ flex: 1 }}
-          mapType="hybrid"
-          rotateEnabled={false}
-          scrollEnabled={false}
-          pitchEnabled={false}
-          cacheEnabled
-          loadingEnabled
-          region={{
-            latitude: pickup.coordinates.latitude,
-            longitude: pickup.coordinates.longitude,
-            latitudeDelta: Platform.OS === 'ios' ? 0.0001 : 0.0007,
-            longitudeDelta: Platform.OS === 'ios' ? 0.00005 : 0.00004,
-          }}
-        >
-          <MapView.Marker
-            coordinate={{
+        {students}
+        {pickup.requestor.uid !== user.uid &&
+          <MapView
+            style={[gstyles.flex1, gstyles.marginTop10]}
+            mapType="hybrid"
+            rotateEnabled={false}
+            scrollEnabled={false}
+            pitchEnabled={false}
+            cacheEnabled
+            loadingEnabled
+            region={{
               latitude: pickup.coordinates.latitude,
               longitude: pickup.coordinates.longitude,
+              latitudeDelta: Platform.OS === 'ios' ? 0.0001 : 0.0007,
+              longitudeDelta: Platform.OS === 'ios' ? 0.00005 : 0.00004,
             }}
-          />
-        </MapView>
+          >
+            <MapView.Marker
+              coordinate={{
+                latitude: pickup.coordinates.latitude,
+                longitude: pickup.coordinates.longitude,
+              }}
+            />
+          </MapView>
+        }
       </View>
     );
     //     <AutoScrollView contentContainerStyle={styles.messagesContainer}>
@@ -345,6 +376,7 @@ PickupMessages.propTypes = {
   cancelEscort: PropTypes.func,
   escortStudent: PropTypes.func,
   releaseStudent: PropTypes.func,
+  undoRelease: PropTypes.func,
 };
 
 PickupMessages.defaultProps = {
@@ -352,6 +384,7 @@ PickupMessages.defaultProps = {
   cancelEscort: () => {},
   escortStudent: () => {},
   releaseStudent: () => {},
+  undoRelease: () => {},
 };
 
 export default PickupMessages;
