@@ -324,7 +324,7 @@ class PickupMessages extends React.Component {
           </View>
         </View>
         {students}
-        {pickup.requestor.uid !== user.uid &&
+        {pickup.requestor.uid !== user.uid ?
           <MapView
             style={[gstyles.flex1, gstyles.marginTop10]}
             mapType="hybrid"
@@ -347,6 +347,17 @@ class PickupMessages extends React.Component {
               }}
             />
           </MapView>
+          :
+          <View
+            style={[gstyles.flex1, {
+              justifyContent: 'flex-end',
+              margin: 10,
+            }]}
+          >
+            <Text>
+              Keep this screen open to notify the school of your location.
+            </Text>
+          </View>
         }
       </View>
     );
