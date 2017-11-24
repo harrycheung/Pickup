@@ -3,14 +3,14 @@
     "sdkVersion": "20.0.0",
     "name": "Pickup",
     "icon": "./images/synapse-512.png",
-    "version": "1.4",
+    "version": "1.5",
     "slug": "harrycheung-synapse-pickup",
     "orientation": "portrait",
     "primaryColor": "#027fbf",
     "scheme": "synapsepickup",
     "ios": {
       "bundleIdentifier": "harrycheung.synapse.pickup.ios",
-      "buildNumber": "14",
+      "buildNumber": "15",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need location tracking"
       }
@@ -18,7 +18,7 @@
     "android": {
       "package": "harrycheung.synapse.pickup.android",
       "icon": "./images/android-512.png",
-      "versionCode": 8,
+      "versionCode": 9,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAepaK0uZCORsxrDIfuH1qkriD6y0Ed_8g"
