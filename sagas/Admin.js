@@ -80,6 +80,7 @@ const releasePickups = function* releasePickups(action) {
       const student = students[j];
       yield put(PickupActions.releaseStudent(pickup, user, student));
     }
+    yield put(PickupActions.markCompleted(pickup));
   }
   yield put(MessageActions.clearMessage());
 };

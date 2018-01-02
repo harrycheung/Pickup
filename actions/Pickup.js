@@ -24,6 +24,7 @@ export const Types = {
   UNLISTEN_LOCATION: 'Pickup/UNLISTEN_LOCATION',
   LISTEN_COORDINATES: 'Pickup/LISTEN_COORDINATES',
   UNLISTEN_COORDINATES: 'Pickup/UNLISTEN_COORDINATES',
+  MARK_COMPLETED: 'Pickup/MARK_COMPLETED',
 };
 
 export const Actions = {
@@ -74,4 +75,5 @@ export const Actions = {
   unlistenLocation: (pickup: Object) => ({ type: Types.UNLISTEN_LOCATION, pickup }),
   listenCoordinates: (pickup: Object) => ({ type: Types.LISTEN_COORDINATES, pickup }),
   unlistenCoordinates: (pickup: Object) => ({ type: Types.UNLISTEN_COORDINATES, pickup }),
+  markCompleted: (pickup: Object) => ({ type: Types. MARK_COMPLETED, pickup }),
 };

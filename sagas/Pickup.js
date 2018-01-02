@@ -259,6 +259,7 @@ const updateStudent = function* updateStudent(type, action) {
         });
         break;
       }
+
       case 'release': {
         let completed = true;
         Object.keys(pickup.students).forEach((key) => {
@@ -411,6 +412,18 @@ const watchListenCoordinates = function* watchListenCoordinates() {
   yield fork(listenCoordinates);
 };
 
+const markCompleted = function markCompleted(action) {
+  try {
+    FBref(`/pickups/${todayStr()}/${action.pickup.key}`).update({ completedAt: Date.now() });
+  } catch (error) {
+    console.log('markCompleted failed', error);
+  }
+};
+
+const watchMarkCompleted = function* watchMarkCompleted() {
+  yield takeEvery(Types.MARK_COMPLETED, markCompleted);
+};
+
 const pickupSaga = function* pickupSaga() {
   yield all([
     watchCreatePickup(),
@@ -426,6 +439,7 @@ const pickupSaga = function* pickupSaga() {
     watchUpdateLocation(),
     watchListenLocation(),
     watchListenCoordinates(),
+    watchMarkCompleted(),
   ]);
 };
 
