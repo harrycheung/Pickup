@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   box: {
     borderWidth: 1,
     borderRadius: 5,
-  }
+  },
 });
 
 class PhoneInput extends React.Component {
