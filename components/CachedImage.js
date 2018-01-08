@@ -22,14 +22,20 @@ class CachedImage extends React.Component {
   state: {
     localUri: string,
   }
-
   async componentWillMount() {
     this._downloadImage(this.props.source.uri);
+    this.mounted = true;
   }
 
   async componentWillReceiveProps(nextProps) {
     this._downloadImage(nextProps.source.uri);
   }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  mounted: boolean
 
   async _downloadImage(image) {
     const filename = image === C.NoProfile ? 'noprofile' : image;
@@ -39,7 +45,7 @@ class CachedImage extends React.Component {
       const { exists } = await FileSystem.getInfoAsync(localUri);
       if (exists) {
         // If logged in
-        if (this.props.user !== null) {
+        if (this.props.user !== null && this.mounted) {
           this.setState({ localUri });
         }
       } else {
@@ -53,7 +59,7 @@ class CachedImage extends React.Component {
         }
         await FileSystem.downloadAsync(uri, localUri)
           .then(() => {
-            if (this.props.user !== null) {
+            if (this.props.user !== null && this.mounted) {
               // If logged in
               this.setState({ localUri });
             }
