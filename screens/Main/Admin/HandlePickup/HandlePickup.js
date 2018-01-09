@@ -43,7 +43,6 @@ class HandlePickup extends React.Component {
   };
 
   componentDidMount() {
-    // console.log('HandlePickup.componentDidMount');
     const names = Object.keys(this.props.pickup.students).map(key => (
       this.props.pickup.students[key].name
     ));

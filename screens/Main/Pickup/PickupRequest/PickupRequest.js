@@ -81,7 +81,10 @@ class PickupRequest extends React.Component {
           <PickupMessages
             user={this.props.user}
             pickup={this.props.pickup}
+            escortStudent={this.props.escortStudent}
+            cancelEscort={this.props.cancelEscort}
             releaseStudent={this.props.releaseStudent}
+            undoRelease={this.props.undoRelease}
             postMessage={this.props.postMessage}
           />
         </KeyboardAwareView>
@@ -97,7 +100,10 @@ PickupRequest.propTypes = {
   pickup: PropTypes.object,
   cancelPickup: PropTypes.func.isRequired,
   clearPickup: PropTypes.func.isRequired,
+  escortStudent: PropTypes.func.isRequired,
+  cancelEscort: PropTypes.func.isRequired,
   releaseStudent: PropTypes.func.isRequired,
+  undoRelease: PropTypes.func.isRequired,
   postMessage: PropTypes.func.isRequired,
   listenPickup: PropTypes.func.isRequired,
   unlistenPickup: PropTypes.func.isRequired,

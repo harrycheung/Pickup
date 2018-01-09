@@ -201,9 +201,10 @@ class PickupMessages extends React.Component {
       const Escort = () => {
         if (student.releaser.uid !== '') {
           return <Text>N/A</Text>;
-        } else if (pickup.requestor.uid === user.uid && !user.admin) {
-          return <Text>Waiting</Text>;
         } else if (student.escort.uid === '') {
+          if (pickup.requestor.uid === user.uid && !user.admin) {
+            return <Text>Waiting</Text>;
+          }
           return (
             <Button
               key="escort"
@@ -218,7 +219,7 @@ class PickupMessages extends React.Component {
           <Profile
             image={student.escort.image}
             name={student.escort.name}
-            onCancel={released ? null : () => this.props.cancelEscort(pickup, user, student)}
+            onCancel={(released || !user.admin) ? null : () => this.props.cancelEscort(pickup, user, student)}
           />
         );
       };
@@ -231,7 +232,7 @@ class PickupMessages extends React.Component {
               <Button
                 key="release"
                 style={gstyles.flex1}
-                onPress={() => { console.log('reelase'); this.props.releaseStudent(pickup, user, student); }}
+                onPress={() => { this.props.releaseStudent(pickup, user, student); }}
                 title="Release"
               />
             );
