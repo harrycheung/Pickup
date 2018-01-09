@@ -1,27 +1,35 @@
 
 // @flow
 
-import { delay } from 'redux-saga';
 import { all, call, fork, put, take } from 'redux-saga/effects';
 
-import { guid, convertToByteArray } from '../helpers';
-import { FBstorageRef } from '../helpers/firebase';
+import { guid } from '../helpers';
+import { FBfunctions, FBstorageRef } from '../helpers/firebase';
 import { Types, Actions } from '../actions/Image';
 import { Actions as MessageActions } from '../actions/Message';
 
-const uploadImageAsync = (imageData: string) => {
-  const bytes = convertToByteArray(imageData);
+const uploadImageAsync = (uri: string) => {
   const filename = guid();
-  const photoRef = FBstorageRef(`images/${filename}`);
-  const uploadTask = photoRef.put(bytes, { contentType: 'image/jpeg' });
-
-  // uploadTask.on('state_changed', (snapshot) => {
-  //   const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  // });
-
-  return uploadTask.then(() => filename, (error) => {
-    throw error;
+  const body = new FormData();
+  body.append('image', {
+    uri,
+    name: filename,
+    type: 'image/jpeg',
   });
+  return fetch(`https://${FBfunctions}/api/uploadImage`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
+    },
+    body,
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        return filename;
+      }
+      throw response.status;
+    });
 };
 
 const uploadImage = function* uploadImage() {

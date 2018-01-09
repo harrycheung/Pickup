@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  findNodeHandle,
   Dimensions,
   Keyboard,
   LayoutAnimation,
@@ -12,7 +13,8 @@ import {
   StyleSheet,
   ViewPropTypes,
 } from 'react-native';
-import ReactNativeComponentTree from 'ReactNativeComponentTree';
+
+var RCTUIManager = require('NativeModules').UIManager;
 
 import { isIPhoneX } from '../helpers';
 
@@ -62,7 +64,6 @@ class KeyboardAwareView extends React.Component {
 
     this._listeners = [];
     this._focusedInput = null;
-    this._onFocus = this._onFocus.bind(this);
   }
 
   state: {
@@ -113,7 +114,7 @@ class KeyboardAwareView extends React.Component {
         isKeyboardOpened: true,
       });
     } else if (this._focusedInput) {
-      this._focusedInput.measure((x, y, w, h, px, py) => {
+      RCTUIManager.measure(this._focusedInput, (x, y, w, h, px, py) => {
         let offset = this.state.offset;
         if (this.props.centerOnInput) {
           offset = -(py - (((event.endCoordinates.screenY + (isIPhoneX() ? 88 : 0)) - h) / 2));
@@ -148,20 +149,16 @@ class KeyboardAwareView extends React.Component {
     this._focusedInput = null;
   }
 
-  _onFocus(event) {
-    this._focusedInput = ReactNativeComponentTree.getInstanceFromNode(event.currentTarget);
-  }
-
   renderChildren(props) {
     if (props.children) {
       const children = React.Children.map(props.children, (child) => {
         if (child && child.props) {
           if (child.props.keyboardAwareInput) {
             return React.cloneElement(child, {
-              onFocus: (event) => {
-                this._onFocus(event);
+              onFocus: (e) => {
+                this._focusedInput = findNodeHandle(e.target);
                 if (child.props.onFocus) {
-                  child.props.onFocus(event);
+                  child.props.onFocus(e);
                 }
               },
             });

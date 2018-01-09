@@ -82,14 +82,13 @@ class ProfileForm extends React.Component {
 
     const pickerResult = await ImagePicker.launchCameraAsync({
       aspect: [1, 1],
-      base64: true,
       exif: true,
       quality: 0.4,
       allowsEditing: true,
     });
 
     if (!pickerResult.cancelled) {
-      this.props.uploadImage(pickerResult.base64);
+      this.props.uploadImage(pickerResult.uri);
     }
   }
 
@@ -98,14 +97,13 @@ class ProfileForm extends React.Component {
 
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       aspect: [1, 1],
-      base64: true,
       exif: true,
       quality: 0.4,
       allowsEditing: true,
     });
 
     if (!pickerResult.cancelled) {
-      this.props.uploadImage(pickerResult.base64);
+      this.props.uploadImage(pickerResult.uri);
     }
   }
 

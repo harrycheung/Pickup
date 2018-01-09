@@ -96,4 +96,7 @@ export default DrawerNavigator({
   order: ['Pickup', 'Students', 'Profile', 'Logout', 'Admin', 'SearchStudents'],
   contentComponent: connect(mapStateToProps, mapDispatchToProps)(Drawer),
   headerMode: 'none',
+  drawerOpenRoute: 'DrawerOpen',
+  drawerCloseRoute: 'DrawerClose',
+  drawerToggleRoute: 'DrawerToggle',
 });
