@@ -199,35 +199,38 @@ class PickupMessages extends React.Component {
       const student = pickup.students[key];
 
       const Escort = () => {
-        if (student.releaser.uid !== '') {
-          return <Text>N/A</Text>;
-        } else if (student.escort.uid === '') {
-          if (pickup.requestor.uid === user.uid && !user.admin) {
-            return <Text>Waiting</Text>;
-          }
+        if (student.escort.uid !== '') {
+          const released = student.releaser.uid !== '';
           return (
-            <Button
-              key="escort"
-              style={gstyles.flex1}
-              onPress={() => this.props.escortStudent(pickup, user, student)}
-              title="Escort"
+            <Profile
+              image={student.escort.image}
+              name={student.escort.name}
+              onCancel={(released || !user.admin) ? null : () => this.props.cancelEscort(pickup, user, student)}
             />
           );
         }
-        const released = student.releaser.uid !== '';
+
+        if (student.releaser.uid !== '') {
+          return <Text>N/A</Text>;
+        }
+
+        if (pickup.requestor.uid === user.uid && !user.admin) {
+          return <Text>Waiting</Text>;
+        }
+
         return (
-          <Profile
-            image={student.escort.image}
-            name={student.escort.name}
-            onCancel={(released || !user.admin) ? null : () => this.props.cancelEscort(pickup, user, student)}
+          <Button
+            key="escort"
+            style={gstyles.flex1}
+            onPress={() => this.props.escortStudent(pickup, user, student)}
+            title="Escort"
           />
         );
       };
 
       const Release = () => {
-        const authorized = user.admin || pickup.requestor.uid === user.uid;
         if (student.releaser.uid === '') {
-          if (authorized) {
+          if (user.admin || pickup.requestor.uid === user.uid) {
             return (
               <Button
                 key="release"
@@ -242,7 +245,7 @@ class PickupMessages extends React.Component {
           <Profile
             image={student.releaser.image}
             name={student.releaser.name}
-            onCancel={authorized ? () => this.props.undoRelease(pickup, student) : null}
+            onCancel={user.admin || student.releaser.uid === user.uid ? () => this.props.undoRelease(pickup, student) : null}
           />
         );
       };
