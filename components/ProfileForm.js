@@ -36,7 +36,6 @@ class ProfileForm extends React.Component {
       disabled: true,
       firstName: this.props.firstName,
       lastInitial: this.props.lastInitial,
-      imageURL: this.props.imageURL,
     };
 
     this._takePhoto = this._takePhoto.bind(this);
@@ -49,8 +48,14 @@ class ProfileForm extends React.Component {
     disabled: boolean,
     firstName: string,
     lastInitial: string,
-    imageURL: string,
   };
+
+  componentDidMount() {
+    // We update the disabled state on mount since Android does something
+    // funny when the image prop gets changed. Instead of just doing the update,
+    // it remounts the whole component.
+    this.updateDisabled();
+  }
 
   componentDidUpdate() {
     if (!this.props.spinning) {
@@ -64,11 +69,11 @@ class ProfileForm extends React.Component {
     const disabled = (
       state.firstName.length < 1 ||
       state.lastInitial.length < 1 ||
-      (props.imageURL.length < 1 && !props.admin) ||
+      (props.profileImage.length < 1 && !props.admin) ||
       invalid || (
         state.firstName === props.firstName &&
         state.lastInitial === props.lastInitial &&
-        state.imageURL === props.imageURL &&
+        props.storedImage === props.profileImage &&
         same
       )
     );
@@ -116,23 +121,23 @@ class ProfileForm extends React.Component {
   _submit() {
     this.setState({ disabled: true }, () => {
       const { firstName, lastInitial } = this.state;
-      if (this.props.imageURL.length < 1 && this.props.admin) {
+      if (this.props.profileImage.length < 1 && this.props.admin) {
         this.props.onSubmit(firstName, lastInitial, C.NoProfile);
       } else {
-        this.props.onSubmit(firstName, lastInitial, this.props.imageURL);
+        this.props.onSubmit(firstName, lastInitial, this.props.profileImage);
       }
     });
   }
 
   render() {
     let imageJSX = null;
-    if (this.props.imageURL === '') {
+    if (this.props.profileImage === '') {
       imageJSX = <Image style={gstyles.profilePic200} source={{ uri: C.NoProfile }} />;
     } else {
       imageJSX = (
         <CachedImage
           style={[gstyles.profilePic200, { backgroundColor: 'transparent' }]}
-          source={{ uri: this.props.imageURL }}
+          source={{ uri: this.props.profileImage }}
         />
       );
     }
@@ -235,7 +240,8 @@ ProfileForm.propTypes = {
   admin: PropTypes.bool,
   firstName: PropTypes.string,
   lastInitial: PropTypes.string,
-  imageURL: PropTypes.string,
+  storedImage: PropTypes.string,
+  profileImage: PropTypes.string,
   isDisabled: PropTypes.func,
   submitButtonText: PropTypes.string,
   onSubmit: PropTypes.func,
@@ -250,7 +256,7 @@ ProfileForm.defaultProps = {
   admin: false,
   firstName: '',
   lastInitial: '',
-  imageURL: '',
+  storedImage: '',
   isDisabled: () => ({ invalid: false, same: true }),
   submitButtonText: 'Done',
   onSubmit: () => {},
@@ -262,7 +268,7 @@ ProfileForm.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  imageURL: state.image.url,
+  profileImage: state.image.url,
 });
 
 const mapDispatchToProps = dispatch => ({

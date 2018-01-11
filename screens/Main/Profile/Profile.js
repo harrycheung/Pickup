@@ -73,6 +73,7 @@ class Profile extends React.Component {
           submitButtonText={this.props.firstName === '' ? 'Save' : 'Update'}
           onSubmit={this.props.updateUser}
           spinning={this.props.spinning}
+          storedImage={this.props.imageURL}
         >
           <View style={[gstyles.flex1, gstyles.marginTop10, gstyles.flexStretch]}>
             <Text style={gstyles.font18}>
