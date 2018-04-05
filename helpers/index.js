@@ -67,13 +67,17 @@ export const distanceFromSchool = (lat, lon) => (distance(37.476539, -122.200109
 export const navigationOptions = {
   headerStyle: {
     backgroundColor: colors.buttonBackground,
-    marginTop: -44,
-    paddingTop: 44,
-    height: 88,
-    borderBottomWidth: 0,
   },
   headerTintColor: 'white',
 };
+
+// Starting with react-navigation 1.5.8, the app bar is being treated
+// with a default height. We need to shrink it a little bit to make it
+// work on android.
+if (Platform.OS === 'android') {
+  navigationOptions.headerStyle['marginTop'] = -26;
+  navigationOptions.headerStyle['paddingTop'] = 26;
+}
 
 export const isIPhoneX = () => (
   Platform.OS === 'ios' && Dimensions.get('window').height === 812

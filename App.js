@@ -6,6 +6,10 @@ import { AppState, AsyncStorage, Text } from 'react-native';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import {
+  createReduxBoundAddListener,
+  createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers';
 
 import AppReducers from './reducers';
 import AppWithNavigationState from './screens';
@@ -27,9 +31,15 @@ const logger = ({ getState }) => {
 }
 
 const sagaMiddleware = createSagaMiddleware();
-const middleware = applyMiddleware(sagaMiddleware, logger);
+const navMiddleware = createReactNavigationReduxMiddleware(
+  'root',
+  state => state.nav,
+);
+const middleware = applyMiddleware(sagaMiddleware, navMiddleware, logger);
 const store = createStore(AppReducers, middleware);
 sagaMiddleware.run(rootSaga);
+
+const addListener = createReduxBoundAddListener('root');
 
 class Root extends React.Component {
   state: {
@@ -83,13 +93,13 @@ class Root extends React.Component {
   render() {
     if (this.state.isStoreLoading) {
       return <Text>Loading...</Text>;
-    } else {
-      return (
-        <Provider store={this.state.store}>
-          <AppWithNavigationState />
-        </Provider>
-      );
     }
+
+    return (
+      <Provider store={this.state.store}>
+        <AppWithNavigationState addListener={addListener} />
+      </Provider>
+    );
   }
 }
 

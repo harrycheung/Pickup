@@ -7,6 +7,7 @@ import {
   Animated,
   ActivityIndicator,
   Platform,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -96,7 +97,7 @@ class MessageView extends React.Component {
   render() {
     const renderChildren = Platform.OS === 'ios' || this.state.message === '';
     return (
-      <View style={this.props.style}>
+      <SafeAreaView style={this.props.style}>
         <StatusBar
           backgroundColor={colors.buttonBackground}
           barStyle="light-content"
@@ -132,8 +133,7 @@ class MessageView extends React.Component {
             </Animated.View>
           </View>
         }
-        <IPhoneXSpacer />
-      </View>
+      </SafeAreaView>
     );
   }
 }
